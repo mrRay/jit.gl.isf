@@ -7,12 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A28706D2230501800BFACA1 /* libVVGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A28706C2230501800BFACA1 /* libVVGL.a */; };
+		1A28706F2230502300BFACA1 /* libVVISF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A28706E2230502300BFACA1 /* libVVISF.a */; };
 		1B8F532E11CFB4FE009968B9 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B8F532D11CFB4FE009968B9 /* OpenGL.framework */; };
 		1B8F534911CFB5AE009968B9 /* jit.gl.vvisf.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.m */; };
 		1B8F541B11CFCF98009968B9 /* max.jit.gl.vvisf.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F541A11CFCF98009968B9 /* max.jit.gl.vvisf.c */; };
 		1B8F573111D02E84009968B9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B8F573011D02E84009968B9 /* Cocoa.framework */; };
 		1B8F574411D02EBD009968B9 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B8F574311D02EBD009968B9 /* AGL.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1A2870702230512000BFACA1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1A28706822304F9900BFACA1;
+			remoteInfo = libVVISF;
+		};
+		1A2870722230512300BFACA1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1A28706422304F1D00BFACA1;
+			remoteInfo = libVVGL;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		1B8F532B11CFB4E4009968B9 /* Copy Syphon Framework */ = {
@@ -28,6 +47,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1A28706C2230501800BFACA1 /* libVVGL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libVVGL.a; path = ../../ISFSandbox/VVGL/bin/libVVGL.a; sourceTree = "<group>"; };
+		1A28706E2230502300BFACA1 /* libVVISF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libVVISF.a; path = ../../ISFSandbox/VVISF/bin/libVVISF.a; sourceTree = "<group>"; };
 		1B8F532D11CFB4FE009968B9 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = jit.gl.vvisf.m; path = jit.gl.vvisf/jit.gl.vvisf.m; sourceTree = "<group>"; };
 		1B8F541A11CFCF98009968B9 /* max.jit.gl.vvisf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = max.jit.gl.vvisf.c; path = jit.gl.vvisf/max.jit.gl.vvisf.c; sourceTree = "<group>"; };
@@ -44,7 +65,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1B8F532E11CFB4FE009968B9 /* OpenGL.framework in Frameworks */,
+				1A28706F2230502300BFACA1 /* libVVISF.a in Frameworks */,
 				1B8F573111D02E84009968B9 /* Cocoa.framework in Frameworks */,
+				1A28706D2230501800BFACA1 /* libVVGL.a in Frameworks */,
 				1B8F574411D02EBD009968B9 /* AGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,6 +90,8 @@
 		089C1671FE841209C02AAC07 /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1A28706C2230501800BFACA1 /* libVVGL.a */,
+				1A28706E2230502300BFACA1 /* libVVISF.a */,
 				1B8F532D11CFB4FE009968B9 /* OpenGL.framework */,
 				1B8F573011D02E84009968B9 /* Cocoa.framework */,
 				1B8F574311D02EBD009968B9 /* AGL.framework */,
@@ -119,6 +144,37 @@
 		};
 /* End PBXHeadersBuildPhase section */
 
+/* Begin PBXLegacyTarget section */
+		1A28706422304F1D00BFACA1 /* libVVGL */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION) -j4";
+			buildConfigurationList = 1A28706722304F1D00BFACA1 /* Build configuration list for PBXLegacyTarget "libVVGL" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "$(PROJECT_DIR)/../../ISFSandbox/VVGL";
+			dependencies = (
+			);
+			name = libVVGL;
+			passBuildSettingsInEnvironment = 0;
+			productName = libVVGL;
+		};
+		1A28706822304F9900BFACA1 /* libVVISF */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION) -j4";
+			buildConfigurationList = 1A28706922304F9900BFACA1 /* Build configuration list for PBXLegacyTarget "libVVISF" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "$(PROJECT_DIR)/../../ISFSandbox/VVISF";
+			dependencies = (
+			);
+			name = libVVISF;
+			passBuildSettingsInEnvironment = 0;
+			productName = libVVISF;
+		};
+/* End PBXLegacyTarget section */
+
 /* Begin PBXNativeTarget section */
 		8D57630D048677EA00EA77CD /* jit.gl.vvisf */ = {
 			isa = PBXNativeTarget;
@@ -134,6 +190,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				1A2870732230512300BFACA1 /* PBXTargetDependency */,
+				1A2870712230512000BFACA1 /* PBXTargetDependency */,
 			);
 			name = jit.gl.vvisf;
 			productInstallPath = "$(HOME)/Library/Bundles";
@@ -148,6 +206,14 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0510;
+				TargetAttributes = {
+					1A28706422304F1D00BFACA1 = {
+						CreatedOnToolsVersion = 9.3.1;
+					};
+					1A28706822304F9900BFACA1 = {
+						CreatedOnToolsVersion = 9.3.1;
+					};
+				};
 			};
 			buildConfigurationList = 1DEB911E08733D790010E9CD /* Build configuration list for PBXProject "jit.gl.vvisf" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -164,6 +230,8 @@
 			projectRoot = "";
 			targets = (
 				8D57630D048677EA00EA77CD /* jit.gl.vvisf */,
+				1A28706422304F1D00BFACA1 /* libVVGL */,
+				1A28706822304F9900BFACA1 /* libVVISF */,
 			);
 		};
 /* End PBXProject section */
@@ -200,7 +268,70 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		1A2870712230512000BFACA1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1A28706822304F9900BFACA1 /* libVVISF */;
+			targetProxy = 1A2870702230512000BFACA1 /* PBXContainerItemProxy */;
+		};
+		1A2870732230512300BFACA1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1A28706422304F1D00BFACA1 /* libVVGL */;
+			targetProxy = 1A2870722230512300BFACA1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		1A28706522304F1D00BFACA1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1A28706622304F1D00BFACA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		1A28706A22304F9900BFACA1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1A28706B22304F9900BFACA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		1DEB911B08733D790010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1BD15DD517A180740014A7AB /* maxmspsdk.xcconfig */;
@@ -217,7 +348,31 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				GENERATE_PKGINFO_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(C74SUPPORT)/max-includes\"",
+					"\"$(C74SUPPORT)/msp-includes\"",
+					"\"$(C74SUPPORT)/jit-includes\"",
+					"$(PROJECT_DIR)/../../ISFSandbox/VVGL/include",
+					"$(PROJECT_DIR)/../../ISFSandbox/VVISF/include",
+				);
 				INSTALL_PATH = /;
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../../ISFSandbox/VVGL/bin",
+					"$(PROJECT_DIR)/../../ISFSandbox/VVISF/bin",
+				);
+				OTHER_CFLAGS = (
+					"-fvisibility=hidden",
+					"-DVVGL_SDK_MAC",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					MaxAudioAPI,
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+					"-lVVGL",
+					"-lVVISF",
+				);
 				PRODUCT_NAME = jit.gl.vvisf;
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -234,7 +389,31 @@
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_MODEL_TUNING = G4;
 				GCC_VERSION = "";
+				HEADER_SEARCH_PATHS = (
+					"\"$(C74SUPPORT)/max-includes\"",
+					"\"$(C74SUPPORT)/msp-includes\"",
+					"\"$(C74SUPPORT)/jit-includes\"",
+					"$(PROJECT_DIR)/../../ISFSandbox/VVGL/include",
+					"$(PROJECT_DIR)/../../ISFSandbox/VVISF/include",
+				);
 				INSTALL_PATH = /;
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../../ISFSandbox/VVGL/bin",
+					"$(PROJECT_DIR)/../../ISFSandbox/VVISF/bin",
+				);
+				OTHER_CFLAGS = (
+					"-fvisibility=hidden",
+					"-DVVGL_SDK_MAC",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					MaxAudioAPI,
+					"-framework",
+					JitterAPI,
+					"$(C74_SYM_LINKER_FLAGS)",
+					"-lVVGL",
+					"-lVVISF",
+				);
 				PRODUCT_NAME = jit.gl.vvisf;
 				WRAPPER_EXTENSION = mxo;
 			};
@@ -273,6 +452,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1A28706722304F1D00BFACA1 /* Build configuration list for PBXLegacyTarget "libVVGL" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A28706522304F1D00BFACA1 /* Debug */,
+				1A28706622304F1D00BFACA1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1A28706922304F9900BFACA1 /* Build configuration list for PBXLegacyTarget "libVVISF" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A28706A22304F9900BFACA1 /* Debug */,
+				1A28706B22304F9900BFACA1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1DEB911A08733D790010E9CD /* Build configuration list for PBXNativeTarget "jit.gl.vvisf" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
