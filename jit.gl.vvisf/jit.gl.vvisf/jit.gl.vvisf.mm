@@ -7,9 +7,9 @@
 
 
 
-
+BEGIN_USING_C_LINKAGE
 t_jit_err jit_ob3d_dest_name_set(t_jit_object *x, void *attr, long argc, t_atom *argv);
-
+END_USING_C_LINKAGE
 
 
 
@@ -19,13 +19,11 @@ typedef struct _jit_gl_vvisf	{
 	// 3d object extension.	 This is what all objects in the GL group have in common.
 	void				*ob3d;
 		
-	// attributes
-	t_symbol			*texturename;	
-	t_symbol			*servername;
-	t_symbol			*appname;
+	//	attributes (automatically recognized by max)
+	t_symbol			*file;	//	
+	t_atom_long			dim[2];	//	render size must be explicitly set
 	
-	NSRect				latestBounds;
-	t_atom_long			dim[2];			// output dim
+	//	ivars (not to be confused with attributes!)
 	BOOL				needsRedraw;
 	
 	// internal jit.gl.texture object
@@ -37,7 +35,7 @@ void			*_jit_gl_vvisf_class;
 
 // init/constructor/free
 t_jit_err jit_gl_vvisf_init(void);
-t_jit_gl_vvisf *jit_gl_vvisf_new(t_symbol * dest_name);
+t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name);
 void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance);
 
 // handle context changes - need to rebuild IOSurface + textures here.
@@ -50,29 +48,24 @@ t_jit_err jit_gl_vvisf_drawto(t_jit_gl_vvisf *x, t_symbol *s, int argc, t_atom *
 
 //attributes
 // serveruuid, for server human readable name
-t_jit_err jit_gl_vvisf_servername(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv);
-t_jit_err jit_gl_vvisf_appname(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv);
-
-// @texturename to read a named texture.
-t_jit_err jit_gl_vvisf_texturename(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv);
+t_jit_err jit_gl_vvisf_file(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv);
 
 // @out_name for output...
 t_jit_err jit_gl_vvisf_getattr_out_name(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av);
 
 // dim
-t_jit_err jit_gl_vvisf_setattr_dim(t_jit_gl_vvisf *x, void *attr, long argc, t_atom *argv);
+t_jit_err jit_gl_vvisf_setattr_size(t_jit_gl_vvisf *x, void *attr, long argc, t_atom *argv);
 
 // symbols
-t_symbol			*ps_servername;
-t_symbol			*ps_appname;
-t_symbol			*ps_texture;
-t_symbol			*ps_width;
-t_symbol			*ps_height;
-t_symbol			*ps_glid;
-t_symbol			*ps_flip;
-t_symbol			*ps_automatic;
-t_symbol			*ps_drawto;
-t_symbol			*ps_draw;
+t_symbol			*ps_file_j;
+t_symbol			*ps_texture_j;
+t_symbol			*ps_width_j;
+t_symbol			*ps_height_j;
+t_symbol			*ps_glid_j;
+t_symbol			*ps_flip_j;
+t_symbol			*ps_automatic_j;
+t_symbol			*ps_drawto_j;
+t_symbol			*ps_draw_j;
 
 // for our internal texture
 extern t_symbol			*ps_jit_gl_texture;
@@ -91,16 +84,15 @@ extern t_symbol			*ps_jit_gl_texture;
 
 t_jit_err jit_gl_vvisf_init(void)	{
 	//	symbols
-	ps_servername = gensym("servername");
-	ps_appname = gensym("appname");
-	ps_texture = gensym("texture");
-	ps_width = gensym("width");
-	ps_height = gensym("height");
-	ps_glid = gensym("glid");
-	ps_flip = gensym("flip");
-	ps_automatic = gensym("automatic");
-	ps_drawto = gensym("drawto");
-	ps_draw = gensym("draw");
+	ps_file_j = gensym("file");
+	ps_texture_j = gensym("texture");
+	ps_width_j = gensym("width");
+	ps_height_j = gensym("height");
+	ps_glid_j = gensym("glid");
+	ps_flip_j = gensym("flip");
+	ps_automatic_j = gensym("automatic");
+	ps_drawto_j = gensym("drawto");
+	ps_draw_j = gensym("draw");
 	
 	// setup our OB3D flags to indicate our capabilities.
 	long			ob3d_flags = JIT_OB3D_NO_MATRIXOUTPUT; // no matrix output
@@ -139,81 +131,47 @@ t_jit_err jit_gl_vvisf_init(void)	{
 	// could be omitted.
 	
 	// OB3D methods
-	jit_class_addmethod(
-		_jit_gl_vvisf_class, 
-		(method)jit_gl_vvisf_dest_closing,
-		"dest_closing",
-		A_CANT,
-		0L);
-	jit_class_addmethod(
-		_jit_gl_vvisf_class, 
-		(method)jit_gl_vvisf_dest_changed,
-		"dest_changed",
-		A_CANT,
-		0L);
-	jit_class_addmethod(
-		_jit_gl_vvisf_class, 
-		(method)jit_gl_vvisf_draw,
-		"ob3d_draw",
-		A_CANT,
-		0L);
+	jit_class_addmethod( _jit_gl_vvisf_class, (method)jit_gl_vvisf_dest_closing, "dest_closing", A_CANT, 0L );
+	jit_class_addmethod( _jit_gl_vvisf_class, (method)jit_gl_vvisf_dest_changed, "dest_changed", A_CANT, 0L );
+	
+	// define our OB3D draw method.  called in automatic mode by
+	// jit.gl.render or otherwise through ob3d when banged. this
+	// method is A_CANT because our draw setup needs to happen
+	// in the ob3d beforehand to initialize OpenGL state
+	jit_class_addmethod( _jit_gl_vvisf_class, (method)jit_gl_vvisf_draw, "ob3d_draw", A_CANT, 0L );
 	
 	// must register for ob3d use
-	jit_class_addmethod(
-		_jit_gl_vvisf_class, 
-		(method)jit_object_register,
-		"register",
-		A_CANT,
-		0L);
+	jit_class_addmethod( _jit_gl_vvisf_class, (method)jit_object_register, "register", A_CANT, 0L );
 	
 	// add attributes
 	long				attrflags = JIT_ATTR_GET_DEFER_LOW | JIT_ATTR_SET_USURP_LOW;
 
 	t_jit_object		*attr;
 	
-	attr = jit_object_new(
+	attr = (t_jit_object*)jit_object_new(
 		_jit_sym_jit_attr_offset_array,
-		"dim",
+		"size",
 		_jit_sym_long,
 		2,
 		attrflags,
 		(method)0L,
-		(method)jit_gl_vvisf_setattr_dim,
+		(method)jit_gl_vvisf_setattr_size,
 		0/*fix*/,
 		calcoffset(t_jit_gl_vvisf,dim));
 	jit_class_addattr(_jit_gl_vvisf_class,attr);	
 
-	attr = jit_object_new(
+	attr = (t_jit_object*)jit_object_new(
 		_jit_sym_jit_attr_offset,
-		"servername",
+		"file",
 		_jit_sym_symbol,
 		attrflags,
 		(method)0L,
-		jit_gl_vvisf_servername,
-		calcoffset(t_jit_gl_vvisf, servername)); 
-	jit_class_addattr(_jit_gl_vvisf_class,attr);	
-
-	attr = jit_object_new(_jit_sym_jit_attr_offset,
-		"appname",
-		_jit_sym_symbol,
-		attrflags,
-		(method)0L,
-		jit_gl_vvisf_appname,
-		calcoffset(t_jit_gl_vvisf, appname));	
-	jit_class_addattr(_jit_gl_vvisf_class,attr);	
-	
-	attr = jit_object_new(
-		_jit_sym_jit_attr_offset,
-		"texturename",
-		_jit_sym_symbol,
-		attrflags,
-		(method)0L,
-		(method)jit_gl_vvisf_texturename,
-		calcoffset(t_jit_gl_vvisf, texturename));		
-	jit_class_addattr(_jit_gl_vvisf_class,attr);	
+		jit_gl_vvisf_file,
+		calcoffset(t_jit_gl_vvisf, file)); 
+	jit_class_addattr(_jit_gl_vvisf_class,attr);
 	
 	attrflags = JIT_ATTR_GET_DEFER_LOW | JIT_ATTR_SET_OPAQUE_USER;
-	attr = jit_object_new(
+	attr = (t_jit_object*)jit_object_new(
 		_jit_sym_jit_attr_offset,
 		"out_name",
 		_jit_sym_symbol,
@@ -229,7 +187,7 @@ t_jit_err jit_gl_vvisf_init(void)	{
 	return JIT_ERR_NONE;
 }
 
-t_jit_gl_vvisf *jit_gl_vvisf_new(t_symbol * dest_name)	{
+t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 	post("%s",__func__);
 	t_jit_gl_vvisf			*targetInstance;
 	
@@ -237,24 +195,19 @@ t_jit_gl_vvisf *jit_gl_vvisf_new(t_symbol * dest_name)	{
 	if ((targetInstance = (t_jit_gl_vvisf *)jit_object_alloc(_jit_gl_vvisf_class)))	{
 		// TODO : is this right ? 
 		// set up attributes
-		jit_attr_setsym(targetInstance->servername, _jit_sym_name, gensym("servername"));
-		jit_attr_setsym(targetInstance->appname, _jit_sym_name, gensym("appname"));
+		jit_attr_setsym(targetInstance->file, _jit_sym_name, ps_file_j);
 		
 		targetInstance->needsRedraw = YES;
 		
 		// instantiate a single internal jit.gl.texture should we need it.
-		targetInstance->output = jit_object_new(ps_jit_gl_texture,dest_name);
-
-		targetInstance->latestBounds = NSMakeRect(0, 0, 640, 480);
+		targetInstance->output = (t_jit_object*)jit_object_new(ps_jit_gl_texture,dest_name);
 		
 		if (targetInstance->output)	{
-			targetInstance->texturename = jit_symbol_unique();		
-
 			// set texture attributes.
-			jit_attr_setsym(targetInstance->output,_jit_sym_name, targetInstance->texturename);
+			jit_attr_setsym(targetInstance->output,_jit_sym_name, jit_symbol_unique());
 			jit_attr_setsym(targetInstance->output,gensym("defaultimage"),gensym("black"));
 			jit_attr_setlong(targetInstance->output,gensym("rectangle"), 1);
-			jit_attr_setlong(targetInstance->output, gensym("flip"), 0);
+			jit_attr_setlong(targetInstance->output, ps_flip_j, 0);
 			
 			targetInstance->dim[0] = 640;
 			targetInstance->dim[1] = 480;
@@ -263,7 +216,6 @@ t_jit_gl_vvisf *jit_gl_vvisf_new(t_symbol * dest_name)	{
 		else	{
 			post("error creating internal texture object");
 			jit_object_error((t_object *)targetInstance,"jit.gl.syphonserver: could not create texture");
-			targetInstance->texturename = _jit_sym_nothing;		
 		}
 		
 		// create and attach ob3d
@@ -326,8 +278,8 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 	//	targetInstance->syClient = [[SyphonNameboundClient alloc] initWithContext:cc];
 	
 	if (targetInstance->output)	{
-		t_symbol			*context = jit_attr_getsym(targetInstance,ps_drawto);
-		jit_attr_setsym(targetInstance->output,ps_drawto,context);
+		t_symbol			*context = jit_attr_getsym(targetInstance,ps_drawto_j);
+		jit_attr_setsym(targetInstance->output,ps_drawto_j,context);
 		
 		// our texture has to be bound in the new context before we can use it
 		// http://cycling74.com/forums/topic.php?id=29197
@@ -368,8 +320,7 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 #pragma mark Attributes
 
 // attributes
-// @serveruuid
-t_jit_err jit_gl_vvisf_servername(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
+t_jit_err jit_gl_vvisf_file(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
 	post("%s",__func__);
 	t_symbol			*srvname;
 
@@ -378,61 +329,21 @@ t_jit_err jit_gl_vvisf_servername(t_jit_gl_vvisf *targetInstance, void *attr, lo
 			srvname = jit_atom_getsym(argv);
 			post("\tsrvname is %s",srvname);
 
-			targetInstance->servername = srvname;
+			targetInstance->file = srvname;
 		} 
 		else	{
 			// no args, set to zero
-			targetInstance->servername = _jit_sym_nothing;
+			targetInstance->file = _jit_sym_nothing;
 		}
 		// if we have a server release it, 
 		// make a new one, with our new UUID.
 		NSAutoreleasePool			*pool = [[NSAutoreleasePool alloc] init];
-		//[targetInstance->syClient setName:[NSString stringWithCString:targetInstance->servername->s_name
+		//[targetInstance->syClient setName:[NSString stringWithCString:targetInstance->file->s_name
 		//																	encoding:NSASCIIStringEncoding]];
 		targetInstance->needsRedraw = YES;
 		
 		[pool drain];
 	}
-	return JIT_ERR_NONE;
-}
-
-t_jit_err jit_gl_vvisf_appname(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
-	post("%s",__func__);
-	t_symbol			*appname;
-	
-	if(targetInstance)	{
-		if (argc && argv)	{
-			appname = jit_atom_getsym(argv);
-			post("\tappname is %s",appname);
-			
-			targetInstance->appname = appname;
-		} 
-		else	{
-			// no args, set to zero
-			targetInstance->appname = _jit_sym_nothing;
-		}
-		// if we have a server release it, 
-		// make a new one, with our new UUID.
-		NSAutoreleasePool			*pool = [[NSAutoreleasePool alloc] init];
-		
-		//[targetInstance->syClient setAppName:[NSString stringWithCString:targetInstance->appname->s_name
-		//																		encoding:NSASCIIStringEncoding]];
-		targetInstance->needsRedraw = YES;
-		
-		[pool drain];
-	}
-	return JIT_ERR_NONE;
-}
-
-// #texturename
-t_jit_err jit_gl_vvisf_texturename(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
-	t_symbol			*s=jit_atom_getsym(argv);
-	
-	targetInstance->texturename = s;
-	if (targetInstance->output)
-		jit_attr_setsym(targetInstance->output,_jit_sym_name,s);
-	jit_attr_setsym(targetInstance,ps_texture,s);
-	
 	return JIT_ERR_NONE;
 }
 											  
@@ -442,7 +353,7 @@ t_jit_err jit_gl_vvisf_getattr_out_name(t_jit_gl_vvisf *targetInstance, void *at
 	} else {
 		//otherwise allocate memory
 		*ac = 1;
-		if (!(*av = jit_getbytes(sizeof(t_atom)*(*ac)))) {
+		if (!(*av = (atom*)jit_getbytes(sizeof(t_atom)*(*ac)))) {
 			*ac = 0;
 			return JIT_ERR_OUT_OF_MEM;
 		}
@@ -454,7 +365,7 @@ t_jit_err jit_gl_vvisf_getattr_out_name(t_jit_gl_vvisf *targetInstance, void *at
 	return JIT_ERR_NONE;
 }											  
 											  
-t_jit_err jit_gl_vvisf_setattr_dim(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
+t_jit_err jit_gl_vvisf_setattr_size(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
 	long			i;
 	long			v;
 	
@@ -467,6 +378,8 @@ t_jit_err jit_gl_vvisf_setattr_dim(t_jit_gl_vvisf *targetInstance, void *attr, l
 				targetInstance->dim[i] = v;
 			}
 		}
+		
+		post("size updated to %d x %d",targetInstance->dim[0],targetInstance->dim[1]);
 		
 		// update our internal texture as well.
 		jit_attr_setlong_array(targetInstance->output, _jit_sym_dim, 2, targetInstance->dim);

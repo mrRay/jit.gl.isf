@@ -16,7 +16,7 @@ typedef struct _max_jit_gl_vvisf	{
 
 t_jit_err jit_gl_vvisf_init(void); 
 
-void *max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv);
+void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv);
 void max_jit_gl_vvisf_free(t_max_jit_gl_vvisf *x);
 
 // custom draw
@@ -31,15 +31,20 @@ t_class				*max_jit_gl_vvisf_class;
 t_symbol			*ps_jit_gl_texture;
 t_symbol			*ps_draw;
 t_symbol			*ps_out_name;
-t_symbol			*ps_appname;
-t_symbol			*ps_servername;
+t_symbol			*ps_file;
 t_symbol			*ps_clear;
 
 
 
 
 int C74_EXPORT main(void)
-{	
+{
+	ps_jit_gl_texture = gensym("jit_gl_texture");
+	ps_draw = gensym("draw");
+	ps_out_name = gensym("out_name");
+	ps_file = gensym("file");
+	ps_clear = gensym("clear");
+	
 	void			*classex;
 	void			*jitclass;
 	
@@ -75,12 +80,7 @@ int C74_EXPORT main(void)
 	
 	// add methods for 3d drawing
 	max_ob3d_setup();
-	ps_jit_gl_texture = gensym("jit_gl_texture");
-	ps_draw = gensym("draw");
-	ps_out_name = gensym("out_name");
-	ps_servername = gensym("servername");
-	ps_appname = gensym("appname");
-	ps_clear = gensym("clear");
+	
 }
 
 void max_jit_gl_vvisf_free(t_max_jit_gl_vvisf *x)	{
@@ -97,12 +97,12 @@ void max_jit_gl_vvisf_free(t_max_jit_gl_vvisf *x)	{
 
 void max_jit_gl_vvisf_bang(t_max_jit_gl_vvisf *x)	{
 //	typedmess((t_object *)x,ps_draw,0,NULL);
-	max_jit_gl_vvisf_draw(x,ps_draw,0,NULL);
+	max_jit_gl_vvisf_draw(x, ps_draw, 0, NULL);
 
 }
 
 void max_jit_gl_vvisf_draw(t_max_jit_gl_vvisf *x, t_symbol *s, long argc, t_atom *argv)	{
-	t_atom a;
+	t_atom				a;
 	// get the jitter object
 	t_jit_object			*jitob = (t_jit_object*)max_jit_obex_jitob_get(x);
 	
@@ -114,7 +114,7 @@ void max_jit_gl_vvisf_draw(t_max_jit_gl_vvisf *x, t_symbol *s, long argc, t_atom
 	outlet_anything(x->texout,ps_jit_gl_texture,1,&a);
 }
 
-void *max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
+void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
 	t_max_jit_gl_vvisf			*x;
 	void			*jit_ob;
 	long			attrstart;
