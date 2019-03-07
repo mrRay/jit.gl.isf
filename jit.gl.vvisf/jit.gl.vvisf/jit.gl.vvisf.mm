@@ -5,6 +5,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+#include "VVGL.hpp"
+#include "VVISF.hpp"
+#include "VVGLContextCacheItem.hpp"
+
 
 
 BEGIN_USING_C_LINKAGE
@@ -229,7 +233,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 		} 
 		else	{
 			post("error creating internal texture object");
-			jit_object_error((t_object *)targetInstance,"jit.gl.syphonserver: could not create texture");
+			jit_object_error((t_object *)targetInstance,(char*)"jit.gl.syphonserver: could not create texture");
 		}
 		
 		// create and attach ob3d
@@ -271,16 +275,21 @@ t_jit_err jit_gl_vvisf_dest_closing(t_jit_gl_vvisf *targetInstance)	{
 t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 	post("%s ... %p",__func__,CGLGetCurrentContext());
 	
-	NSAutoreleasePool			*pool = [[NSAutoreleasePool alloc] init];
+	//	get the current GL context on this thread- if there isn't one, bail
+	CGLContextObj				hostCtx = CGLGetCurrentContext();
+	if (hostCtx == NULL)	{
+		post("ERR: no host GL ctx");
+		return JIT_ERR_INVALID_PTR;
+	}
+	//	get the cache item for the current context- the cache item contains buffer pools and contexts (GL2 + GL4)
+	VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(hostCtx);
+	//	if there's no cached context item, something has gone horribly wrong- bail
+	if (cacheItem == nullptr)	{
+		post("ERR: couldnt find cache ctx");
+		return JIT_ERR_INVALID_PTR;
+	}
 	
-	//if (targetInstance->syClient != NULL)	{
-	//	[targetInstance->syClient release];
-	//	targetInstance->syClient = NULL;
-	//}
-	//CGLContextObj		cc = CGLGetCurrentContext();
-	//if (cc != NULL)
-	//	targetInstance->syClient = [[SyphonNameboundClient alloc] initWithContext:cc];
-	
+	//	get the jit.gl.texture object we render into for output
 	if (targetInstance->outputTexObj)	{
 		t_symbol			*context = jit_attr_getsym(targetInstance, ps_drawto_j);
 		jit_attr_setsym(targetInstance->outputTexObj, ps_drawto_j, context);
@@ -297,9 +306,6 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 		post("ERR: outputTexObj null in %s",__func__);
 	
 	jit_attr_setlong(targetInstance, ps_needsRedraw_j, 1);
-	
-	[pool release];
-	pool = nil;
 	
 	return JIT_ERR_NONE;
 }
@@ -336,14 +342,15 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 // attributes
 t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
 	post("%s",__func__);
-	t_symbol			*srvname;
+	//t_symbol			*srvname;
 
 	if(targetInstance)	{
 		if (argc && argv)	{
-			srvname = jit_atom_getsym(argv);
-			post("\tsrvname is %s",srvname);
-
-			targetInstance->file = srvname;
+			//srvname = jit_atom_getsym(argv);
+			//post("\tsrvname is %s",srvname);
+			//targetInstance->file = srvname;
+			targetInstance->file = jit_atom_getsym(argv);
+			post("\tfile is %s",targetInstance->file->s_name);
 		} 
 		else	{
 			// no args, set to zero

@@ -73,10 +73,10 @@ int C74_EXPORT main(void)
 	// custom draw handler so we can output our texture.
 	// override default ob3d bang/draw methods
 	addbang((method)max_jit_gl_vvisf_bang);
-	max_addmethod_defer_low((method)max_jit_gl_vvisf_draw, "draw");	 
+	max_addmethod_defer_low((method)max_jit_gl_vvisf_draw, (char*)"draw");
 	
 	// use standard ob3d assist method
-	addmess((method)max_jit_ob3d_assist, "assist", A_CANT,0);
+	addmess((method)max_jit_ob3d_assist, (char*)"assist", A_CANT,0);
 	
 	// add methods for 3d drawing
 	max_ob3d_setup();
