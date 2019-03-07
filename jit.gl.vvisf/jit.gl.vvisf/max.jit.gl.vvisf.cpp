@@ -8,7 +8,7 @@ typedef struct _max_jit_gl_vvisf	{
 	t_object		ob;
 	void			*obex;
 	
-	// output texture outlet
+	//	outlets
 	void			*texout;
 	void			*dumpout;
 	
@@ -30,7 +30,7 @@ t_class				*max_jit_gl_vvisf_class;
 
 t_symbol			*ps_jit_gl_texture;
 t_symbol			*ps_draw;
-t_symbol			*ps_out_name;
+t_symbol			*ps_out_tex_sym;
 t_symbol			*ps_file;
 t_symbol			*ps_clear;
 
@@ -41,7 +41,7 @@ int C74_EXPORT main(void)
 {
 	ps_jit_gl_texture = gensym("jit_gl_texture");
 	ps_draw = gensym("draw");
-	ps_out_name = gensym("out_name");
+	ps_out_tex_sym = gensym("out_tex_sym");
 	ps_file = gensym("file");
 	ps_clear = gensym("clear");
 	
@@ -76,7 +76,7 @@ int C74_EXPORT main(void)
 	max_addmethod_defer_low((method)max_jit_gl_vvisf_draw, "draw");	 
 	
 	// use standard ob3d assist method
-	addmess((method)max_jit_ob3d_assist, "assist", A_CANT,0);  
+	addmess((method)max_jit_ob3d_assist, "assist", A_CANT,0);
 	
 	// add methods for 3d drawing
 	max_ob3d_setup();
@@ -104,23 +104,23 @@ void max_jit_gl_vvisf_bang(t_max_jit_gl_vvisf *x)	{
 void max_jit_gl_vvisf_draw(t_max_jit_gl_vvisf *x, t_symbol *s, long argc, t_atom *argv)	{
 	t_atom				a;
 	// get the jitter object
-	t_jit_object			*jitob = (t_jit_object*)max_jit_obex_jitob_get(x);
+	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(x);
 	
 	// call the jitter object's draw method
-	jit_object_method(jitob,s,s,argc,argv);
+	jit_object_method(jitob, s, s, argc, argv);
 	
 	// query the texture name and send out the texture output 
-	jit_atom_setsym(&a,jit_attr_getsym(jitob,ps_out_name));
-	outlet_anything(x->texout,ps_jit_gl_texture,1,&a);
+	jit_atom_setsym(&a, jit_attr_getsym(jitob, ps_out_tex_sym));
+	outlet_anything(x->texout, ps_jit_gl_texture, 1, &a);
 }
 
 void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
-	t_max_jit_gl_vvisf			*x;
+	t_max_jit_gl_vvisf			*newObjPtr;
 	void			*jit_ob;
 	long			attrstart;
 	t_symbol		*dest_name_sym = _jit_sym_nothing;
 	
-	if ((x = (t_max_jit_gl_vvisf *) max_jit_obex_new(max_jit_gl_vvisf_class, gensym("jit_gl_vvisf"))))	{
+	if ((newObjPtr = (t_max_jit_gl_vvisf *) max_jit_obex_new(max_jit_gl_vvisf_class, gensym("jit_gl_vvisf"))))	{
 		// get first normal arg, the destination name
 		attrstart = max_jit_attr_args_offset(argc,argv);
 		if (attrstart&&argv) 	{
@@ -130,26 +130,26 @@ void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
 		// instantiate Jitter object with dest_name arg
 		if ((jit_ob = jit_object_new(gensym("jit_gl_vvisf"), dest_name_sym)))	{
 			// set internal jitter object instance
-			max_jit_obex_jitob_set(x, jit_ob);
+			max_jit_obex_jitob_set(newObjPtr, jit_ob);
 			
 			// process attribute arguments 
-			max_jit_attr_args(x, argc, argv);		
+			max_jit_attr_args(newObjPtr, argc, argv);		
 			
 
 			// add a general purpose outlet (rightmost)
-			x->dumpout = outlet_new(x,NULL);
-			max_jit_obex_dumpout_set(x, x->dumpout);
+			newObjPtr->dumpout = outlet_new(newObjPtr, NULL);
+			max_jit_obex_dumpout_set(newObjPtr, newObjPtr->dumpout);
 
-			// this outlet is used to shit out textures! yay!
-			x->texout = outlet_new(x, "jit_gl_texture");
+			// this outlet is used to send textures
+			newObjPtr->texout = outlet_new(newObjPtr, "jit_gl_texture");
 		} 
 		else 	{
 			error("jit.gl.syphon_server: could not allocate object");
-			freeobject((t_object *)x);
-			x = NULL;
+			freeobject((t_object *)newObjPtr);
+			newObjPtr = NULL;
 		}
 	}
-	return (x);
+	return (newObjPtr);
 }
 
 
