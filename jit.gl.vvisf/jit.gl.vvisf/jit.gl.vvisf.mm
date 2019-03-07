@@ -22,9 +22,9 @@ typedef struct _jit_gl_vvisf	{
 	//	attributes (automatically recognized by max)
 	t_symbol			*file;	//	
 	t_atom_long			dim[2];	//	render size must be explicitly set
+	t_atom_long			needsRedraw;
 	
 	//	ivars (not to be confused with attributes!)
-	BOOL				needsRedraw;
 	
 	// internal jit.gl.texture object
 	t_jit_object		*outputTexObj;
@@ -48,6 +48,8 @@ t_jit_err jit_gl_vvisf_drawto(t_jit_gl_vvisf *targetInstance, t_symbol *s, int a
 
 //attributes
 t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv);
+t_jit_err jit_gl_vvisf_getattr_needsRedraw(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av);
+t_jit_err jit_gl_vvisf_setattr_needsRedraw(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv);
 
 // @out_tex_sym for output...
 t_jit_err jit_gl_vvisf_getattr_out_tex_sym(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av);
@@ -65,6 +67,7 @@ t_symbol			*ps_flip_j;
 t_symbol			*ps_automatic_j;
 t_symbol			*ps_drawto_j;
 t_symbol			*ps_draw_j;
+t_symbol			*ps_needsRedraw_j;
 
 // for our internal texture
 extern t_symbol			*ps_jit_gl_texture;
@@ -82,6 +85,7 @@ extern t_symbol			*ps_jit_gl_texture;
 
 
 t_jit_err jit_gl_vvisf_init(void)	{
+	post("%s",__func__);
 	//	symbols
 	ps_file_j = gensym("file");
 	ps_texture_j = gensym("texture");
@@ -92,6 +96,7 @@ t_jit_err jit_gl_vvisf_init(void)	{
 	ps_automatic_j = gensym("automatic");
 	ps_drawto_j = gensym("drawto");
 	ps_draw_j = gensym("draw");
+	ps_needsRedraw_j = gensym("needsRedraw");
 	
 	// setup our OB3D flags to indicate our capabilities.
 	long			ob3d_flags = JIT_OB3D_NO_MATRIXOUTPUT; // no matrix output
@@ -157,7 +162,7 @@ t_jit_err jit_gl_vvisf_init(void)	{
 		(method)jit_gl_vvisf_setattr_size,
 		0/*fix*/,
 		calcoffset(t_jit_gl_vvisf,dim));
-	jit_class_addattr(_jit_gl_vvisf_class,attr);	
+	jit_class_addattr(_jit_gl_vvisf_class, attr);	
 
 	attr = (t_jit_object*)jit_object_new(
 		_jit_sym_jit_attr_offset,
@@ -167,7 +172,7 @@ t_jit_err jit_gl_vvisf_init(void)	{
 		(method)0L,
 		jit_gl_vvisf_setattr_file,
 		calcoffset(t_jit_gl_vvisf, file)); 
-	jit_class_addattr(_jit_gl_vvisf_class,attr);
+	jit_class_addattr(_jit_gl_vvisf_class, attr);
 	
 	attrflags = JIT_ATTR_GET_DEFER_LOW | JIT_ATTR_SET_OPAQUE_USER;
 	attr = (t_jit_object*)jit_object_new(
@@ -179,6 +184,16 @@ t_jit_err jit_gl_vvisf_init(void)	{
 		(method)0L,
 		0);	
 	jit_class_addattr(_jit_gl_vvisf_class,attr);
+	
+	attr = (t_jit_object*)jit_object_new(
+		_jit_sym_jit_attr_offset,
+		"needsRedraw",
+		_jit_sym_long,
+		attrflags,
+		jit_gl_vvisf_getattr_needsRedraw,
+		jit_gl_vvisf_setattr_needsRedraw,
+		calcoffset(t_jit_gl_vvisf, needsRedraw));
+	jit_class_addattr(_jit_gl_vvisf_class, attr);
 	
 	
 	jit_class_register(_jit_gl_vvisf_class);
@@ -196,7 +211,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 		// set up attributes
 		jit_attr_setsym(targetInstance->file, _jit_sym_name, ps_file_j);
 		
-		targetInstance->needsRedraw = YES;
+		jit_attr_setlong(targetInstance, ps_needsRedraw_j, 1);
 		
 		// instantiate a single internal jit.gl.texture should we need it.
 		targetInstance->outputTexObj = (t_jit_object*)jit_object_new(ps_jit_gl_texture,dest_name);
@@ -204,7 +219,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 		if (targetInstance->outputTexObj)	{
 			// set texture attributes.
 			jit_attr_setsym(targetInstance->outputTexObj, _jit_sym_name, jit_symbol_unique());
-			jit_attr_setsym(targetInstance->outputTexObj, gensym("defaultimage"), gensym("black"));
+			jit_attr_setsym(targetInstance->outputTexObj, gensym("defaultimage"), gensym("white"));
 			jit_attr_setlong(targetInstance->outputTexObj, gensym("rectangle"), 1);
 			jit_attr_setlong(targetInstance->outputTexObj, ps_flip_j, 0);
 			
@@ -219,17 +234,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 		
 		// create and attach ob3d
 		jit_ob3d_new(targetInstance, dest_name);
-		post("about to make new ctx");
-		if (CGLGetCurrentContext() == NULL) {
-			post("ERR: current context NULL in %s",__func__);
-			//targetInstance->syClient = NULL;
-		}
-		else	{
-			post("should be good to go!");
-			//targetInstance->syClient = [[SyphonNameboundClient alloc] initWithContext:CGLGetCurrentContext()];
-		}
 		
-		//targetInstance->syClient = [[SyphonNameboundClient alloc] initWithContext:CGLGetCurrentContext()];
 	} 
 	else 	{
 		targetInstance = NULL;
@@ -278,7 +283,7 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 	
 	if (targetInstance->outputTexObj)	{
 		t_symbol			*context = jit_attr_getsym(targetInstance, ps_drawto_j);
-		jit_attr_setsym(targetInstance->outputTexObj, ps_drawto_j,context);
+		jit_attr_setsym(targetInstance->outputTexObj, ps_drawto_j, context);
 		
 		// our texture has to be bound in the new context before we can use it
 		// http://cycling74.com/forums/topic.php?id=29197
@@ -291,7 +296,7 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 	else
 		post("ERR: outputTexObj null in %s",__func__);
 	
-	targetInstance->needsRedraw = YES;
+	jit_attr_setlong(targetInstance, ps_needsRedraw_j, 1);
 	
 	[pool release];
 	pool = nil;
@@ -303,6 +308,7 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 #pragma mark Draw
 
 t_jit_err jit_gl_vvisf_drawto(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
+	post("%s",__func__);
 	object_attr_setvalueof(targetInstance->outputTexObj, s, argc, argv);	
 	jit_ob3d_dest_name_set((t_jit_object *)targetInstance, NULL, argc, argv);
 	
@@ -310,8 +316,17 @@ t_jit_err jit_gl_vvisf_drawto(t_jit_gl_vvisf *targetInstance, t_symbol *s, int a
 }
 
 t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
+	post("%s",__func__);
 	if (!targetInstance)
 		return JIT_ERR_INVALID_PTR;
+	
+	if (jit_attr_getlong(targetInstance, ps_needsRedraw_j))	{
+		post("\trendering a frame...");
+		//	render content here
+		
+		jit_attr_setlong(targetInstance, ps_needsRedraw_j, 0);
+	}
+	
 	return JIT_ERR_NONE;
 }
 		
@@ -339,14 +354,43 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 		NSAutoreleasePool			*pool = [[NSAutoreleasePool alloc] init];
 		//[targetInstance->syClient setName:[NSString stringWithCString:targetInstance->file->s_name
 		//																	encoding:NSASCIIStringEncoding]];
-		targetInstance->needsRedraw = YES;
+		jit_attr_setlong(targetInstance, ps_needsRedraw_j, 1);
 		
 		[pool drain];
 	}
 	return JIT_ERR_NONE;
 }
+
+t_jit_err jit_gl_vvisf_getattr_needsRedraw(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av)	{
+	//	if there was memory passed in, use it
+	if ((*ac) && (*av))	{
+	}
+	//	else allocate memory
+	else	{
+		*ac = 1;
+		if (!(*av == (atom*)jit_getbytes(sizeof(t_atom)*(*ac))))	{
+			*ac = 0;
+			return JIT_ERR_OUT_OF_MEM;
+		}
+	}
+	
+	//	populate the memory with the return value
+	jit_atom_setlong(*av, targetInstance->needsRedraw);
+	
+	return JIT_ERR_NONE;
+}
+
+t_jit_err jit_gl_vvisf_setattr_needsRedraw(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
+	if (targetInstance)	{
+		targetInstance->needsRedraw = jit_atom_getlong(argv);
+		return JIT_ERR_NONE;
+	}
+	return JIT_ERR_INVALID_PTR;
+}
+
 											  
 t_jit_err jit_gl_vvisf_getattr_out_tex_sym(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av)	{
+	post("%s",__func__);
 	if ((*ac) && (*av))	{
 		//	memory passed in, use it
 	}
@@ -366,11 +410,12 @@ t_jit_err jit_gl_vvisf_getattr_out_tex_sym(t_jit_gl_vvisf *targetInstance, void 
 }											  
 											  
 t_jit_err jit_gl_vvisf_setattr_size(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
+	post("%s",__func__);
 	long			i;
 	long			v;
 	
 	if (targetInstance)	{
-		targetInstance->needsRedraw = YES;
+		jit_attr_setlong(targetInstance, ps_needsRedraw_j, 1);
 		
 		for(i = 0; i < JIT_MATH_MIN(argc, 2); i++)	{
 			v = jit_atom_getlong(argv+i);

@@ -84,6 +84,7 @@ int C74_EXPORT main(void)
 }
 
 void max_jit_gl_vvisf_free(t_max_jit_gl_vvisf *x)	{
+	post("%s",__func__);
 	max_jit_ob3d_detach(x);
 
 	// lookup our internal Jitter object instance and free
@@ -96,12 +97,18 @@ void max_jit_gl_vvisf_free(t_max_jit_gl_vvisf *x)	{
 }
 
 void max_jit_gl_vvisf_bang(t_max_jit_gl_vvisf *x)	{
+	post("%s",__func__);
 //	typedmess((t_object *)x,ps_draw,0,NULL);
+	
+	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(x);
+	jit_attr_setlong(jitob, gensym("needsRedraw"), 1);
+	
 	max_jit_gl_vvisf_draw(x, ps_draw, 0, NULL);
-
+	
 }
 
 void max_jit_gl_vvisf_draw(t_max_jit_gl_vvisf *x, t_symbol *s, long argc, t_atom *argv)	{
+	post("%s",__func__);
 	t_atom				a;
 	// get the jitter object
 	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(x);
@@ -115,6 +122,7 @@ void max_jit_gl_vvisf_draw(t_max_jit_gl_vvisf *x, t_symbol *s, long argc, t_atom
 }
 
 void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
+	post("%s",__func__);
 	t_max_jit_gl_vvisf			*newObjPtr;
 	void			*jit_ob;
 	long			attrstart;
