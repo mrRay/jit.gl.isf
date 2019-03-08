@@ -13,10 +13,10 @@ using VVGLContextCacheItemRef = shared_ptr<VVGLContextCacheItem>;
 
 class VVGLContextCacheItem	{
 	private:
-		GLContextRef			gl2Context = nullptr;
+		GLContextRef			gl2Context = nullptr;	//	this is the shared ctx for gl2 contexts
 		GLBufferPoolRef			gl2Pool = nullptr;
 		
-		GLContextRef			gl4Context = nullptr;
+		GLContextRef			gl4Context = nullptr;	//	this is the shared ctx for gl4 contexts
 		GLBufferPoolRef			gl4Pool = nullptr;
 		
 		GLTexToTexCopierRef		gl2Copier = nullptr;

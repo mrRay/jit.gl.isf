@@ -29,13 +29,22 @@ class ISFRenderer	{
 		ISFRenderer() = default;
 		~ISFRenderer();
 		
+		//	this function must be called before any files are loaded or frames are rendered
 		void configureWithCache(const VVGLContextCacheItemRef & inCacheItem=nullptr);
 		
 		void loadFile(const string & inFilePath);
 		void reloadFile();
 		ISFDocRef loadedISFDoc();
+		GLBufferPoolRef loadedBufferPool();
+		GLTexToTexCopierRef loadedTextureCopier();
 		
-		void render(const double & inRenderTime=-1.0);
+		GLBufferPoolRef getGL2BufferPool();
+		GLBufferPoolRef getGL4BufferPool();
+		
+		GLTexToTexCopierRef getGL2TextureCopier();
+		GLTexToTexCopierRef getGL4TextureCopier();
+		
+		void render(const GLBufferRef & inRenderTex, const VVGL::Size & inRenderSize, const double & inRenderTime=-1.0);
 };
 
 

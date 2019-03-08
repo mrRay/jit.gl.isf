@@ -7,7 +7,7 @@
 
 #include "VVGL.hpp"
 #include "VVISF.hpp"
-#include "VVGLContextCacheItem.hpp"
+#include "ISFRenderer.hpp"
 
 
 
@@ -29,6 +29,7 @@ typedef struct _jit_gl_vvisf	{
 	t_atom_long			needsRedraw;
 	
 	//	ivars (not to be confused with attributes!)
+	ISFRenderer			renderer;	//	this owns the GL scenes and does all the rendering
 	
 	// internal jit.gl.texture object
 	t_jit_object		*outputTexObj;
@@ -249,14 +250,14 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 
 void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
 	post("%s",__func__);
-	NSAutoreleasePool			*pool = [[NSAutoreleasePool alloc] init];
+	//NSAutoreleasePool			*pool = [[NSAutoreleasePool alloc] init];
 	
 	//if (targetInstance->syClient != NULL)	{
 	//	[targetInstance->syClient release];
 	//	targetInstance->syClient = nil;
 	//}
 	
-	[pool drain];
+	//[pool drain];
 
 	// free our ob3d data 
 	if(targetInstance)
@@ -281,7 +282,8 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 		post("ERR: no host GL ctx");
 		return JIT_ERR_INVALID_PTR;
 	}
-	//	get the cache item for the current context- the cache item contains buffer pools and contexts (GL2 + GL4)
+	
+	//	get the cache item for the current context- the cache item contains buffer pools and shared contexts (GL2 + GL4) used to create the renderer's contexts
 	VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(hostCtx);
 	//	if there's no cached context item, something has gone horribly wrong- bail
 	if (cacheItem == nullptr)	{
@@ -289,8 +291,11 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 		return JIT_ERR_INVALID_PTR;
 	}
 	
+	//	tell the renderer to update using the cache item- this will create all the contexts and reload the file if necessary
+	targetInstance->renderer.configureWithCache(cacheItem);
+	
 	//	get the jit.gl.texture object we render into for output
-	if (targetInstance->outputTexObj)	{
+	if (targetInstance->outputTexObj != NULL)	{
 		t_symbol			*context = jit_attr_getsym(targetInstance, ps_drawto_j);
 		jit_attr_setsym(targetInstance->outputTexObj, ps_drawto_j, context);
 		
@@ -305,7 +310,11 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 	else
 		post("ERR: outputTexObj null in %s",__func__);
 	
+	//	flag the needsRedraw attribute so i know i need to render a new frame
 	jit_attr_setlong(targetInstance, ps_needsRedraw_j, 1);
+	
+	//	don't forget to return the cache item to the pool!
+	ReturnCacheItemToPool(cacheItem);
 	
 	return JIT_ERR_NONE;
 }
@@ -328,7 +337,43 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 	
 	if (jit_attr_getlong(targetInstance, ps_needsRedraw_j))	{
 		post("\trendering a frame...");
-		//	render content here
+		
+		//	get the host context, use that to retrieve the cache item which holds the shared contexts, buffer pools, and buffer copiers
+		CGLContextObj		origCglCtx = CGLGetCurrentContext();
+		VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(origCglCtx);
+		if (cacheItem != nullptr)	{
+			targetInstance->renderer.configureWithCache(cacheItem);
+			ReturnCacheItemToPool(cacheItem);
+		}
+		
+		//	get the buffer pool that corresponds to the currently-loaded ISF file (we need the appropriate- gl2/gl4- pool)
+		GLBufferPoolRef		tmpPool =  targetInstance->renderer.loadedBufferPool();
+		//	if there's no buffer pool then something is wrong with the renderer
+		if (tmpPool == nullptr)	{
+			post("err: no pool in %s",__func__);
+			return JIT_ERR_INVALID_PTR;
+		}
+		
+		//	create a GLBufferRef that "wraps" the jitter texture
+		uint32_t			texName = jit_attr_getlong(targetInstance->outputTexObj, ps_glid_j);
+		VVGL::Size			tmpSize = VVGL::Size(targetInstance->dim[0], targetInstance->dim[1]);
+		VVGL::Rect			tmpRect = VVGL::Rect(0, 0, tmpSize.width, tmpSize.height);
+		GLBufferRef			wrapperTex = CreateFromExistingGLTexture(
+			texName,	//	inTexName The name of the OpenGL texture that will be used to populate the GLBuffer.
+			GLBuffer::Target_Rect,	//	inTexTarget The texture target of the OpenGL texture (GLBuffer::Target)
+			GLBuffer::IF_RGBA8,	//	inTexIntFmt The internal format of the OpenGL texture.  Not as important to get right, used primarily for creating the texture.
+			GLBuffer::PF_BGRA,	//	inTexPxlFmt The pixel format of the OpenGL texture.  Not as important to get right, used primarily for creating the texture.
+			GLBuffer::PT_UInt_8888_Rev,	//	inTexPxlType The pixel type of the OpenGL texture.  Not as important to get right, used primarily for creating the texture.
+			tmpSize,	//	inTexSize The Size of the OpenGL texture, in pixels.
+			false,	//	inTexFlipped Whether or not the image in the OpenGL texture is flipped.
+			tmpRect,	//	inImgRectInTex The region of the texture (bottom-left origin, in pixels) that contains the image.
+			nullptr,	//	inReleaseCallbackContext An arbitrary pointer stored (weakly) with the GLBuffer- this pointer is passed to the release callback.  If you want to store a pointer from another SDK, this is the appropriate place to do so.
+			nullptr,	//	inReleaseCallback A callback function or lambda that will be executed when the GLBuffer is deallocated.  If the GLBuffer needs to release any other resources when it's freed, this is the appropriate place to do so.
+			tmpPool	//	inPoolRef The pool that the GLBuffer should be created with.  When the GLBuffer is freed, its underlying GL resources will be returned to this pool (where they will be either freed or recycled).
+		);
+		
+		//	tell the renderer to render into the wrapper GLBufferRef we made around the jit.gl.texture object we own
+		targetInstance->renderer.render(wrapperTex, VVGL::Size(targetInstance->dim[0],targetInstance->dim[1]));
 		
 		jit_attr_setlong(targetInstance, ps_needsRedraw_j, 0);
 	}
