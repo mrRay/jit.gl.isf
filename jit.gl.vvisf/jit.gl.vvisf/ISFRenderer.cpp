@@ -1,5 +1,8 @@
 #include "ISFRenderer.hpp"
 
+#include "jit.common.h"
+#include "jit.gl.h"
+
 
 
 
@@ -77,19 +80,28 @@ void ISFRenderer::configureWithCache(const VVGLContextCacheItemRef & inCacheItem
 	
 	//	if we had a doc loaded originally and a ctx was chagned, load it again
 	if (origDoc != nullptr && ctxChanged)	{
-		loadFile(origDoc->path());
+		string			tmpStr = origDoc->path();
+		loadFile(&tmpStr);
 	}
 	
 }
 
 
+/*
 void ISFRenderer::loadFile(const string & inFilePath)	{
+	loadFile(&inFilePath);
+}
+*/
+void ISFRenderer::loadFile(const string * inFilePath)	{
 	lock_guard<recursive_mutex>		lock(_sceneLock);
 	
 	if (_gl2Scene!=nullptr && _gl4Scene!=nullptr)	{
 		//	first try loading the file in gl2
 		try	{
-			_gl2Scene->useFile(inFilePath);
+			if (inFilePath==nullptr)
+				_gl2Scene->useFile();
+			else
+				_gl2Scene->useFile(*inFilePath);
 			GLBufferPoolRef		bp2 = getGL2BufferPool();
 			_gl2Scene->createAndRenderABuffer(VVGL::Size(640,480), nullptr, bp2);
 			_sceneUsesGL4 = false;
@@ -98,7 +110,10 @@ void ISFRenderer::loadFile(const string & inFilePath)	{
 		catch (...)	{
 			//	if we're here, there was an exception- try loading the file in gl4
 			try	{
-				_gl4Scene->useFile(inFilePath);
+				if (inFilePath==nullptr)
+					_gl4Scene->useFile();
+				else
+					_gl4Scene->useFile(*inFilePath);
 				GLBufferPoolRef		bp4 = getGL4BufferPool();
 				_gl4Scene->createAndRenderABuffer(VVGL::Size(640,480), nullptr, bp4);
 				_sceneUsesGL4 = true;
@@ -115,7 +130,8 @@ void ISFRenderer::reloadFile()	{
 	//	get the currently-loaded doc
 	ISFDocRef			origDoc = loadedISFDoc();
 	if (origDoc != nullptr)	{
-		loadFile(origDoc->path());
+		string			tmpStr = origDoc->path();
+		loadFile(&tmpStr);
 	}
 }
 ISFDocRef ISFRenderer::loadedISFDoc()	{
@@ -126,6 +142,18 @@ ISFDocRef ISFRenderer::loadedISFDoc()	{
 		}
 		else if (!_sceneUsesGL4 && _gl2Scene!=nullptr)	{
 			return _gl2Scene->doc();
+		}
+	}
+	return nullptr;
+}
+ISFSceneRef ISFRenderer::loadedISFScene()	{
+	lock_guard<recursive_mutex>		lock(_sceneLock);
+	if (_sceneLoaded)	{
+		if (_sceneUsesGL4 && _gl4Scene!=nullptr)	{
+			return _gl4Scene;
+		}
+		else if (!_sceneUsesGL4 && _gl2Scene!=nullptr)	{
+			return _gl2Scene;
 		}
 	}
 	return nullptr;
@@ -178,5 +206,26 @@ GLTexToTexCopierRef ISFRenderer::getGL4TextureCopier()	{
 
 void ISFRenderer::render(const GLBufferRef & inRenderTex, const VVGL::Size & inRenderSize, const double & inRenderTime)	{
 	lock_guard<recursive_mutex>		lock(_sceneLock);
+	if (_sceneLoaded)	{
+		ISFSceneRef			targetScene = nullptr;
+		if (_sceneUsesGL4)	{
+			targetScene = _gl4Scene;
+		}
+		else	{
+			targetScene = _gl2Scene;
+		}
+		
+		if (targetScene != nullptr)	{
+			try	{
+				if (inRenderTime < 0.)
+					targetScene->renderToBuffer(inRenderTex, inRenderSize);
+				else
+					targetScene->renderToBuffer(inRenderTex, inRenderSize, inRenderTime);
+			}
+			catch (...)	{
+				post("err rendering frame in %s",__func__);
+			}
+		}
+	}
 }
 

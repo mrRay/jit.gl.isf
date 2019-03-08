@@ -29,7 +29,7 @@ typedef struct _jit_gl_vvisf	{
 	t_atom_long			needsRedraw;
 	
 	//	ivars (not to be confused with attributes!)
-	ISFRenderer			renderer;	//	this owns the GL scenes and does all the rendering
+	ISFRenderer			*renderer;	//	this owns the GL scenes and does all the rendering
 	
 	// internal jit.gl.texture object
 	t_jit_object		*outputTexObj;
@@ -212,6 +212,8 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 	
 	// make jit object
 	if ((targetInstance = (t_jit_gl_vvisf *)jit_object_alloc(_jit_gl_vvisf_class)))	{
+		targetInstance->renderer = new ISFRenderer();
+		
 		// TODO : is this right ? 
 		// set up attributes
 		jit_attr_setsym(targetInstance->file, _jit_sym_name, ps_file_j);
@@ -220,8 +222,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 		
 		// instantiate a single internal jit.gl.texture should we need it.
 		targetInstance->outputTexObj = (t_jit_object*)jit_object_new(ps_jit_gl_texture,dest_name);
-		
-		if (targetInstance->outputTexObj)	{
+		if (targetInstance->outputTexObj != NULL)	{
 			// set texture attributes.
 			jit_attr_setsym(targetInstance->outputTexObj, _jit_sym_name, jit_symbol_unique());
 			jit_attr_setsym(targetInstance->outputTexObj, gensym("defaultimage"), gensym("white"));
@@ -231,7 +232,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 			targetInstance->dim[0] = 640;
 			targetInstance->dim[1] = 480;
 			jit_attr_setlong_array(targetInstance->outputTexObj, _jit_sym_dim, 2, targetInstance->dim);
-		} 
+		}
 		else	{
 			post("error creating internal texture object");
 			jit_object_error((t_object *)targetInstance,(char*)"jit.gl.syphonserver: could not create texture");
@@ -258,6 +259,11 @@ void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
 	//}
 	
 	//[pool drain];
+	
+	if (targetInstance->renderer != NULL)	{
+		delete targetInstance->renderer;
+		targetInstance->renderer = NULL;
+	}
 
 	// free our ob3d data 
 	if(targetInstance)
@@ -292,7 +298,7 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 	}
 	
 	//	tell the renderer to update using the cache item- this will create all the contexts and reload the file if necessary
-	targetInstance->renderer.configureWithCache(cacheItem);
+	targetInstance->renderer->configureWithCache(cacheItem);
 	
 	//	get the jit.gl.texture object we render into for output
 	if (targetInstance->outputTexObj != NULL)	{
@@ -342,16 +348,16 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		CGLContextObj		origCglCtx = CGLGetCurrentContext();
 		VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(origCglCtx);
 		if (cacheItem != nullptr)	{
-			targetInstance->renderer.configureWithCache(cacheItem);
+			targetInstance->renderer->configureWithCache(cacheItem);
 			ReturnCacheItemToPool(cacheItem);
 		}
 		
 		//	get the buffer pool that corresponds to the currently-loaded ISF file (we need the appropriate- gl2/gl4- pool)
-		GLBufferPoolRef		tmpPool =  targetInstance->renderer.loadedBufferPool();
+		GLBufferPoolRef		tmpPool =  targetInstance->renderer->loadedBufferPool();
 		//	if there's no buffer pool then something is wrong with the renderer
 		if (tmpPool == nullptr)	{
-			post("err: no pool in %s",__func__);
-			return JIT_ERR_INVALID_PTR;
+			post("err: no pool in %s, file presumably not loaded yet",__func__);
+			return JIT_ERR_NONE;
 		}
 		
 		//	create a GLBufferRef that "wraps" the jitter texture
@@ -371,11 +377,16 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 			nullptr,	//	inReleaseCallback A callback function or lambda that will be executed when the GLBuffer is deallocated.  If the GLBuffer needs to release any other resources when it's freed, this is the appropriate place to do so.
 			tmpPool	//	inPoolRef The pool that the GLBuffer should be created with.  When the GLBuffer is freed, its underlying GL resources will be returned to this pool (where they will be either freed or recycled).
 		);
+		post("\twrapperTex is %s",wrapperTex->getDescriptionString().c_str());
 		
 		//	tell the renderer to render into the wrapper GLBufferRef we made around the jit.gl.texture object we own
-		targetInstance->renderer.render(wrapperTex, VVGL::Size(targetInstance->dim[0],targetInstance->dim[1]));
+		targetInstance->renderer->render(wrapperTex, VVGL::Size(targetInstance->dim[0], targetInstance->dim[1]));
 		
 		jit_attr_setlong(targetInstance, ps_needsRedraw_j, 0);
+		
+		if (origCglCtx != NULL)	{
+			CGLSetCurrentContext(origCglCtx);
+		}
 	}
 	
 	return JIT_ERR_NONE;
@@ -396,10 +407,13 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 			//targetInstance->file = srvname;
 			targetInstance->file = jit_atom_getsym(argv);
 			post("\tfile is %s",targetInstance->file->s_name);
+			string		tmpStr = string(targetInstance->file->s_name);
+			targetInstance->renderer->loadFile(&tmpStr);
 		} 
 		else	{
 			// no args, set to zero
 			targetInstance->file = _jit_sym_nothing;
+			targetInstance->renderer->loadFile();
 		}
 		// if we have a server release it, 
 		// make a new one, with our new UUID.
