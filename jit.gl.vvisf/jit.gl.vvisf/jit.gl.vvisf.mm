@@ -9,6 +9,9 @@
 #include "VVISF.hpp"
 #include "ISFRenderer.hpp"
 
+#include <map>
+#include <string>
+
 
 
 BEGIN_USING_C_LINKAGE
@@ -29,7 +32,8 @@ typedef struct _jit_gl_vvisf	{
 	t_atom_long			needsRedraw;
 	
 	//	ivars (not to be confused with attributes!)
-	ISFRenderer			*renderer;	//	this owns the GL scenes and does all the rendering
+	ISFRenderer			*isfRenderer;	//	this owns the GL scenes and does all the rendering
+	std::map<std::string,std::string>		*inputTextureMap;	//	key is string of the jitter object name of the gl texture, value is a string describing the name of the input
 	
 	// internal jit.gl.texture object
 	t_jit_object		*outputTexObj;
@@ -42,6 +46,8 @@ void			*_jit_gl_vvisf_class;
 t_jit_err jit_gl_vvisf_init(void);
 t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name);
 void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance);
+
+//void jit_gl_vvisf_loadFile(t_jit_gl_vvisf *targetInstance, const string & inFilePath);
 
 //	handle context changes - need to rebuild IOSurface + textures here.
 t_jit_err jit_gl_vvisf_dest_closing(t_jit_gl_vvisf *targetInstance);
@@ -90,7 +96,7 @@ extern t_symbol			*ps_jit_gl_texture;
 
 
 t_jit_err jit_gl_vvisf_init(void)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	//	symbols
 	ps_file_j = gensym("file");
 	ps_texture_j = gensym("texture");
@@ -168,7 +174,7 @@ t_jit_err jit_gl_vvisf_init(void)	{
 		0/*fix*/,
 		calcoffset(t_jit_gl_vvisf,dim));
 	jit_class_addattr(_jit_gl_vvisf_class, attr);	
-
+	
 	attr = (t_jit_object*)jit_object_new(
 		_jit_sym_jit_attr_offset,
 		"file",
@@ -207,12 +213,15 @@ t_jit_err jit_gl_vvisf_init(void)	{
 }
 
 t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	t_jit_gl_vvisf			*targetInstance;
 	
 	// make jit object
 	if ((targetInstance = (t_jit_gl_vvisf *)jit_object_alloc(_jit_gl_vvisf_class)))	{
-		targetInstance->renderer = new ISFRenderer();
+		targetInstance->isfRenderer = new ISFRenderer();
+		
+		//	allocate the input texture map
+		targetInstance->inputTextureMap = new std::map<std::string,std::string>();
 		
 		// TODO : is this right ? 
 		// set up attributes
@@ -250,7 +259,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 }
 
 void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	//NSAutoreleasePool			*pool = [[NSAutoreleasePool alloc] init];
 	
 	//if (targetInstance->syClient != NULL)	{
@@ -260,9 +269,14 @@ void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
 	
 	//[pool drain];
 	
-	if (targetInstance->renderer != NULL)	{
-		delete targetInstance->renderer;
-		targetInstance->renderer = NULL;
+	if (targetInstance->isfRenderer != NULL)	{
+		delete targetInstance->isfRenderer;
+		targetInstance->isfRenderer = NULL;
+	}
+	
+	if (targetInstance->inputTextureMap != nullptr)	{
+		delete targetInstance->inputTextureMap;
+		targetInstance->inputTextureMap = nullptr;
 	}
 
 	// free our ob3d data 
@@ -274,13 +288,27 @@ void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
 		jit_object_free(targetInstance->outputTexObj);
 }
 
+
+#pragma mark -
+#pragma mark misc funcs
+
+/*
+void jit_gl_vvisf_loadFile(t_jit_gl_vvisf *targetInstance, const string & inFilePath)	{
+	post("%s ... %s",__func__,inFilePath.c_str());
+}
+*/
+
+#pragma mark -
+#pragma mark ctx change
+
+
 t_jit_err jit_gl_vvisf_dest_closing(t_jit_gl_vvisf *targetInstance)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	return JIT_ERR_NONE;
 }
 
 t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
-	post("%s ... %p",__func__,CGLGetCurrentContext());
+	//post("%s ... %p",__func__,CGLGetCurrentContext());
 	
 	//	get the current GL context on this thread- if there isn't one, bail
 	CGLContextObj				hostCtx = CGLGetCurrentContext();
@@ -298,7 +326,7 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 	}
 	
 	//	tell the renderer to update using the cache item- this will create all the contexts and reload the file if necessary
-	targetInstance->renderer->configureWithCache(cacheItem);
+	targetInstance->isfRenderer->configureWithCache(cacheItem);
 	
 	//	get the jit.gl.texture object we render into for output
 	if (targetInstance->outputTexObj != NULL)	{
@@ -329,7 +357,7 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 #pragma mark Draw
 
 t_jit_err jit_gl_vvisf_drawto(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	object_attr_setvalueof(targetInstance->outputTexObj, s, argc, argv);	
 	jit_ob3d_dest_name_set((t_jit_object *)targetInstance, NULL, argc, argv);
 	
@@ -337,26 +365,26 @@ t_jit_err jit_gl_vvisf_drawto(t_jit_gl_vvisf *targetInstance, t_symbol *s, int a
 }
 
 t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	if (!targetInstance)
 		return JIT_ERR_INVALID_PTR;
 	
 	if (jit_attr_getlong(targetInstance, ps_needsRedraw_j))	{
-		post("\trendering a frame...");
+		//post("\trendering a frame...");
 		
 		//	get the host context, use that to retrieve the cache item which holds the shared contexts, buffer pools, and buffer copiers
 		CGLContextObj		origCglCtx = CGLGetCurrentContext();
 		VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(origCglCtx);
 		if (cacheItem != nullptr)	{
-			targetInstance->renderer->configureWithCache(cacheItem);
+			targetInstance->isfRenderer->configureWithCache(cacheItem);
 			ReturnCacheItemToPool(cacheItem);
 		}
 		
 		//	get the buffer pool that corresponds to the currently-loaded ISF file (we need the appropriate- gl2/gl4- pool)
-		GLBufferPoolRef		tmpPool =  targetInstance->renderer->loadedBufferPool();
+		GLBufferPoolRef		tmpPool =  targetInstance->isfRenderer->loadedBufferPool();
 		//	if there's no buffer pool then something is wrong with the renderer
 		if (tmpPool == nullptr)	{
-			post("err: no pool in %s, file presumably not loaded yet",__func__);
+			//post("err: no pool in %s, file presumably not loaded yet",__func__);
 			return JIT_ERR_NONE;
 		}
 		
@@ -377,10 +405,10 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 			nullptr,	//	inReleaseCallback A callback function or lambda that will be executed when the GLBuffer is deallocated.  If the GLBuffer needs to release any other resources when it's freed, this is the appropriate place to do so.
 			tmpPool	//	inPoolRef The pool that the GLBuffer should be created with.  When the GLBuffer is freed, its underlying GL resources will be returned to this pool (where they will be either freed or recycled).
 		);
-		post("\twrapperTex is %s",wrapperTex->getDescriptionString().c_str());
+		//post("\twrapperTex is %s",wrapperTex->getDescriptionString().c_str());
 		
 		//	tell the renderer to render into the wrapper GLBufferRef we made around the jit.gl.texture object we own
-		targetInstance->renderer->render(wrapperTex, VVGL::Size(targetInstance->dim[0], targetInstance->dim[1]));
+		targetInstance->isfRenderer->render(wrapperTex, VVGL::Size(targetInstance->dim[0], targetInstance->dim[1]));
 		
 		jit_attr_setlong(targetInstance, ps_needsRedraw_j, 0);
 		
@@ -396,36 +424,45 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 #pragma mark Attributes
 
 // attributes
+
 t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	//t_symbol			*srvname;
 
-	if(targetInstance)	{
+	if(targetInstance != NULL)	{
 		if (argc && argv)	{
 			//srvname = jit_atom_getsym(argv);
 			//post("\tsrvname is %s",srvname);
 			//targetInstance->file = srvname;
 			targetInstance->file = jit_atom_getsym(argv);
-			post("\tfile is %s",targetInstance->file->s_name);
 			string		tmpStr = string(targetInstance->file->s_name);
-			targetInstance->renderer->loadFile(&tmpStr);
+			//post("\tfile is %s",tmpStr.c_str());
+			if (targetInstance->isfRenderer == nullptr)
+				post("ERR: isfRenderer NULL in %s",__func__);
+			else
+				targetInstance->isfRenderer->loadFile(&tmpStr);
 		} 
 		else	{
 			// no args, set to zero
 			targetInstance->file = _jit_sym_nothing;
-			targetInstance->renderer->loadFile();
+			targetInstance->isfRenderer->loadFile();
 		}
 		// if we have a server release it, 
 		// make a new one, with our new UUID.
-		NSAutoreleasePool			*pool = [[NSAutoreleasePool alloc] init];
+		//NSAutoreleasePool			*pool = [[NSAutoreleasePool alloc] init];
 		//[targetInstance->syClient setName:[NSString stringWithCString:targetInstance->file->s_name
 		//																	encoding:NSASCIIStringEncoding]];
 		jit_attr_setlong(targetInstance, ps_needsRedraw_j, 1);
 		
-		[pool drain];
+		//[pool drain];
+	}
+	else	{
+		post("ERR: target instance NULL in %s",__func__);
+		return JIT_ERR_INVALID_PTR;
 	}
 	return JIT_ERR_NONE;
 }
+
 
 t_jit_err jit_gl_vvisf_getattr_needsRedraw(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av)	{
 	//	if there was memory passed in, use it
@@ -456,7 +493,7 @@ t_jit_err jit_gl_vvisf_setattr_needsRedraw(t_jit_gl_vvisf *targetInstance, void 
 
 											  
 t_jit_err jit_gl_vvisf_getattr_out_tex_sym(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	if ((*ac) && (*av))	{
 		//	memory passed in, use it
 	}
@@ -476,7 +513,7 @@ t_jit_err jit_gl_vvisf_getattr_out_tex_sym(t_jit_gl_vvisf *targetInstance, void 
 }											  
 											  
 t_jit_err jit_gl_vvisf_setattr_size(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	long			i;
 	long			v;
 	

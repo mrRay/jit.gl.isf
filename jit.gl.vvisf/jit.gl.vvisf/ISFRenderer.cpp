@@ -7,22 +7,27 @@
 
 
 ISFRenderer::~ISFRenderer()	{
+	//post("%s",__func__);
 	_gl2Scene = nullptr;
 	_gl4Scene = nullptr;
 }
 
 
 void ISFRenderer::configureWithCache(const VVGLContextCacheItemRef & inCacheItem)	{
+	//post("%s",__func__);
 	//	if we weren't passed a cache item, something's wrong and we need to bail right now
 	if (inCacheItem == nullptr)	{
+		//post("\terr: bailing, %s",__func__);
 		return;
 	}
 	
 	
 	lock_guard<recursive_mutex>		lock(_sceneLock);
 	
+	_hostUsesGL4 = (inCacheItem->getHostGLVersion() == GLVersion_4) ? true : false;
+	
 	//	get the currently-loaded doc
-	ISFDocRef			origDoc = loadedISFDoc();
+	//ISFDocRef			origDoc = loadedISFDoc();
 	bool				ctxChanged = false;
 	
 	//	get the gl2 & gl4 contexts from the cache item (these should both exist)
@@ -79,9 +84,9 @@ void ISFRenderer::configureWithCache(const VVGLContextCacheItemRef & inCacheItem
 	
 	
 	//	if we had a doc loaded originally and a ctx was chagned, load it again
-	if (origDoc != nullptr && ctxChanged)	{
-		string			tmpStr = origDoc->path();
-		loadFile(&tmpStr);
+	if (_filepath.length()>0 && ctxChanged)	{
+		//post("\tctx changed in %s, reloading file",__func__);
+		loadFile(&_filepath);
 	}
 	
 }
@@ -93,7 +98,13 @@ void ISFRenderer::loadFile(const string & inFilePath)	{
 }
 */
 void ISFRenderer::loadFile(const string * inFilePath)	{
+	//post("%s",__func__);
 	lock_guard<recursive_mutex>		lock(_sceneLock);
+	
+	if (inFilePath == nullptr)
+		_filepath = string("");
+	else
+		_filepath = *inFilePath;
 	
 	if (_gl2Scene!=nullptr && _gl4Scene!=nullptr)	{
 		//	first try loading the file in gl2
@@ -103,6 +114,8 @@ void ISFRenderer::loadFile(const string * inFilePath)	{
 			else
 				_gl2Scene->useFile(*inFilePath);
 			GLBufferPoolRef		bp2 = getGL2BufferPool();
+			//if (bp2 == nullptr)
+			//	post("\tERR: buffer pool null in %s",__func__);
 			_gl2Scene->createAndRenderABuffer(VVGL::Size(640,480), nullptr, bp2);
 			_sceneUsesGL4 = false;
 			_sceneLoaded = true;
@@ -115,6 +128,8 @@ void ISFRenderer::loadFile(const string * inFilePath)	{
 				else
 					_gl4Scene->useFile(*inFilePath);
 				GLBufferPoolRef		bp4 = getGL4BufferPool();
+				//if (bp4 == nullptr)
+				//	post("\tERR: buffer pool null in %s",__func__);
 				_gl4Scene->createAndRenderABuffer(VVGL::Size(640,480), nullptr, bp4);
 				_sceneUsesGL4 = true;
 				_sceneLoaded = true;
@@ -124,6 +139,9 @@ void ISFRenderer::loadFile(const string * inFilePath)	{
 				_sceneLoaded = false;
 			}
 		}
+	}
+	else	{
+		//post("\tERR: a scene is null in %s",__func__);
 	}
 }
 void ISFRenderer::reloadFile()	{
@@ -204,26 +222,65 @@ GLTexToTexCopierRef ISFRenderer::getGL4TextureCopier()	{
 }
 
 
-void ISFRenderer::render(const GLBufferRef & inRenderTex, const VVGL::Size & inRenderSize, const double & inRenderTime)	{
+void ISFRenderer::render(const GLBufferRef & inTexFromMax, const VVGL::Size & inRenderSize, const double & inRenderTime)	{
+	//post("%s",__func__);
 	lock_guard<recursive_mutex>		lock(_sceneLock);
 	if (_sceneLoaded)	{
-		ISFSceneRef			targetScene = nullptr;
+		ISFSceneRef			renderScene = nullptr;
+		
 		if (_sceneUsesGL4)	{
-			targetScene = _gl4Scene;
+			renderScene = _gl4Scene;
 		}
 		else	{
-			targetScene = _gl2Scene;
+			renderScene = _gl2Scene;
 		}
 		
-		if (targetScene != nullptr)	{
+		
+		if (renderScene != nullptr)	{
 			try	{
-				if (inRenderTime < 0.)
-					targetScene->renderToBuffer(inRenderTex, inRenderSize);
-				else
-					targetScene->renderToBuffer(inRenderTex, inRenderSize, inRenderTime);
+				//	if the host and the scene doing the rendering are using the same version of GL then this is a simple render
+				if (_hostUsesGL4 == _sceneUsesGL4)	{
+					if (inRenderTime < 0.)
+						renderScene->renderToBuffer(inTexFromMax, inRenderSize);
+					else
+						renderScene->renderToBuffer(inTexFromMax, inRenderSize, inRenderTime);
+				}
+				//	else there's a GL version mismatch between the host and render scene contexts- i have to render my scene to an IOSurface, and then copy that to the destination buffer i was passed
+				else	{
+					//post("\tctx mismatch");
+					GLBufferPoolRef		renderPool = nullptr;
+					GLBufferPoolRef		maxPool = nullptr;
+					GLTexToTexCopierRef		hostCompatibleCopier = nullptr;
+					GLBufferRef			renderIOSfc = nullptr;
+					GLBufferRef			hostIOSfc = nullptr;
+					
+					if (_sceneUsesGL4)	{
+						renderPool = _gl4Scene->privatePool();
+						maxPool = _gl2Scene->privatePool();
+						hostCompatibleCopier = _gl2Scene->privateCopier();
+						renderIOSfc = CreateRGBATexIOSurface(inRenderSize, false, renderPool);
+					}
+					else	{
+						renderPool = _gl2Scene->privatePool();
+						maxPool = _gl4Scene->privatePool();
+						hostCompatibleCopier = _gl4Scene->privateCopier();
+						renderIOSfc = CreateRGBATexIOSurface(inRenderSize, false, renderPool);
+					}
+					
+					//post("\trender tex is %s",renderIOSfc->getDescriptionString().c_str());
+					//post("\tmax tex is %s",inTexFromMax->getDescriptionString().c_str());
+					
+					if (inRenderTime < 0.)
+						renderScene->renderToBuffer(renderIOSfc, inRenderSize);
+					else
+						renderScene->renderToBuffer(renderIOSfc, inRenderSize, inRenderTime);
+					hostIOSfc = CreateRGBATexFromIOSurfaceID(renderIOSfc->desc.localSurfaceID, false, maxPool);
+					
+					hostCompatibleCopier->ignoreSizeCopy(hostIOSfc, inTexFromMax);
+				}
 			}
 			catch (...)	{
-				post("err rendering frame in %s",__func__);
+				//post("err rendering frame in %s",__func__);
 			}
 		}
 	}

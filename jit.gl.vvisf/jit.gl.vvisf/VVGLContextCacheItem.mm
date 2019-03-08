@@ -126,7 +126,7 @@ VVGLContextCacheItemRef GetCacheItemForContext(const GLContextRef & inHostCtx)	{
 		
 		GLContextRef			newCtx = CreateNewGLContextRef(inHostCtx->contextObj());
 		returnMe = make_shared<VVGLContextCacheItem>(newCtx);
-		
+		returnMe->setHostGLVersion(newCtx->version);
 	}
 	
 	return returnMe;

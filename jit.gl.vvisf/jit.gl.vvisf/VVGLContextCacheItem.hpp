@@ -13,6 +13,8 @@ using VVGLContextCacheItemRef = shared_ptr<VVGLContextCacheItem>;
 
 class VVGLContextCacheItem	{
 	private:
+		GLVersion				hostGLVersion = GLVersion_2;
+		
 		GLContextRef			gl2Context = nullptr;	//	this is the shared ctx for gl2 contexts
 		GLBufferPoolRef			gl2Pool = nullptr;
 		
@@ -37,6 +39,9 @@ class VVGLContextCacheItem	{
 		
 		inline GLTexToTexCopierRef getGL2Copier() const { return gl2Copier; };
 		inline GLTexToTexCopierRef getGL4Copier() const { return gl4Copier; };
+		
+		inline void setHostGLVersion(const GLVersion & n) { hostGLVersion=n; };
+		inline GLVersion getHostGLVersion() { return hostGLVersion; }
 };
 
 VVGLContextCacheItemRef GetCacheItemForContext(const CGLContextObj & inHostCtx);
