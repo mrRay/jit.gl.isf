@@ -1,43 +1,7 @@
-#include "jit.common.h"
-#include "jit.gl.h"
+#include "max.jit.gl.vvisf.h"
 
-#include <string>
-
-
-
-
-typedef struct _max_jit_gl_vvisf	{
-	t_object		ob;
-	void			*obex;
-	long			_proxyInletVal;
-	
-	//	proxy inlets?
-	void			*_proxyInlet;
-	
-	//	outlets
-	void			*texout;
-	void			*dumpout;
-	
-	//	ivars
-	//std::map<std::string,std::string>		*inputTextureMap;	//	key is string of the jitter object name of the gl texture, value is a string describing the name of the input
-	
-} t_max_jit_gl_vvisf;
-
-t_jit_err jit_gl_vvisf_init(void); 
-
-void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv);
-void max_jit_gl_vvisf_free(t_max_jit_gl_vvisf *x);
-
-//	misc methods
-//void max_jit_gl_vvisf_file(t_max_jit_gl_vvisf *x, t_symbol *s);
-void max_jit_gl_vvisf_anything(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv);
-
-//	notify
-void max_jit_gl_vvisf_notify(t_max_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob, void *data);
-
-// custom draw
-void max_jit_gl_vvisf_bang(t_max_jit_gl_vvisf *x);
-void max_jit_gl_vvisf_draw(t_max_jit_gl_vvisf *x, t_symbol *s, long argc, t_atom *argv);
+#include "jit.gl.vvisf.h"
+#include "ISFRenderer.hpp"
 
 
 
@@ -194,14 +158,22 @@ void max_jit_gl_vvisf_anything(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, 
 	}
 	
 	//	get the jitter object
-	void			*jitObj = max_jit_obex_jitob_get(targetInstance);
+	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
 	//	get the renderer from the jitter object
-	//ISFRenderer		*renderer = jit_gl_vvisf_get_renderer(jitObj);
+	ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(jitObj);
 	//	get the ISFDoc that is currently being used
-	
+	ISFDocRef			doc = (renderer==nullptr) ? nullptr : renderer->loadedISFDoc();
+	if (doc == nullptr)	{
+		return;
+	}
 	//	's' would ordinarily be the message/method name, but in this case it's the name of the input
-	string			inputName = string(s->s_name);
+	string				inputName = string(s->s_name);
 	//	get the ISFAttr from the ISFDoc that corresponds to the input name the user supplied
+	ISFAttrRef			attr = doc->input(inputName);
+	if (attr == nullptr)	{
+		post("err: unrecognized input \"%s\"",inputName.c_str());
+		return;
+	}
 	//	based on the type of the attribute, assemble a value from the input values, showing a warning if we can't
 	
 	
