@@ -1,12 +1,18 @@
 #include "jit.common.h"
 #include "jit.gl.h"
 
+#include <string>
+
 
 
 
 typedef struct _max_jit_gl_vvisf	{
 	t_object		ob;
 	void			*obex;
+	long			_proxyInletVal;
+	
+	//	proxy inlets?
+	void			*_proxyInlet;
 	
 	//	outlets
 	void			*texout;
@@ -24,6 +30,7 @@ void max_jit_gl_vvisf_free(t_max_jit_gl_vvisf *x);
 
 //	misc methods
 //void max_jit_gl_vvisf_file(t_max_jit_gl_vvisf *x, t_symbol *s);
+void max_jit_gl_vvisf_anything(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv);
 
 //	notify
 void max_jit_gl_vvisf_notify(t_max_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob, void *data);
@@ -90,6 +97,8 @@ int C74_EXPORT main(void)
 	// use standard ob3d assist method
 	addmess((method)max_jit_ob3d_assist, (char*)"assist", A_CANT,0);
 	
+	addmess( (method)max_jit_gl_vvisf_anything, (char*)"anything", A_GIMME, 0L );
+	
 	// add methods for 3d drawing
 	max_ob3d_setup();
 	
@@ -109,6 +118,8 @@ void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
 			jit_atom_arg_getsym(&dest_name_sym, 0, attrstart, argv);
 		}
 		
+		newObjPtr->_proxyInlet = proxy_new(newObjPtr, 1, &newObjPtr->_proxyInletVal);
+		
 		//	allocate the input texture map
 		//newObjPtr->inputTextureMap = new std::map<std::string,std::string>();
 		
@@ -126,6 +137,7 @@ void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
 
 			// this outlet is used to send textures
 			newObjPtr->texout = outlet_new(newObjPtr, "jit_gl_texture");
+			
 		} 
 		else 	{
 			error("jit.gl.syphon_server: could not allocate object");
@@ -150,6 +162,11 @@ void max_jit_gl_vvisf_free(t_max_jit_gl_vvisf *x)	{
 	//	x->inputTextureMap = nullptr;
 	//}
 	
+	if (x->_proxyInlet != NULL)	{
+		freeobject((t_object *)x->_proxyInlet);
+		x->_proxyInlet = NULL;
+	}
+	
 	// free resources associated with our obex entry
 	max_jit_obex_free(x);
 }
@@ -160,6 +177,75 @@ void max_jit_gl_vvisf_file(t_max_jit_gl_vvisf *x, t_symbol *s)	{
 	//jit_attr_setsym(jitob, ps_file, s);
 }
 */
+void max_jit_gl_vvisf_anything(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
+	post("%s",__func__);
+	
+	using namespace std;
+	
+	if (argv == NULL)
+		return;
+	
+	//post("%s, inlet is %d",__func__,proxy_getinlet(&targetInstance->ob));
+	int				rxInlet = proxy_getinlet(&targetInstance->ob);
+	post("\trxInlet is %d",rxInlet);
+	//	bail if this method is called on anything but the second inlet
+	if (rxInlet != 1)	{
+		return;
+	}
+	
+	//	get the jitter object
+	void			*jitObj = max_jit_obex_jitob_get(targetInstance);
+	//	get the renderer from the jitter object
+	//ISFRenderer		*renderer = jit_gl_vvisf_get_renderer(jitObj);
+	//	get the ISFDoc that is currently being used
+	
+	//	's' would ordinarily be the message/method name, but in this case it's the name of the input
+	string			inputName = string(s->s_name);
+	//	get the ISFAttr from the ISFDoc that corresponds to the input name the user supplied
+	//	based on the type of the attribute, assemble a value from the input values, showing a warning if we can't
+	
+	
+	/*
+	t_atom			*aptr = argv;
+	long			i = 0;
+	for (i=0; i<argc; i++)	{
+		switch (atom_gettype(aptr))	{
+		case A_NOTHING:
+			post("\targ %d is null", i);
+			break;
+		case A_LONG:
+		case A_DEFLONG:
+			post("\targ %d is %d", i, (int)aptr->a_w.w_long);
+			break;
+		case A_FLOAT:
+		case A_DEFFLOAT:
+			post("\targ %d is %f", i, aptr->a_w.w_float);
+			break;
+		case A_SYM:
+		case A_DEFSYM:
+			post("\targ %d is %s", i, aptr->a_w.w_sym->s_name);
+			break;
+		case A_OBJ:
+			post("\targ %d is an object", i);
+			break;
+		case A_GIMME:
+		case A_CANT:
+		case A_SEMI:
+		case A_COMMA:
+		case A_DOLLAR:
+		case A_DOLLSYM:
+		case A_GIMMEBACK:
+		case A_DEFER:
+		case A_USURP:
+		case A_DEFER_LOW:
+		case A_USURP_LOW:
+			post("\targ %d is some other type",argc);
+			break;
+		}
+		++aptr;
+	}
+	*/
+}
 void max_jit_gl_vvisf_notify(t_max_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob, void *data)	{
 	post("%s",__func__);
 	/*

@@ -48,6 +48,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name);
 void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance);
 
 //void jit_gl_vvisf_loadFile(t_jit_gl_vvisf *targetInstance, const string & inFilePath);
+void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv);
 
 //	handle context changes - need to rebuild IOSurface + textures here.
 t_jit_err jit_gl_vvisf_dest_closing(t_jit_gl_vvisf *targetInstance);
@@ -67,6 +68,9 @@ t_jit_err jit_gl_vvisf_getattr_out_tex_sym(t_jit_gl_vvisf *targetInstance, void 
 
 // dim
 t_jit_err jit_gl_vvisf_setattr_size(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv);
+
+//	getters
+//ISFRenderer * jit_gl_vvisf_get_renderer(t_jit_gl_vvisf *targetInstance);
 
 // symbols
 t_symbol			*ps_file_j;
@@ -206,6 +210,7 @@ t_jit_err jit_gl_vvisf_init(void)	{
 		calcoffset(t_jit_gl_vvisf, needsRedraw));
 	jit_class_addattr(_jit_gl_vvisf_class, attr);
 	
+	jit_class_addmethod( _jit_gl_vvisf_class, (method)jit_gl_vvisf_setInputValue, "setInputValue", A_GIMME, 0L );
 	
 	jit_class_register(_jit_gl_vvisf_class);
 
@@ -292,11 +297,57 @@ void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
 #pragma mark -
 #pragma mark misc funcs
 
+
 /*
 void jit_gl_vvisf_loadFile(t_jit_gl_vvisf *targetInstance, const string & inFilePath)	{
 	post("%s ... %s",__func__,inFilePath.c_str());
 }
 */
+void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
+	post("%s",__func__);
+	if (argv == NULL)
+		return;
+	
+	t_atom			*aptr = argv;
+	long			i = 0;
+	for (i=0; i<argc; i++)	{
+		switch (atom_gettype(aptr))	{
+		case A_NOTHING:
+			post("\targ %d is null", i);
+			break;
+		case A_LONG:
+		case A_DEFLONG:
+			post("\targ %d is %d", i, (int)aptr->a_w.w_long);
+			break;
+		case A_FLOAT:
+		case A_DEFFLOAT:
+			post("\targ %d is %f", i, aptr->a_w.w_float);
+			break;
+		case A_SYM:
+		case A_DEFSYM:
+			post("\targ %d is %s", i, aptr->a_w.w_sym->s_name);
+			break;
+		case A_OBJ:
+			post("\targ %d is an object", i);
+			break;
+		case A_GIMME:
+		case A_CANT:
+		case A_SEMI:
+		case A_COMMA:
+		case A_DOLLAR:
+		case A_DOLLSYM:
+		case A_GIMMEBACK:
+		case A_DEFER:
+		case A_USURP:
+		case A_DEFER_LOW:
+		case A_USURP_LOW:
+			post("\targ %d is some other type",argc);
+			break;
+		}
+		++aptr;
+	}
+}
+
 
 #pragma mark -
 #pragma mark ctx change
@@ -536,3 +587,12 @@ t_jit_err jit_gl_vvisf_setattr_size(t_jit_gl_vvisf *targetInstance, void *attr, 
 	}
 	return JIT_ERR_INVALID_PTR;
 }
+
+
+/*
+ISFRenderer * jit_gl_vvisf_get_renderer(t_jit_gl_vvisf *targetInstance)	{
+	if (targetInstance == NULL)
+		return NULL;
+	return targetInstance->isfRenderer;
+}
+*/
