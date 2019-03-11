@@ -22,6 +22,7 @@ class ISFRenderer	{
 		bool			_hostUsesGL4 = false;
 		bool			_sceneLoaded = false;	//	false on init, set to true only after either a- the shader is successfully compiled or b- the shader has failed to compile on all scenes and is officially bunk until reloaded
 		bool			_sceneUsesGL4 = false;	//	false by default, set to true if the selected ISF only compiles using GL 4
+		bool			_hasInputImageKey = false;
 		
 		ISFSceneRef		_gl2Scene = nullptr;
 		ISFSceneRef		_gl4Scene = nullptr;
@@ -29,7 +30,7 @@ class ISFRenderer	{
 		std::string		_filepath = string("");
 		
 	public:
-		ISFRenderer() = default;
+		ISFRenderer();
 		~ISFRenderer();
 		
 		//	this function must be called before any files are loaded or frames are rendered
@@ -42,12 +43,15 @@ class ISFRenderer	{
 		ISFSceneRef loadedISFScene();
 		GLBufferPoolRef loadedBufferPool();
 		GLTexToTexCopierRef loadedTextureCopier();
+		bool hasInputImageKey();
 		
 		GLBufferPoolRef getGL2BufferPool();
 		GLBufferPoolRef getGL4BufferPool();
 		
 		GLTexToTexCopierRef getGL2TextureCopier();
 		GLTexToTexCopierRef getGL4TextureCopier();
+		
+		void applyJitGLTexToInputKey(void *inJitGLTexNameSym, const string & inInputName);
 		
 		void render(const GLBufferRef & inRenderTex, const VVGL::Size & inRenderSize, const double & inRenderTime=-1.0);
 };

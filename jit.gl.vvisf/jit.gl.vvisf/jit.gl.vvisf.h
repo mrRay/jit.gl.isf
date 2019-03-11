@@ -39,7 +39,7 @@ typedef struct _jit_gl_vvisf	{
 	
 	//	ivars (not to be confused with attributes!)
 	ISFRenderer			*isfRenderer;	//	this owns the GL scenes and does all the rendering
-	std::map<std::string,std::string>		*inputTextureMap;	//	key is string of the jitter object name of the gl texture, value is a string describing the name of the input
+	std::map<std::string,std::string>		*inputTextureMap;	//	key is string of attribute name, value is string of the jitter object name of the gl texture (turn this into a t_symbol and use it to find the registered object to locate the jitter object)
 	
 	// internal jit.gl.texture object
 	t_jit_object		*outputTexObj;
@@ -53,6 +53,10 @@ void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance);
 
 //void jit_gl_vvisf_loadFile(t_jit_gl_vvisf *targetInstance, const string & inFilePath);
 void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv);
+t_jit_err jit_gl_vvisf_jit_gl_texture(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv);
+
+//	notify
+void jit_gl_vvisf_notify(t_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob, void *data);
 
 //	handle context changes - need to rebuild IOSurface + textures here.
 t_jit_err jit_gl_vvisf_dest_closing(t_jit_gl_vvisf *targetInstance);

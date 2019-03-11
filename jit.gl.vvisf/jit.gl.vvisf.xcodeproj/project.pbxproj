@@ -16,6 +16,8 @@
 		1A28706F2230502300BFACA1 /* libVVISF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A28706E2230502300BFACA1 /* libVVISF.a */; };
 		1A58CEC12231AA3600B6E9F0 /* VVGLContextCacheItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.mm */; };
 		1A58CEC22231AA3600B6E9F0 /* VVGLContextCacheItem.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1A58CEC02231AA3600B6E9F0 /* VVGLContextCacheItem.hpp */; };
+		1A66C7BC223596ED0047F82F /* jit.gl.vvisf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A66C7BB223596ED0047F82F /* jit.gl.vvisf.h */; };
+		1A66C7BE223596F40047F82F /* max.jit.gl.vvisf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A66C7BD223596F40047F82F /* max.jit.gl.vvisf.h */; };
 		1B8F532E11CFB4FE009968B9 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B8F532D11CFB4FE009968B9 /* OpenGL.framework */; };
 		1B8F534911CFB5AE009968B9 /* jit.gl.vvisf.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.mm */; };
 		1B8F541B11CFCF98009968B9 /* max.jit.gl.vvisf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F541A11CFCF98009968B9 /* max.jit.gl.vvisf.cpp */; };
@@ -63,6 +65,8 @@
 		1A28706E2230502300BFACA1 /* libVVISF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libVVISF.a; path = ../../ISFSandbox/VVISF/bin/libVVISF.a; sourceTree = "<group>"; };
 		1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = VVGLContextCacheItem.mm; path = jit.gl.vvisf/VVGLContextCacheItem.mm; sourceTree = "<group>"; };
 		1A58CEC02231AA3600B6E9F0 /* VVGLContextCacheItem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VVGLContextCacheItem.hpp; path = jit.gl.vvisf/VVGLContextCacheItem.hpp; sourceTree = "<group>"; };
+		1A66C7BB223596ED0047F82F /* jit.gl.vvisf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jit.gl.vvisf.h; path = jit.gl.vvisf/jit.gl.vvisf.h; sourceTree = "<group>"; };
+		1A66C7BD223596F40047F82F /* max.jit.gl.vvisf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = max.jit.gl.vvisf.h; path = jit.gl.vvisf/max.jit.gl.vvisf.h; sourceTree = "<group>"; };
 		1B8F532D11CFB4FE009968B9 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = jit.gl.vvisf.mm; path = jit.gl.vvisf/jit.gl.vvisf.mm; sourceTree = "<group>"; };
 		1B8F541A11CFCF98009968B9 /* max.jit.gl.vvisf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = max.jit.gl.vvisf.cpp; path = jit.gl.vvisf/max.jit.gl.vvisf.cpp; sourceTree = "<group>"; };
@@ -128,7 +132,9 @@
 		08FB77AFFE84173DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				1A66C7BB223596ED0047F82F /* jit.gl.vvisf.h */,
 				1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.mm */,
+				1A66C7BD223596F40047F82F /* max.jit.gl.vvisf.h */,
 				1B8F541A11CFCF98009968B9 /* max.jit.gl.vvisf.cpp */,
 				1A58CEC02231AA3600B6E9F0 /* VVGLContextCacheItem.hpp */,
 				1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.mm */,
@@ -171,8 +177,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A66C7BE223596F40047F82F /* max.jit.gl.vvisf.h in Headers */,
 				1A12A53F2231C0FE0099918C /* ISFRenderer.hpp in Headers */,
 				1A58CEC22231AA3600B6E9F0 /* VVGLContextCacheItem.hpp in Headers */,
+				1A66C7BC223596ED0047F82F /* jit.gl.vvisf.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

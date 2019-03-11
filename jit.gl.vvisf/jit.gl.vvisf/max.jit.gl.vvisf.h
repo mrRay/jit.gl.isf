@@ -7,6 +7,7 @@
 #include "jit.common.h"
 #include "jit.gl.h"
 
+#include <map>
 #include <string>
 
 
@@ -25,7 +26,7 @@ typedef struct _max_jit_gl_vvisf	{
 	void			*dumpout;
 	
 	//	ivars
-	//std::map<std::string,std::string>		*inputTextureMap;	//	key is string of the jitter object name of the gl texture, value is a string describing the name of the input
+	//std::map<std::string,std::string>		*inputTextureMap;	//	key is string of attribute name, value is string of the jitter object name of the gl texture (turn this into a t_symbol and use it to find the registered object to locate the jitter object)
 	
 } t_max_jit_gl_vvisf;
 
@@ -35,11 +36,7 @@ void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv);
 void max_jit_gl_vvisf_free(t_max_jit_gl_vvisf *x);
 
 //	misc methods
-//void max_jit_gl_vvisf_file(t_max_jit_gl_vvisf *x, t_symbol *s);
-void max_jit_gl_vvisf_anything(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv);
-
-//	notify
-void max_jit_gl_vvisf_notify(t_max_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob, void *data);
+//void max_jit_gl_vvisf_anything(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv);
 
 // custom draw
 void max_jit_gl_vvisf_bang(t_max_jit_gl_vvisf *x);

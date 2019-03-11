@@ -2,10 +2,29 @@
 
 #include "jit.common.h"
 #include "jit.gl.h"
+//#include "ext_mess.h"
 
 
 
 
+static t_symbol			*ps_glid_r = NULL;
+static t_symbol			*ps_width_r = NULL;
+static t_symbol			*ps_height_r = NULL;
+static t_symbol			*ps_gltarget_r = NULL;
+static t_symbol			*ps_flip_r = NULL;
+
+
+
+ISFRenderer::ISFRenderer()	{
+	if (ps_glid_r == NULL)	{
+		ps_glid_r = gensym("glid");
+		ps_width_r = gensym("width");
+		ps_height_r = gensym("height");
+		ps_gltarget_r = gensym("gltarget");
+		ps_flip_r = gensym("flip");
+	}
+	//_parentJitterObject = inParentJitterObject;
+}
 ISFRenderer::~ISFRenderer()	{
 	//post("%s",__func__);
 	_gl2Scene = nullptr;
@@ -107,6 +126,7 @@ void ISFRenderer::loadFile(const string * inFilePath)	{
 		_filepath = *inFilePath;
 	
 	if (_gl2Scene!=nullptr && _gl4Scene!=nullptr)	{
+		ISFDocRef		loadedDoc = nullptr;
 		//	first try loading the file in gl2
 		try	{
 			if (inFilePath==nullptr)
@@ -119,6 +139,7 @@ void ISFRenderer::loadFile(const string * inFilePath)	{
 			_gl2Scene->createAndRenderABuffer(VVGL::Size(640,480), nullptr, bp2);
 			_sceneUsesGL4 = false;
 			_sceneLoaded = true;
+			loadedDoc = _gl2Scene->doc();
 		}
 		catch (...)	{
 			//	if we're here, there was an exception- try loading the file in gl4
@@ -133,11 +154,19 @@ void ISFRenderer::loadFile(const string * inFilePath)	{
 				_gl4Scene->createAndRenderABuffer(VVGL::Size(640,480), nullptr, bp4);
 				_sceneUsesGL4 = true;
 				_sceneLoaded = true;
+				loadedDoc = _gl4Scene->doc();
 			}
 			catch (...)	{
 				_sceneUsesGL4 = false;
 				_sceneLoaded = false;
 			}
+		}
+		
+		if (_sceneLoaded && loadedDoc != nullptr && loadedDoc->type()==ISFFileType_Filter)	{
+			_hasInputImageKey = true;
+		}
+		else	{
+			_hasInputImageKey = false;
 		}
 	}
 	else	{
@@ -199,6 +228,10 @@ GLTexToTexCopierRef ISFRenderer::loadedTextureCopier()	{
 		}
 	}
 	return nullptr;
+}
+bool ISFRenderer::hasInputImageKey()	{
+	lock_guard<recursive_mutex>		lock(_sceneLock);
+	return _hasInputImageKey;
 }
 
 
@@ -284,5 +317,91 @@ void ISFRenderer::render(const GLBufferRef & inTexFromMax, const VVGL::Size & in
 			}
 		}
 	}
+}
+
+
+void ISFRenderer::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const string & inInputName)	{
+	//post("%s",__func__);
+	
+	lock_guard<recursive_mutex>		lock(_sceneLock);
+	
+	if (_sceneLoaded)	{
+		//	find the IF attribute object that corresponds to this input name
+		
+		ISFSceneRef			renderScene = nullptr;
+		if (_sceneUsesGL4)
+			renderScene = _gl4Scene;
+		else
+			renderScene = _gl2Scene;
+		ISFDocRef			renderDoc = (renderScene==nullptr) ? nullptr : renderScene->doc();
+		ISFAttrRef			attr = (renderDoc==nullptr) ? nullptr : renderDoc->input(inInputName);
+		if (attr != nullptr)	{
+			GLBufferRef			wrapperTex = nullptr;
+			if (inJitGLTexNameSym != NULL)	{
+				void				*jitTexture = jit_object_findregistered(static_cast<t_symbol*>(inJitGLTexNameSym));
+				//if (jitTexture == NULL || jit_object_method(jitTexture, _jit_sym_class_jit_matrix) == NULL)
+				//if (jitTexture == NULL || jit_object_method(jitTexture, _jit_sym_jit_matrix) == NULL)
+				//if (jitTexture == NULL || jit_object_method(jitTexture, ps_jit_gl_texture) == NULL)
+				if (jitTexture == NULL)	{
+					post("ERR: cant find jitter object registered for %s",static_cast<t_symbol*>(inJitGLTexNameSym)->s_name);
+				}
+				else	{
+					//GLuint width = jit_attr_getlong(texture,ps_width);
+					//GLuint height = jit_attr_getlong(texture,ps_height);
+					//GLuint texTarget = jit_attr_getlong(texture, ps_gltarget);
+					//t_jit_gl_context			ctx = jit_gl_get_context();
+					//if (ctx == NULL)
+					//	post("ERR: couldnt retrieve ctx in %s",__func__);
+					//else
+					//	jit_ob3d_set_context(_parentJitterObject);
+					//t_symbol			*tmpClassName = jit_object_classname(jitTexture);
+					//post("texture is %p, class name check is %s",jitTexture,tmpClassName->s_name);
+					
+					uint32_t			texName = jit_attr_getlong(jitTexture, ps_glid_r);
+					//VVGL::Size			tmpSize = VVGL::Size(jitObj->dim[0], jitObj->dim[1]);
+					VVGL::Size			tmpSize;
+					tmpSize.width = (double)jit_attr_getlong(jitTexture, ps_width_r);
+					tmpSize.height = (double)jit_attr_getlong(jitTexture, ps_height_r);
+					//post("tex name is %d, dims are %f x %f",texName,tmpSize.width,tmpSize.height);
+					VVGL::Rect			tmpRect = VVGL::Rect(0, 0, tmpSize.width, tmpSize.height);
+					GLBufferPoolRef		tmpPool = _gl2Scene->privatePool();
+					bool				tmpFlipped = (jit_attr_getlong(jitTexture, ps_flip_r)>0) ? false : true;
+					wrapperTex = CreateFromExistingGLTexture(
+						texName,	//	inTexName The name of the OpenGL texture that will be used to populate the GLBuffer.
+						//GLBuffer::Target_Rect,	//	inTexTarget The texture target of the OpenGL texture (GLBuffer::Target)
+						(GLBuffer::Target)jit_attr_getlong(jitTexture, ps_gltarget_r),
+						GLBuffer::IF_RGBA8,	//	inTexIntFmt The internal format of the OpenGL texture.  Not as important to get right, used primarily for creating the texture.
+						GLBuffer::PF_BGRA,	//	inTexPxlFmt The pixel format of the OpenGL texture.  Not as important to get right, used primarily for creating the texture.
+						GLBuffer::PT_UInt_8888_Rev,	//	inTexPxlType The pixel type of the OpenGL texture.  Not as important to get right, used primarily for creating the texture.
+						tmpSize,	//	inTexSize The Size of the OpenGL texture, in pixels.
+						tmpFlipped,	//	inTexFlipped Whether or not the image in the OpenGL texture is flipped.
+						tmpRect,	//	inImgRectInTex The region of the texture (bottom-left origin, in pixels) that contains the image.
+						nullptr,	//	inReleaseCallbackContext An arbitrary pointer stored (weakly) with the GLBuffer- this pointer is passed to the release callback.  If you want to store a pointer from another SDK, this is the appropriate place to do so.
+						nullptr,	//	inReleaseCallback A callback function or lambda that will be executed when the GLBuffer is deallocated.  If the GLBuffer needs to release any other resources when it's freed, this is the appropriate place to do so.
+						tmpPool	//	inPoolRef The pool that the GLBuffer should be created with.  When the GLBuffer is freed, its underlying GL resources will be returned to this pool (where they will be either freed or recycled).
+					);
+					attr->setCurrentImageBuffer(wrapperTex);
+				}
+			}
+			else	{
+				attr->setCurrentImageBuffer(nullptr);
+			}
+		}
+		else
+			post("ERR: no attribute found named %s in %s",static_cast<t_symbol*>(inJitGLTexNameSym)->s_name,__func__);
+	}
+	else
+		post("ERR: no file loaded yet, %s",__func__);
+	
+	if (inJitGLTexNameSym == nullptr)	{
+	}
+	//	try to find the isf attribute object that corresponds to this input name, then null out its current value
+	//ISFAttrRef			attr = (doc==nullptr) ? nullptr : doc->input(iter->first);
+	//if (attr != nullptr)	{
+	//	attr->setCurrentImageBuffer(nullptr);
+	//}
+	
+	/*
+	*/
 }
 
