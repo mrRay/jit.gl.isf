@@ -16,17 +16,10 @@
 typedef struct _max_jit_gl_vvisf	{
 	t_object		ob;
 	void			*obex;
-	long			_proxyInletVal;
-	
-	//	proxy inlets?
-	void			*_proxyInlet;
 	
 	//	outlets
 	void			*texout;
 	void			*dumpout;
-	
-	//	ivars
-	//std::map<std::string,std::string>		*inputTextureMap;	//	key is string of attribute name, value is string of the jitter object name of the gl texture (turn this into a t_symbol and use it to find the registered object to locate the jitter object)
 	
 } t_max_jit_gl_vvisf;
 

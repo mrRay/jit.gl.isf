@@ -117,7 +117,7 @@ t_jit_err jit_gl_vvisf_init(void)	{
 		_jit_sym_long,
 		2,
 		attrflags,
-		(method)0L,
+		(method)jit_gl_vvisf_getattr_size,
 		(method)jit_gl_vvisf_setattr_size,
 		0/*fix*/,
 		calcoffset(t_jit_gl_vvisf,dim));
@@ -133,7 +133,7 @@ t_jit_err jit_gl_vvisf_init(void)	{
 		calcoffset(t_jit_gl_vvisf, file)); 
 	jit_class_addattr(_jit_gl_vvisf_class, attr);
 	
-	attrflags = JIT_ATTR_GET_DEFER_LOW | JIT_ATTR_SET_OPAQUE_USER;
+	attrflags = JIT_ATTR_GET_DEFER_LOW | JIT_ATTR_SET_OPAQUE_USER | JIT_ATTR_GET_OPAQUE_USER;
 	attr = (t_jit_object*)jit_object_new(
 		_jit_sym_jit_attr_offset,
 		"out_tex_sym",
@@ -171,6 +171,8 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 		
 		//	allocate the input texture map
 		targetInstance->inputTextureMap = new std::map<std::string,std::string>();
+		
+		targetInstance->sizeNeedsToBePushed = false;
 		
 		// TODO : is this right ? 
 		// set up attributes
@@ -410,8 +412,30 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 		}
 		break;
 	case ISFValType_Point2D:	//	point-type ISF attribute
+		{
+			if (argc == 3)	{
+				t_atom		*firstAtom = argAtoms;
+				t_atom		*secondAtom = argAtoms + 1;
+				ISFVal		tmpPointVal = ISFPoint2DVal(jit_atom_getfloat(firstAtom), jit_atom_getfloat(secondAtom));
+				attr->setCurrentVal(tmpPointVal);
+			}
+		}
 		break;
 	case ISFValType_Color:	//	color-type ISF attribute
+		{
+			if (argc >= 4)	{
+				t_atom		*firstAtom = argAtoms;
+				t_atom		*secondAtom = argAtoms + 1;
+				t_atom		*thirdAtom = argAtoms + 2;
+				t_atom		*fourthAtom = (argc == 4) ? argAtoms + 3 : NULL;
+				ISFVal		tmpColorVal;
+				if (fourthAtom == NULL)
+					tmpColorVal = ISFColorVal(jit_atom_getfloat(firstAtom), jit_atom_getfloat(secondAtom), jit_atom_getfloat(thirdAtom), 1.0);
+				else
+					tmpColorVal = ISFColorVal(jit_atom_getfloat(firstAtom), jit_atom_getfloat(secondAtom), jit_atom_getfloat(thirdAtom), jit_atom_getfloat(fourthAtom));
+				attr->setCurrentVal(tmpColorVal);
+			}
+		}
 		break;
 	case ISFValType_Cube:	//	cube-type ISF attribute: unhandled
 		break;
@@ -608,6 +632,25 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 	if (jit_attr_getlong(targetInstance, ps_needsRedraw_j))	{
 		//post("\trendering a frame...");
 		
+		//	if our size has been changed, we need to apply that change to our internal jit.gl.texture object now
+		if (targetInstance->sizeNeedsToBePushed && targetInstance->outputTexObj != NULL)	{
+			//	first update the texture's size attr
+			jit_attr_setlong_array(targetInstance->outputTexObj, _jit_sym_dim, 2, targetInstance->dim);
+			targetInstance->sizeNeedsToBePushed = false;
+			
+			// our texture has to be bound in the new context before we can use it
+			// http://cycling74.com/forums/topic.php?id=29197
+			t_jit_gl_drawinfo			drawInfo;
+			t_symbol			*texName = jit_attr_getsym(targetInstance->outputTexObj, gensym("name"));
+			if (texName == NULL)
+				post("ERR: texName NULL in %s",__func__);
+			else	{
+				jit_gl_drawinfo_setup(targetInstance, &drawInfo);
+				jit_gl_bindtexture(&drawInfo, texName, 0);
+				jit_gl_unbindtexture(&drawInfo, texName, 0);
+			}
+		}
+		
 		//t_symbol		*tmpClassName = object_classname((t_object*)&targetInstance->ob);
 		//post("class name of jit objects ob is %s",tmpClassName->s_name);
 		
@@ -746,11 +789,31 @@ t_jit_err jit_gl_vvisf_getattr_out_tex_sym(t_jit_gl_vvisf *targetInstance, void 
 	}
 	
 	jit_atom_setsym(*av, jit_attr_getsym(targetInstance->outputTexObj, _jit_sym_name));
-	// jit_object_post((t_object *)targetInstance,"jit.gl.imageunit: sending output: %s", JIT_SYM_SAFECSTR(jit_attr_getsym(targetInstance->outputTexObj,_jit_sym_name)));
 	
 	return JIT_ERR_NONE;
 }											  
-											  
+
+t_jit_err jit_gl_vvisf_getattr_size(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av)	{
+	if ((*ac) && (*av))	{
+		//	memory passed in, use it
+	}
+	else	{
+		//	otherwise allocate memory
+		*ac = 2;
+		if (!(*av = (atom*)jit_getbytes(sizeof(t_atom)*(*ac)))) {
+			*ac = 0;
+			return JIT_ERR_OUT_OF_MEM;
+		}
+	}
+	
+	//jit_atom_setsym(*av, jit_attr_getsym(targetInstance->outputTexObj, _jit_sym_name));
+	if (*ac >= 1)
+		jit_atom_setfloat(*av, targetInstance->dim[0]);
+	if (*ac >= 2)
+		jit_atom_setfloat(*av+1, targetInstance->dim[1]);
+	
+	return JIT_ERR_NONE;
+}
 t_jit_err jit_gl_vvisf_setattr_size(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
 	//post("%s",__func__);
 	long			i;
@@ -766,11 +829,13 @@ t_jit_err jit_gl_vvisf_setattr_size(t_jit_gl_vvisf *targetInstance, void *attr, 
 			}
 		}
 		
-		post("size updated to %d targetInstance %d",targetInstance->dim[0],targetInstance->dim[1]);
+		//post("size updated to %d targetInstance %d",targetInstance->dim[0],targetInstance->dim[1]);
 		
+		targetInstance->sizeNeedsToBePushed = true;
+		/*
 		// update our internal texture as well.
 		jit_attr_setlong_array(targetInstance->outputTexObj, _jit_sym_dim, 2, targetInstance->dim);
-		
+		*/
 		return JIT_ERR_NONE;
 	}
 	return JIT_ERR_INVALID_PTR;

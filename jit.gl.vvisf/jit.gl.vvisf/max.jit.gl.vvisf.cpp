@@ -84,8 +84,6 @@ void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
 			jit_atom_arg_getsym(&dest_name_sym, 0, attrstart, argv);
 		}
 		
-		newObjPtr->_proxyInlet = proxy_new(newObjPtr, 1, &newObjPtr->_proxyInletVal);
-		
 		//	allocate the input texture map
 		//newObjPtr->inputTextureMap = new std::map<std::string,std::string>();
 		
@@ -121,16 +119,6 @@ void max_jit_gl_vvisf_free(t_max_jit_gl_vvisf *x)	{
 	// lookup our internal Jitter object instance and free
 	if (max_jit_obex_jitob_get(x))	{
 		jit_object_free(max_jit_obex_jitob_get(x));
-	}
-	
-	//if (x->inputTextureMap != nullptr)	{
-	//	delete x->inputTextureMap;
-	//	x->inputTextureMap = nullptr;
-	//}
-	
-	if (x->_proxyInlet != NULL)	{
-		freeobject((t_object *)x->_proxyInlet);
-		x->_proxyInlet = NULL;
 	}
 	
 	// free resources associated with our obex entry

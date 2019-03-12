@@ -40,6 +40,7 @@ typedef struct _jit_gl_vvisf	{
 	//	ivars (not to be confused with attributes!)
 	ISFRenderer			*isfRenderer;	//	this owns the GL scenes and does all the rendering
 	std::map<std::string,std::string>		*inputTextureMap;	//	key is string of attribute name, value is string of the jitter object name of the gl texture (turn this into a t_symbol and use it to find the registered object to locate the jitter object)
+	bool				sizeNeedsToBePushed;
 	
 	// internal jit.gl.texture object
 	t_jit_object		*outputTexObj;
@@ -75,6 +76,7 @@ t_jit_err jit_gl_vvisf_setattr_needsRedraw(t_jit_gl_vvisf *targetInstance, void 
 t_jit_err jit_gl_vvisf_getattr_out_tex_sym(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av);
 
 // dim
+t_jit_err jit_gl_vvisf_getattr_size(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av);
 t_jit_err jit_gl_vvisf_setattr_size(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv);
 
 //	getters
