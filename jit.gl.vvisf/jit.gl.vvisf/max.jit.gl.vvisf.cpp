@@ -60,10 +60,17 @@ int C74_EXPORT main(void)
 	addbang((method)max_jit_gl_vvisf_bang);
 	max_addmethod_defer_low((method)max_jit_gl_vvisf_draw, (char*)"draw");
 	
-	// use standard ob3d assist method
-	addmess((method)max_jit_ob3d_assist, (char*)"assist", A_CANT,0);
+	//	use our custom assist method so we can correctly label the relevant outputs
+	addmess((method)max_jit_gl_vvisf_assist, (char*)"assist", A_CANT, 0);
 	
 	//addmess( (method)max_jit_gl_vvisf_anything, (char*)"anything", A_GIMME, 0L );
+	
+	//	the 'read' method basically just sets the file attribute
+	addmess((method)max_jit_gl_vvisf_read, (char*)"read", A_SYM, 0L);
+	
+	//	the 'inputs' method causes the object to dump a list describing its inputs (name and type) out the INPUTS outlet
+	addmess((method)max_jit_gl_vvisf_inputs, (char*)"inputs", 0L);
+	addmess((method)max_jit_gl_vvisf_input, (char*)"input", A_SYM, 0L);
 	
 	// add methods for 3d drawing
 	max_ob3d_setup();
@@ -93,16 +100,30 @@ void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
 			max_jit_obex_jitob_set(newObjPtr, jit_ob);
 			
 			// process attribute arguments 
-			max_jit_attr_args(newObjPtr, argc, argv);		
+			max_jit_attr_args(newObjPtr, argc, argv);
 			
 			// add a general purpose outlet (rightmost)
 			newObjPtr->dumpout = outlet_new(newObjPtr, NULL);
 			max_jit_obex_dumpout_set(newObjPtr, newObjPtr->dumpout);
-
+			
+		
+			//	this outlet spits out lists decribing the various ISF files installed in globally-available locations
+			newObjPtr->filesout = outlet_new(newObjPtr, NULL);
+			
+			//	this outlet spits out lists describing the various inputs
+			newObjPtr->inputsout = outlet_new(newObjPtr, NULL);
+			
+			
 			// this outlet is used to send textures
 			newObjPtr->texout = outlet_new(newObjPtr, "jit_gl_texture");
 			
-		} 
+			//	give the jitter object a weak ref to the t_max_jit_gl_vvisf struct that wraps it
+			t_jit_gl_vvisf		*jitob = (t_jit_gl_vvisf*)max_jit_obex_jitob_get(newObjPtr);
+			if (jitob != NULL)
+				jitob->maxWrapperStruct = newObjPtr;
+			else
+				post("ERR: couldnt set weak ref in jit obj in %s",__func__);
+		}
 		else 	{
 			error("jit.gl.syphon_server: could not allocate object");
 			freeobject((t_object *)newObjPtr);
@@ -124,19 +145,249 @@ void max_jit_gl_vvisf_free(t_max_jit_gl_vvisf *x)	{
 	// free resources associated with our obex entry
 	max_jit_obex_free(x);
 }
+
+
+void max_jit_gl_vvisf_assist(t_max_jit_gl_vvisf *x, void *b, long m, long a, char *s)	{
+	//post("%s",__func__);
+	if (m == ASSIST_INLET)	{
+		sprintf(s, "Commands, or GL textures in");
+	}
+	else if (m == ASSIST_OUTLET)	{
+		switch (a)	{
+		case 0:
+			sprintf(s, "Rendered GL textures out");
+			break;
+		case 1:
+			sprintf(s, "INPUTS information (inputs, input <sym>)");
+			break;
+		case 2:
+			sprintf(s, "File information (filesDump)");
+			break;
+		case 3:
+			sprintf(s, "Dump output");
+			break;
+		}
+	}
+}
+
+
 /*
 void max_jit_gl_vvisf_anything(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
 	post("%s, argc is %d",__func__,argc);
 }
 */
+void max_jit_gl_vvisf_read(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
+	//post("%s ... %s",__func__,s->s_name);
+	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(targetInstance);
+	if (jitob != NULL)
+		jit_attr_setsym(jitob, ps_file, s);
+	
+	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);
+}
+void max_jit_gl_vvisf_inputs(t_max_jit_gl_vvisf *targetInstance)	{
+	//post("%s",__func__);
+	//	get the ISF file's INPUTS, dump them out the approrpiate outlet
+	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
+	ISFRenderer			*renderer = (jitObj==NULL) ? NULL : jit_gl_vvisf_get_renderer(jitObj);
+	ISFDocRef			tmpDoc = (renderer==NULL) ? nullptr : renderer->loadedISFDoc();
+	if (tmpDoc != nullptr)	{
+		outlet_anything(targetInstance->inputsout, gensym("clear"), 0, 0L);
+		auto				tmpAttrs = tmpDoc->inputs();
+		for (const auto & tmpAttr : tmpAttrs)	{
+			max_jit_gl_vvisf_input(targetInstance, gensym( tmpAttr->name().c_str() ));
+		}
+		/*
+		t_atom				tmpList[2];
+		auto				tmpAttrs = tmpDoc->inputs();
+		for (const auto & tmpAttr : tmpAttrs)	{
+			atom_setsym(tmpList+0, gensym(tmpAttr->name().c_str()));	//	input name
+			
+			switch (tmpAttr->type())	{
+			case ISFValType_None:
+				break;
+			case ISFValType_Event:
+				break;
+			case ISFValType_Bool:
+				break;
+			case ISFValType_Long:
+				break;
+			case ISFValType_Float:
+				break;
+			case ISFValType_Point2D:
+				break;
+			case ISFValType_Color:
+				break;
+			case ISFValType_Cube:
+				break;
+			case ISFValType_Image:
+				break;
+			case ISFValType_Audio:
+				break;
+			case ISFValType_AudioFFT:
+				break;
+			}
+			
+			outlet_anything(targetInstance->inputsout, gensym("input"), 1, tmpList);
+		}
+		*/
+	}
+	
+}
+void max_jit_gl_vvisf_input(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
+	//post("%s ... %s",__func__,s->s_name);
+	if (targetInstance==NULL || s==NULL)
+		return;
+	//	get the ISF file's INPUTS, dump them out the approrpiate outlet
+	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
+	ISFRenderer			*renderer = (jitObj==NULL) ? NULL : jit_gl_vvisf_get_renderer(jitObj);
+	ISFDocRef			tmpDoc = (renderer==NULL) ? nullptr : renderer->loadedISFDoc();
+	string				attrName = string((char*)s->s_name);
+	ISFAttrRef			tmpAttr = (tmpDoc==nullptr) ? nullptr : tmpDoc->input(attrName);
+	ISFVal				tmpVal;
+	if (tmpAttr != nullptr)	{
+		t_atom				tmpList[7];
+		atom_setsym(tmpList+0, gensym( tmpAttr->name().c_str() ));	//	input name
+		atom_setsym(tmpList+2, gensym( tmpAttr->description().c_str() ));	//	input description
+		
+		
+		switch (tmpAttr->type())	{
+		case ISFValType_None:
+			break;
+		case ISFValType_Event:
+			atom_setsym(tmpList+1, gensym("event"));	//	type
+			atom_setsym(tmpList+3, gensym(""));	//	min
+			atom_setsym(tmpList+4, gensym(""));	//	max
+			atom_setsym(tmpList+5, gensym(""));	//	default
+			atom_setsym(tmpList+6, gensym(""));	//	current
+			break;
+		case ISFValType_Bool:
+			atom_setsym(tmpList+1, gensym("bool"));	//	type
+			atom_setsym(tmpList+3, gensym(""));	//	min
+			atom_setsym(tmpList+4, gensym(""));	//	max
+			//	default
+			tmpVal = tmpAttr->defaultVal();
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+5, gensym(""));
+			else
+				atom_setlong(tmpList+5, (tmpVal.getBoolVal())?1:0);
+			//	current
+			tmpVal = tmpAttr->currentVal();
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+6, gensym(""));
+			else
+				atom_setlong(tmpList+6, (tmpVal.getBoolVal())?1:0);
+			break;
+		case ISFValType_Long:
+			atom_setsym(tmpList+1, gensym("long"));	//	type
+			//	min
+			tmpVal = tmpAttr->minVal();
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+3, gensym(""));
+			else
+				atom_setlong(tmpList+3, tmpVal.getLongVal());
+			//	max
+			tmpVal = tmpAttr->maxVal();
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+4, gensym(""));
+			else
+				atom_setlong(tmpList+4, tmpVal.getLongVal());
+			//	default
+			tmpVal = tmpAttr->defaultVal();
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+5, gensym(""));
+			else
+				atom_setlong(tmpList+5, tmpVal.getLongVal());
+			//	current
+			tmpVal = tmpAttr->currentVal();
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+6, gensym(""));
+			else
+				atom_setlong(tmpList+6, tmpVal.getLongVal());
+			break;
+		case ISFValType_Float:
+			atom_setsym(tmpList+1, gensym("float"));	//	type
+			//	min
+			tmpVal = tmpAttr->minVal();
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+3, gensym(""));
+			else
+				atom_setfloat(tmpList+3, tmpVal.getDoubleVal());
+			//	max
+			tmpVal = tmpAttr->maxVal();
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+4, gensym(""));
+			else
+				atom_setfloat(tmpList+4, tmpVal.getDoubleVal());
+			//	default
+			tmpVal = tmpAttr->defaultVal();
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+5, gensym(""));
+			else
+				atom_setfloat(tmpList+5, tmpVal.getDoubleVal());
+			//	current
+			tmpVal = tmpAttr->currentVal();
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+6, gensym(""));
+			else
+				atom_setfloat(tmpList+6, tmpVal.getDoubleVal());
+			break;
+		case ISFValType_Point2D:
+			atom_setsym(tmpList+1, gensym("point2D"));	//	type
+			atom_setsym(tmpList+3, gensym(""));	//	min
+			atom_setsym(tmpList+4, gensym(""));	//	max
+			atom_setsym(tmpList+5, gensym(""));	//	default
+			atom_setsym(tmpList+6, gensym(""));	//	current
+			break;
+		case ISFValType_Color:
+			atom_setsym(tmpList+1, gensym("color"));	//	type
+			atom_setsym(tmpList+3, gensym(""));	//	min
+			atom_setsym(tmpList+4, gensym(""));	//	max
+			atom_setsym(tmpList+5, gensym(""));	//	default
+			atom_setsym(tmpList+6, gensym(""));	//	current
+			break;
+		case ISFValType_Cube:
+			atom_setsym(tmpList+1, gensym("cube"));	//	type
+			atom_setsym(tmpList+3, gensym(""));	//	min
+			atom_setsym(tmpList+4, gensym(""));	//	max
+			atom_setsym(tmpList+5, gensym(""));	//	default
+			atom_setsym(tmpList+6, gensym(""));	//	current
+			break;
+		case ISFValType_Image:
+			atom_setsym(tmpList+1, gensym("image"));	//	type
+			atom_setsym(tmpList+3, gensym(""));	//	min
+			atom_setsym(tmpList+4, gensym(""));	//	max
+			atom_setsym(tmpList+5, gensym(""));	//	default
+			atom_setsym(tmpList+6, gensym(""));	//	current
+			break;
+		case ISFValType_Audio:
+			atom_setsym(tmpList+1, gensym("audio"));	//	type
+			atom_setsym(tmpList+3, gensym(""));	//	min
+			atom_setsym(tmpList+4, gensym(""));	//	max
+			atom_setsym(tmpList+5, gensym(""));	//	default
+			atom_setsym(tmpList+6, gensym(""));	//	current
+			break;
+		case ISFValType_AudioFFT:
+			atom_setsym(tmpList+1, gensym("audioFFT"));	//	type
+			atom_setsym(tmpList+3, gensym(""));	//	min
+			atom_setsym(tmpList+4, gensym(""));	//	max
+			atom_setsym(tmpList+5, gensym(""));	//	default
+			atom_setsym(tmpList+6, gensym(""));	//	current
+			break;
+		}
+		
+		outlet_anything(targetInstance->inputsout, gensym("inputDetails"), 7, tmpList);
+	}
+}
 
-void max_jit_gl_vvisf_bang(t_max_jit_gl_vvisf *x)	{
+
+void max_jit_gl_vvisf_bang(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
 	
-	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(x);
-	jit_attr_setlong(jitob, gensym("needsRedraw"), 1);
+	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(targetInstance);
+	if (jitob != NULL)
+		jit_attr_setlong(jitob, gensym("needsRedraw"), 1);
 	
-	max_jit_gl_vvisf_draw(x, ps_draw, 0, NULL);
+	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);
 	
 }
 

@@ -258,6 +258,10 @@ GLTexToTexCopierRef ISFRenderer::getGL4TextureCopier()	{
 void ISFRenderer::render(const GLBufferRef & inTexFromMax, const VVGL::Size & inRenderSize, const double & inRenderTime)	{
 	//post("%s",__func__);
 	lock_guard<recursive_mutex>		lock(_sceneLock);
+	
+	GLBufferPoolRef		gl2Pool = (_gl2Scene==nullptr) ? nullptr : _gl2Scene->privatePool();
+	GLBufferPoolRef		gl4Pool = (_gl4Scene==nullptr) ? nullptr : _gl4Scene->privatePool();
+	
 	if (_sceneLoaded)	{
 		ISFSceneRef			renderScene = nullptr;
 		
@@ -289,13 +293,13 @@ void ISFRenderer::render(const GLBufferRef & inTexFromMax, const VVGL::Size & in
 					
 					if (_sceneUsesGL4)	{
 						renderPool = _gl4Scene->privatePool();
-						maxPool = _gl2Scene->privatePool();
+						maxPool = gl2Pool;
 						hostCompatibleCopier = _gl2Scene->privateCopier();
 						renderIOSfc = CreateRGBATexIOSurface(inRenderSize, false, renderPool);
 					}
 					else	{
 						renderPool = _gl2Scene->privatePool();
-						maxPool = _gl4Scene->privatePool();
+						maxPool = gl4Pool;
 						hostCompatibleCopier = _gl4Scene->privateCopier();
 						renderIOSfc = CreateRGBATexIOSurface(inRenderSize, false, renderPool);
 					}
@@ -317,6 +321,11 @@ void ISFRenderer::render(const GLBufferRef & inTexFromMax, const VVGL::Size & in
 			}
 		}
 	}
+	
+	if (gl2Pool != nullptr)
+		gl2Pool->housekeeping();
+	if (gl4Pool != nullptr)
+		gl4Pool->housekeeping();
 }
 
 

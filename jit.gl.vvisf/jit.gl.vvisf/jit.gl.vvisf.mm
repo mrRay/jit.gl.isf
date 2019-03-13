@@ -106,6 +106,9 @@ t_jit_err jit_gl_vvisf_init(void)	{
 	
 	jit_class_addmethod( _jit_gl_vvisf_class, (method)jit_gl_vvisf_jit_gl_texture, "jit_gl_texture", A_GIMME, 0L);
 	
+	//	this method is how you pass input values to the isf object
+	jit_class_addmethod( _jit_gl_vvisf_class, (method)jit_gl_vvisf_setInputValue, "setInputValue", A_GIMME, 0L );
+	
 	// add attributes
 	long				attrflags = JIT_ATTR_GET_DEFER_LOW | JIT_ATTR_SET_USURP_LOW;
 
@@ -153,8 +156,6 @@ t_jit_err jit_gl_vvisf_init(void)	{
 		jit_gl_vvisf_setattr_needsRedraw,
 		calcoffset(t_jit_gl_vvisf, needsRedraw));
 	jit_class_addattr(_jit_gl_vvisf_class, attr);
-	
-	jit_class_addmethod( _jit_gl_vvisf_class, (method)jit_gl_vvisf_setInputValue, "setInputValue", A_GIMME, 0L );
 	
 	jit_class_register(_jit_gl_vvisf_class);
 
@@ -316,7 +317,7 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 	//	get the ISFDoc that is currently being used
 	ISFDocRef			doc = (renderer==nullptr) ? nullptr : renderer->loadedISFDoc();
 	if (doc == nullptr)	{
-		post("ERR: bailing, no ISF file loaded yet, %s",__func__);
+		//post("ERR: bailing, no ISF file loaded yet, %s",__func__);
 		return;
 	}
 	//	's' would ordinarily be the message/method name, but in this case it's the name of the input
@@ -497,21 +498,14 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 
 t_jit_err jit_gl_vvisf_jit_gl_texture(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
 	//post("%s",__func__);
-	t_atom		*firstAtom = argv;
-	//long		firstType = atom_gettype(firstAtom);
-	t_symbol			*firstMsgSym = jit_atom_getsym(firstAtom);
-	//void				*jitTexture = jit_object_findregistered(firstMsgSym);
-	//if (jitTexture == NULL)
-	//	post("ERR: unable to create jitTexture from sym");
-	//else	{
-		//uint32_t			texName = jit_attr_getlong(jitTexture, gensym("glid"));
-		//post("tex name is %d",texName);
-		
-		//	get the renderer from the jitter object
-		ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(targetInstance);
-		if (renderer != NULL && renderer->hasInputImageKey())
-			targetInstance->isfRenderer->applyJitGLTexToInputKey(firstMsgSym, string("inputImage"));
-	//}
+	t_atom			*firstAtom = argv;
+	t_symbol		*firstMsgSym = jit_atom_getsym(firstAtom);
+	
+	//	get the renderer from the jitter object, try to pass the texture to it as an input image
+	ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(targetInstance);
+	if (renderer != NULL && renderer->hasInputImageKey())
+		targetInstance->isfRenderer->applyJitGLTexToInputKey(firstMsgSym, string("inputImage"));
+	
 	return JIT_ERR_NONE;
 }
 
@@ -582,23 +576,25 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 	//	get the jit.gl.texture object we render into for output
 	if (targetInstance->outputTexObj != NULL)	{
 		t_symbol			*context = jit_attr_getsym(targetInstance, ps_drawto_j);
-		if (context == NULL)
+		if (context == NULL)	{
 			post("ERR: context NULL in %s",__func__);
+		}
 		else	{
 			jit_attr_setsym(targetInstance->outputTexObj, ps_drawto_j, context);
-			/*
+			
 			// our texture has to be bound in the new context before we can use it
 			// http://cycling74.com/forums/topic.php?id=29197
 			t_jit_gl_drawinfo			drawInfo;
 			t_symbol			*texName = jit_attr_getsym(targetInstance->outputTexObj, gensym("name"));
-			if (texName == NULL)
+			if (texName == NULL)	{
 				post("ERR: texName NULL in %s",__func__);
+			}
 			else	{
 				jit_gl_drawinfo_setup(targetInstance, &drawInfo);
 				jit_gl_bindtexture(&drawInfo, texName, 0);
 				jit_gl_unbindtexture(&drawInfo, texName, 0);
 			}
-			*/
+			
 		}
 	}
 	else
@@ -713,16 +709,15 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 
 	if(targetInstance != NULL)	{
 		if (argc && argv)	{
-			//srvname = jit_atom_getsym(argv);
-			//post("\tsrvname is %s",srvname);
-			//targetInstance->file = srvname;
 			targetInstance->file = jit_atom_getsym(argv);
 			string		tmpStr = string(targetInstance->file->s_name);
 			//post("\tfile is %s",tmpStr.c_str());
 			if (targetInstance->isfRenderer == nullptr)
 				post("ERR: isfRenderer NULL in %s",__func__);
-			else
+			else	{
 				targetInstance->isfRenderer->loadFile(&tmpStr);
+				max_jit_gl_vvisf_inputs((t_max_jit_gl_vvisf*)targetInstance->maxWrapperStruct);
+			}
 		} 
 		else	{
 			// no args, set to zero

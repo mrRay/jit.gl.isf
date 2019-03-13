@@ -45,6 +45,7 @@ typedef struct _jit_gl_vvisf	{
 	// internal jit.gl.texture object
 	t_jit_object		*outputTexObj;
 	
+	void				*maxWrapperStruct;	//	weak ptr to t_max_jit_gl_vvisf struct that "wraps" my jitter object
 } t_jit_gl_vvisf;
 
 //	init/constructor/free
