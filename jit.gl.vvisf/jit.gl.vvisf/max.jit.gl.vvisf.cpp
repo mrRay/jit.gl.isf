@@ -2,6 +2,7 @@
 
 #include "jit.gl.vvisf.h"
 #include "ISFRenderer.hpp"
+#include "ISFFileManager_Mac.hpp"
 
 
 
@@ -15,6 +16,8 @@ t_symbol			*ps_file;
 t_symbol			*ps_clear;
 t_symbol			*ps_glid;
 
+static ISFFileManager_Mac		*fm = NULL;
+
 
 
 
@@ -26,6 +29,11 @@ int C74_EXPORT main(void)
 	ps_file = gensym("file");
 	ps_clear = gensym("clear");
 	ps_glid = gensym("glid");
+	
+	if (fm == NULL)	{
+		fm = new ISFFileManager_Mac;
+		fm->populateEntries();
+	}
 	
 	void			*classex;
 	void			*jitclass;
@@ -71,6 +79,13 @@ int C74_EXPORT main(void)
 	//	the 'inputs' method causes the object to dump a list describing its inputs (name and type) out the INPUTS outlet
 	addmess((method)max_jit_gl_vvisf_inputs, (char*)"inputs", 0L);
 	addmess((method)max_jit_gl_vvisf_input, (char*)"input", A_SYM, 0L);
+	
+	addmess((method)max_jit_gl_vvisf_all_filenames, (char*)"all_filenames", 0L);
+	addmess((method)max_jit_gl_vvisf_source_filenames, (char*)"source_filenames", 0L);
+	addmess((method)max_jit_gl_vvisf_filter_filenames, (char*)"filter_filenames", 0L);
+	addmess((method)max_jit_gl_vvisf_transition_filenames, (char*)"transition_filenames", 0L);
+	addmess((method)max_jit_gl_vvisf_all_categories, (char*)"all_categories", 0L);
+	addmess((method)max_jit_gl_vvisf_category_filenames, (char*)"category_filenames", A_SYM, 0L);
 	
 	// add methods for 3d drawing
 	max_ob3d_setup();
@@ -178,9 +193,20 @@ void max_jit_gl_vvisf_anything(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, 
 */
 void max_jit_gl_vvisf_read(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
 	//post("%s ... %s",__func__,s->s_name);
+	if (s == nil)
+		return;
+	
 	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(targetInstance);
-	if (jitob != NULL)
-		jit_attr_setsym(jitob, ps_file, s);
+	if (jitob != NULL)	{
+		bool				foundTheFile = false;
+		//	we don't know if the passed symbol is a filename or a path- assume a filename at first
+		string				inStr((char*)s->s_name);
+		ISFFile				fileEntry = fm->fileEntryForName(inStr);
+		if (fileEntry.isValid())
+			jit_attr_setsym( jitob, ps_file, gensym(fileEntry.path().c_str()) );
+		else
+			jit_attr_setsym(jitob, ps_file, s);
+	}
 	
 	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);
 }
@@ -191,7 +217,7 @@ void max_jit_gl_vvisf_inputs(t_max_jit_gl_vvisf *targetInstance)	{
 	ISFRenderer			*renderer = (jitObj==NULL) ? NULL : jit_gl_vvisf_get_renderer(jitObj);
 	ISFDocRef			tmpDoc = (renderer==NULL) ? nullptr : renderer->loadedISFDoc();
 	if (tmpDoc != nullptr)	{
-		outlet_anything(targetInstance->inputsout, gensym("clear"), 0, 0L);
+		outlet_anything(targetInstance->inputsout, ps_clear, 0, 0L);
 		auto				tmpAttrs = tmpDoc->inputs();
 		for (const auto & tmpAttr : tmpAttrs)	{
 			max_jit_gl_vvisf_input(targetInstance, gensym( tmpAttr->name().c_str() ));
@@ -376,6 +402,111 @@ void max_jit_gl_vvisf_input(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
 		}
 		
 		outlet_anything(targetInstance->inputsout, gensym("inputDetails"), 7, tmpList);
+	}
+}
+
+
+void max_jit_gl_vvisf_all_filenames(t_max_jit_gl_vvisf *targetInstance)	{
+	post("%s",__func__);
+	if (targetInstance==NULL)
+		return;
+	if (fm == NULL)
+		return;
+	
+	outlet_anything(targetInstance->filesout, gensym("filename_clear"), 0, 0L);
+	
+	vector<string>		filenames = fm->fileNames();
+	t_atom				outAtom;
+	
+	for (const auto & filename : filenames)	{
+		atom_setsym(&outAtom, gensym( filename.c_str() ));
+		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
+	}
+}
+void max_jit_gl_vvisf_source_filenames(t_max_jit_gl_vvisf *targetInstance)	{
+	post("%s",__func__);
+	if (targetInstance==NULL)
+		return;
+	if (fm == NULL)
+		return;
+	
+	outlet_anything(targetInstance->filesout, gensym("filename_clear"), 0, 0L);
+	
+	vector<string>		filenames = fm->generatorNames();
+	t_atom				outAtom;
+	
+	for (const auto & filename : filenames)	{
+		atom_setsym(&outAtom, gensym( filename.c_str() ));
+		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
+	}
+}
+void max_jit_gl_vvisf_filter_filenames(t_max_jit_gl_vvisf *targetInstance)	{
+	post("%s",__func__);
+	if (targetInstance==NULL)
+		return;
+	if (fm == NULL)
+		return;
+	
+	outlet_anything(targetInstance->filesout, gensym("filename_clear"), 0, 0L);
+	
+	vector<string>		filenames = fm->filterNames();
+	t_atom				outAtom;
+	
+	for (const auto & filename : filenames)	{
+		atom_setsym(&outAtom, gensym( filename.c_str() ));
+		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
+	}
+}
+void max_jit_gl_vvisf_transition_filenames(t_max_jit_gl_vvisf *targetInstance)	{
+	post("%s",__func__);
+	if (targetInstance==NULL)
+		return;
+	if (fm == NULL)
+		return;
+	
+	outlet_anything(targetInstance->filesout, gensym("filename_clear"), 0, 0L);
+	
+	vector<string>		filenames = fm->transitionNames();
+	t_atom				outAtom;
+	
+	for (const auto & filename : filenames)	{
+		atom_setsym(&outAtom, gensym( filename.c_str() ));
+		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
+	}
+}
+void max_jit_gl_vvisf_all_categories(t_max_jit_gl_vvisf *targetInstance)	{
+	post("%s",__func__);
+	if (targetInstance==NULL)
+		return;
+	if (fm == NULL)
+		return;
+	
+	outlet_anything(targetInstance->filesout, gensym("category_clear"), 0, 0L);
+	
+	vector<string>		categories = fm->categories();
+	t_atom				outAtom;
+	
+	for (const auto & category : categories)	{
+		post("\tcat is %s",category.c_str());
+		atom_setsym(&outAtom, gensym( category.c_str() ));
+		outlet_anything(targetInstance->filesout, gensym("category"), 1, &outAtom);
+	}
+}
+void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
+	post("%s ... %s",__func__,s->s_name);
+	if (targetInstance==NULL || s==NULL)
+		return;
+	if (fm == NULL)
+		return;
+	
+	outlet_anything(targetInstance->filesout, gensym("filename_clear"), 0, 0L);
+	
+	vector<string>		filenames = fm->fileNamesForCategory(string(s->s_name));
+	t_atom				outAtom;
+	
+	for (const auto & filename : filenames)	{
+		atom_setsym(&outAtom, gensym( filename.c_str() ));
+		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
 	}
 }
 

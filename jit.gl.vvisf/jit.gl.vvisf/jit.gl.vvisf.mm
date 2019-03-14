@@ -330,6 +330,12 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 		post("err: unrecognized input \"%s\"",inputName.c_str());
 		return;
 	}
+	
+	
+	//	get the host context, we'll need to restore it later
+	CGLContextObj		origCglCtx = CGLGetCurrentContext();
+	
+	
 	//	based on the type of the attribute, assemble a value from the input values, showing a warning if we can't
 	switch (attr->type())	{
 	case ISFValType_None:	//	unrecognized value type, do nothing
@@ -494,6 +500,12 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 	case ISFValType_AudioFFT:	//	audio-FFT-type ISF attribute
 		break;
 	}
+	
+	
+	//	restore the original GL context
+	if (origCglCtx != NULL)	{
+		CGLSetCurrentContext(origCglCtx);
+	}
 }
 
 t_jit_err jit_gl_vvisf_jit_gl_texture(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
@@ -503,8 +515,17 @@ t_jit_err jit_gl_vvisf_jit_gl_texture(t_jit_gl_vvisf *targetInstance, t_symbol *
 	
 	//	get the renderer from the jitter object, try to pass the texture to it as an input image
 	ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(targetInstance);
-	if (renderer != NULL && renderer->hasInputImageKey())
+	if (renderer != NULL && renderer->hasInputImageKey())	{
+		//	get the host context, we'll need to restore it later
+		CGLContextObj		origCglCtx = CGLGetCurrentContext();
+		
 		targetInstance->isfRenderer->applyJitGLTexToInputKey(firstMsgSym, string("inputImage"));
+		
+		//	restore the original GL context
+		if (origCglCtx != NULL)	{
+			CGLSetCurrentContext(origCglCtx);
+		}
+	}
 	
 	return JIT_ERR_NONE;
 }
@@ -519,6 +540,9 @@ void jit_gl_vvisf_notify(t_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob
 		ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(jitObj);
 		//	get the ISFDoc that is currently being used by the renderer
 		//ISFDocRef			doc = (renderer==nullptr) ? nullptr : renderer->loadedISFDoc();
+		
+		//	get the host context, we'll need to restore it later
+		CGLContextObj		origCglCtx = CGLGetCurrentContext();
 		
 		//	get the name of the jitter texture being freed as a std::string
 		string			jitTextureName = std::string((char*)s->s_name);
@@ -537,6 +561,11 @@ void jit_gl_vvisf_notify(t_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob
 			//	else this item in the map doesn't match the texture being freed- increment the iterator and check the next...
 			else
 				++iter;
+		}
+		
+		//	restore the original GL context
+		if (origCglCtx != NULL)	{
+			CGLSetCurrentContext(origCglCtx);
 		}
 	}
 	
@@ -573,6 +602,11 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 	//	tell the renderer to update using the cache item- this will create all the contexts and reload the file if necessary
 	targetInstance->isfRenderer->configureWithCache(cacheItem);
 	
+	//	restore the original GL context
+	if (hostCtx != NULL)	{
+		CGLSetCurrentContext(hostCtx);
+	}
+	
 	//	get the jit.gl.texture object we render into for output
 	if (targetInstance->outputTexObj != NULL)	{
 		t_symbol			*context = jit_attr_getsym(targetInstance, ps_drawto_j);
@@ -590,9 +624,12 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 				post("ERR: texName NULL in %s",__func__);
 			}
 			else	{
+				//	this crashes with jit.gl.world, but doesn't crash with jit.gl.videoplane.  i'd like to include it because without it, we get a white flash because that first frame doesn't get rendered.
+				/*
 				jit_gl_drawinfo_setup(targetInstance, &drawInfo);
 				jit_gl_bindtexture(&drawInfo, texName, 0);
 				jit_gl_unbindtexture(&drawInfo, texName, 0);
+				*/
 			}
 			
 		}
@@ -690,6 +727,7 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		
 		jit_attr_setlong(targetInstance, ps_needsRedraw_j, 0);
 		
+		//	restore the original GL context
 		if (origCglCtx != NULL)	{
 			CGLSetCurrentContext(origCglCtx);
 		}
@@ -708,6 +746,10 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 	//t_symbol			*srvname;
 
 	if(targetInstance != NULL)	{
+		
+		//	get the host context, we'll need to restore it later
+		CGLContextObj		origCglCtx = CGLGetCurrentContext();
+		
 		if (argc && argv)	{
 			targetInstance->file = jit_atom_getsym(argv);
 			string		tmpStr = string(targetInstance->file->s_name);
@@ -724,6 +766,12 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 			targetInstance->file = _jit_sym_nothing;
 			targetInstance->isfRenderer->loadFile();
 		}
+		
+		//	restore the original GL context
+		if (origCglCtx != NULL)	{
+			CGLSetCurrentContext(origCglCtx);
+		}
+		
 		// if we have a server release it, 
 		// make a new one, with our new UUID.
 		//NSAutoreleasePool			*pool = [[NSAutoreleasePool alloc] init];
