@@ -37,7 +37,7 @@ t_symbol			*ps_free_j;
 // Function implementations
 //
 #pragma mark -
-#pragma mark Init, New, Cleanup, Context changes
+#pragma mark Init, New, Cleanup
 
 
 
@@ -187,10 +187,12 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 	if ((targetInstance = (t_jit_gl_vvisf *)jit_object_alloc(_jit_gl_vvisf_class)))	{
 		TI->isfRenderer = new ISFRenderer(/*targetInstance*/);
 		
+		TI->adapt = 1;
+		
 		TI->renderTimeOverride = -1.0;
 		
 		//	allocate the input texture map
-		TI->inputTextureMap = new std::map<std::string,std::string>();
+		TI->inputToTextureMap = new std::map<std::string,std::string>();
 		
 		// TODO : is this right ? 
 		// set up attributes
@@ -245,9 +247,19 @@ void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
 		TI->isfRenderer = NULL;
 	}
 	
-	if (TI->inputTextureMap != nullptr)	{
-		delete TI->inputTextureMap;
-		TI->inputTextureMap = nullptr;
+	//	run through the input name to texture map, unregistering for notification on all of the textures in it
+	auto			iter = TI->inputToTextureMap->begin();
+	while (iter != TI->inputToTextureMap->end())	{
+		t_symbol		*textureSym = gensym((char*)iter->second.c_str());
+		if (textureSym != NULL)	{
+			jit_object_detach(textureSym, TI);
+		}
+		++iter;
+	}
+	//	delete the actual texture map
+	if (TI->inputToTextureMap != nullptr)	{
+		delete TI->inputToTextureMap;
+		TI->inputToTextureMap = nullptr;
 	}
 
 	// free our ob3d data 
@@ -479,34 +491,41 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 				if (firstMsgSym != NULL && secondMsgSym != NULL && firstMsgSym == ps_jit_gl_texture)	{
 					//post("should be okay so far, second type is %d",secondType);
 					
-					//	the second msg sym is the name of the incoming jitter texture.  check to see if we're already attached as an observer
+					//	the second msg sym is the name of the incoming jitter texture.  check to see if we're already registered as an observer
 					bool				alreadyRegistered = false;
 					try	{
-						string				&oldJitTexName = TI->inputTextureMap->at(inputName);
+						string				&oldJitTexName = TI->inputToTextureMap->at(inputName);
 						t_symbol			*oldJitTexNameSym = gensym((char*)oldJitTexName.c_str());
-						if (oldJitTexNameSym != NULL && oldJitTexNameSym == secondMsgSym)
-							alreadyRegistered = true;
+						if (oldJitTexNameSym != NULL)	{
+							//	if it's the same texture then we're already registered
+							if (oldJitTexNameSym == secondMsgSym)
+								alreadyRegistered = true;
+							//	else it's not the same texture, we have to unregister the old!
+							else
+								jit_object_detach(oldJitTexNameSym, TI);
+						}
 					}
 					catch(...)	{}
 					
-					//	if we aren't already attached, we need to do so
+					//	if we aren't already registered as an observer of the passed texture, we need to do so
 					if (!alreadyRegistered)	{
 						//	attach to the jitter texture we were passed, and store a record of this attachment in our map
 						if (jit_object_attach(secondMsgSym, targetInstance) == NULL)
 							post("ERR: unable to attach the jitter object to the input texture, %s",__func__);
 						else	{
-							TI->inputTextureMap->emplace( std::make_pair(inputName, std::string((char*)secondMsgSym->s_name)) );
-							//TI->inputTextureMap->insert({inputName, std::string((char*)secondMsgSym->s_name)});
+							TI->inputToTextureMap->emplace( std::make_pair(inputName, std::string((char*)secondMsgSym->s_name)) );
+							//TI->inputToTextureMap->insert({inputName, std::string((char*)secondMsgSym->s_name)});
 							
-							//	finally, pass the jitter texture object to the ISFRenderer, which will "wrap" it with a GLBufferRef from the appropriate pool/GL version to render
-							GLBufferRef			wrapperTex = renderer->applyJitGLTexToInputKey(secondMsgSym, inputName);
-							
-							//	if this was the input image, we need to update the jitter object's last adapt dims, so we know what res to render at next time we're told to do so
-							if (inputName == string("inputImage"))	{
-								TI->lastAdaptDims[0] = wrapperTex->size.width;
-								TI->lastAdaptDims[1] = wrapperTex->size.height;
-							}
 						}
+					}
+					
+					//	finally, pass the jitter texture object to the ISFRenderer, which will "wrap" it with a GLBufferRef from the appropriate pool/GL version to render
+					GLBufferRef			wrapperTex = renderer->applyJitGLTexToInputKey(secondMsgSym, inputName);
+					//	if this was the input image, we need to update the jitter object's last adapt dims, so we know what res to render at next time we're told to do so
+					if (inputName == string("inputImage"))	{
+						TI->lastAdaptDims[0] = wrapperTex->size.width;
+						TI->lastAdaptDims[1] = wrapperTex->size.height;
+						//post("inputImage detected, adapting to res %d x %d",TI->lastAdaptDims[0],TI->lastAdaptDims[1]);
 					}
 					
 					
@@ -521,9 +540,9 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 						
 						//	first use the attr name to look up and detach from any jit.gl.texture objects we're attached to under this input name
 						try	{
-							string				&oldJitTexName = TI->inputTextureMap->at(inputName);
+							string				&oldJitTexName = TI->inputToTextureMap->at(inputName);
 							t_symbol			*oldJitTexNameSym = gensym((char*)oldJitTexName.c_str());
-							TI->inputTextureMap->erase(inputName);
+							TI->inputToTextureMap->erase(inputName);
 							if (oldJitTexNameSym != NULL)	{
 								jit_object_detach(oldJitTexNameSym, targetInstance);
 							}
@@ -535,8 +554,8 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 						if (jit_object_attach(secondMsgSym, targetInstance) == NULL)
 							post("ERR: unable to attach the jitter object to the input texture, %s",__func__);
 						else	{
-							TI->inputTextureMap->emplace( std::make_pair(inputName, std::string((char*)secondMsgSym->s_name)) );
-							//TI->inputTextureMap->insert({inputName, std::string((char*)secondMsgSym->s_name)});
+							TI->inputToTextureMap->emplace( std::make_pair(inputName, std::string((char*)secondMsgSym->s_name)) );
+							//TI->inputToTextureMap->insert({inputName, std::string((char*)secondMsgSym->s_name)});
 							
 							//	finally, pass the jitter texture object to the ISFRenderer, which will "wrap" it with a GLBufferRef from the appropriate pool/GL version to render
 							renderer->applyJitGLTexToInputKey(secondMsgSym, inputName);
@@ -568,6 +587,10 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 	if (origCglCtx != NULL)	{
 		CGLSetCurrentContext(origCglCtx);
 	}
+}
+
+t_jit_err jit_gl_vvisf_jit_matrix(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
+	return JIT_ERR_NONE;
 }
 
 t_jit_err jit_gl_vvisf_jit_gl_texture(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
@@ -613,8 +636,8 @@ void jit_gl_vvisf_notify(t_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob
 		//	get the name of the jitter texture being freed as a std::string
 		string			jitTextureName = std::string((char*)s->s_name);
 		//	run through the map of input names/jitter texture names
-		auto			iter = x->inputTextureMap->begin();
-		while (iter != x->inputTextureMap->end())	{
+		auto			iter = x->inputToTextureMap->begin();
+		while (iter != x->inputToTextureMap->end())	{
 			//	if this item in the map matches the texture being freed...
 			if (iter->second == jitTextureName)	{
 				//	detach from the jitter object, we no longer want to be notified as to its changes (is this safe to do now, in a notify callback?)
@@ -622,7 +645,7 @@ void jit_gl_vvisf_notify(t_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob
 				//	tell the ISF renderer to clear out the texture for this attribute 
 				renderer->applyJitGLTexToInputKey(NULL, iter->first);
 				//	delete the item from the map (this automatically increments the iterator)
-				iter = x->inputTextureMap->erase(iter);
+				iter = x->inputToTextureMap->erase(iter);
 			}
 			//	else this item in the map doesn't match the texture being freed- increment the iterator and check the next...
 			else
@@ -735,6 +758,9 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		VVGL::Size			renderSize = VVGL::Size(TI->dim[0], TI->dim[1]);
 		if (TI->adapt)
 			renderSize = VVGL::Size(TI->lastAdaptDims[0], TI->lastAdaptDims[1]);
+		t_atom_long			renderSizeAtoms[2];
+		renderSizeAtoms[0] = long(renderSize.width);
+		renderSizeAtoms[1] = long(renderSize.height);
 		//	get the size of the internal texture object
 		VVGL::Size			tmpSize = VVGL::Size(1,1);
 		if (TI->outputTexObj != NULL)	{
@@ -744,7 +770,7 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		//	if the render size doesn't match the size of the internal texture object, update the internal texture size
 		if (renderSize != tmpSize && TI->outputTexObj != NULL)	{
 			//	first update the texture's size attr
-			jit_attr_setlong_array(TI->outputTexObj, _jit_sym_dim, 2, TI->dim);
+			jit_attr_setlong_array(TI->outputTexObj, _jit_sym_dim, 2, renderSizeAtoms);
 			
 			// our texture has to be bound in the new context before we can use it
 			// http://cycling74.com/forums/topic.php?id=29197
@@ -781,7 +807,7 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		//	create a GLBufferRef that "wraps" the jitter texture
 		uint32_t			texName = jit_attr_getlong(TI->outputTexObj, ps_glid_j);
 		//VVGL::Size			tmpSize = VVGL::Size(TI->dim[0], TI->dim[1]);
-		VVGL::Rect			tmpRect = VVGL::Rect(0, 0, tmpSize.width, tmpSize.height);
+		VVGL::Rect			tmpRect = VVGL::Rect(0, 0, renderSize.width, renderSize.height);
 		GLBufferRef			wrapperTex = CreateFromExistingGLTexture(
 			texName,	//	inTexName The name of the OpenGL texture that will be used to populate the GLBuffer.
 			GLBuffer::Target_Rect,	//	inTexTarget The texture target of the OpenGL texture (GLBuffer::Target)
@@ -799,7 +825,7 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		//post("\twrapperTex is %s",wrapperTex->getDescriptionString().c_str());
 		
 		//	tell the renderer to render into the wrapper GLBufferRef we made around the jit.gl.texture object we own
-		TI->isfRenderer->render(wrapperTex, VVGL::Size(TI->dim[0], TI->dim[1]), TI->renderTimeOverride);
+		TI->isfRenderer->render(wrapperTex, renderSize, TI->renderTimeOverride);
 		//	always reset the renderTimeOverride
 		TI->renderTimeOverride = -1.0;
 		
@@ -829,21 +855,39 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 		CGLContextObj		origCglCtx = CGLGetCurrentContext();
 		
 		if (argc && argv)	{
+			//	update the file symbol
 			TI->file = jit_atom_getsym(argv);
-			string		tmpStr = string(TI->file->s_name);
-			//post("\tfile is %s",tmpStr.c_str());
-			if (TI->isfRenderer == nullptr)
-				post("ERR: isfRenderer NULL in %s",__func__);
-			else	{
-				TI->isfRenderer->loadFile(&tmpStr);
-				max_jit_gl_vvisf_inputs((t_max_jit_gl_vvisf*)TI->maxWrapperStruct);
-			}
-		} 
-		else	{
-			// no args, set to zero
-			TI->file = _jit_sym_nothing;
-			TI->isfRenderer->loadFile();
 		}
+		else	{
+			//	update the file symbol
+			TI->file = _jit_sym_nothing;
+		}
+		
+		//	run through the input name to texture map, unregistering for notification on all of the textures in it
+		auto			iter = TI->inputToTextureMap->begin();
+		while (iter != TI->inputToTextureMap->end())	{
+			t_symbol		*textureSym = gensym((char*)iter->second.c_str());
+			if (textureSym != NULL)	{
+				jit_object_detach(textureSym, TI);
+			}
+			iter = TI->inputToTextureMap->erase(iter);
+		}
+		
+		//	load the file (or load a nil file if we weren't passed any args)
+		if (TI->isfRenderer == nullptr)
+			post("ERR: isfRenderer NULL in %s",__func__);
+		else	{
+			if (TI->file == _jit_sym_nothing)
+				TI->isfRenderer->loadFile();
+			else	{
+				string		tmpStr = string(TI->file->s_name);
+				TI->isfRenderer->loadFile(&tmpStr);
+			}
+			
+			//	fake an input call- this sends information describing the inputs of the loaded file from the appropriate outlet
+			max_jit_gl_vvisf_inputs((t_max_jit_gl_vvisf*)TI->maxWrapperStruct);
+		}
+		
 		
 		//	restore the original GL context
 		if (origCglCtx != NULL)	{
