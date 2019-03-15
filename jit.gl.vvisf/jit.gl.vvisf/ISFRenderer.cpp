@@ -256,7 +256,7 @@ GLTexToTexCopierRef ISFRenderer::getGL4TextureCopier()	{
 
 
 void ISFRenderer::render(const GLBufferRef & inTexFromMax, const VVGL::Size & inRenderSize, const double & inRenderTime)	{
-	//post("%s",__func__);
+	//post("%s ... %0.2f",__func__,inRenderTime);
 	lock_guard<recursive_mutex>		lock(_sceneLock);
 	
 	GLBufferPoolRef		gl2Pool = (_gl2Scene==nullptr) ? nullptr : _gl2Scene->privatePool();
@@ -329,9 +329,10 @@ void ISFRenderer::render(const GLBufferRef & inTexFromMax, const VVGL::Size & in
 }
 
 
-void ISFRenderer::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const string & inInputName)	{
+GLBufferRef ISFRenderer::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const string & inInputName)	{
 	//post("%s",__func__);
 	
+	GLBufferRef			returnMe = nullptr;
 	lock_guard<recursive_mutex>		lock(_sceneLock);
 	
 	if (_sceneLoaded)	{
@@ -345,7 +346,7 @@ void ISFRenderer::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const string 
 		ISFDocRef			renderDoc = (renderScene==nullptr) ? nullptr : renderScene->doc();
 		ISFAttrRef			attr = (renderDoc==nullptr) ? nullptr : renderDoc->input(inInputName);
 		if (attr != nullptr)	{
-			GLBufferRef			wrapperTex = nullptr;
+			//GLBufferRef			wrapperTex = nullptr;
 			if (inJitGLTexNameSym != NULL)	{
 				void				*jitTexture = jit_object_findregistered(static_cast<t_symbol*>(inJitGLTexNameSym));
 				//if (jitTexture == NULL || jit_object_method(jitTexture, _jit_sym_class_jit_matrix) == NULL)
@@ -375,7 +376,7 @@ void ISFRenderer::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const string 
 					VVGL::Rect			tmpRect = VVGL::Rect(0, 0, tmpSize.width, tmpSize.height);
 					GLBufferPoolRef		tmpPool = _gl2Scene->privatePool();
 					bool				tmpFlipped = (jit_attr_getlong(jitTexture, ps_flip_r)>0) ? false : true;
-					wrapperTex = CreateFromExistingGLTexture(
+					returnMe = CreateFromExistingGLTexture(
 						texName,	//	inTexName The name of the OpenGL texture that will be used to populate the GLBuffer.
 						//GLBuffer::Target_Rect,	//	inTexTarget The texture target of the OpenGL texture (GLBuffer::Target)
 						(GLBuffer::Target)jit_attr_getlong(jitTexture, ps_gltarget_r),
@@ -389,11 +390,11 @@ void ISFRenderer::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const string 
 						nullptr,	//	inReleaseCallback A callback function or lambda that will be executed when the GLBuffer is deallocated.  If the GLBuffer needs to release any other resources when it's freed, this is the appropriate place to do so.
 						tmpPool	//	inPoolRef The pool that the GLBuffer should be created with.  When the GLBuffer is freed, its underlying GL resources will be returned to this pool (where they will be either freed or recycled).
 					);
-					attr->setCurrentImageBuffer(wrapperTex);
+					attr->setCurrentImageBuffer(returnMe);
 				}
 			}
 			else	{
-				attr->setCurrentImageBuffer(nullptr);
+				attr->setCurrentImageBuffer(returnMe);
 			}
 		}
 		else
@@ -402,15 +403,6 @@ void ISFRenderer::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const string 
 	else
 		post("ERR: no file loaded yet, %s",__func__);
 	
-	if (inJitGLTexNameSym == nullptr)	{
-	}
-	//	try to find the isf attribute object that corresponds to this input name, then null out its current value
-	//ISFAttrRef			attr = (doc==nullptr) ? nullptr : doc->input(iter->first);
-	//if (attr != nullptr)	{
-	//	attr->setCurrentImageBuffer(nullptr);
-	//}
-	
-	/*
-	*/
+	return returnMe;
 }
 

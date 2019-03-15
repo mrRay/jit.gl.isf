@@ -51,7 +51,7 @@ class ISFRenderer	{
 		GLTexToTexCopierRef getGL2TextureCopier();
 		GLTexToTexCopierRef getGL4TextureCopier();
 		
-		void applyJitGLTexToInputKey(void *inJitGLTexNameSym, const string & inInputName);
+		GLBufferRef applyJitGLTexToInputKey(void *inJitGLTexNameSym, const string & inInputName);
 		
 		void render(const GLBufferRef & inRenderTex, const VVGL::Size & inRenderSize, const double & inRenderTime=-1.0);
 };

@@ -66,6 +66,7 @@ int C74_EXPORT main(void)
 	// custom draw handler so we can output our texture.
 	// override default ob3d bang/draw methods
 	addbang((method)max_jit_gl_vvisf_bang);
+	addfloat((method)max_jit_gl_vvisf_float);
 	max_addmethod_defer_low((method)max_jit_gl_vvisf_draw, (char*)"draw");
 	
 	//	use our custom assist method so we can correctly label the relevant outputs
@@ -407,7 +408,7 @@ void max_jit_gl_vvisf_input(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
 
 
 void max_jit_gl_vvisf_all_filenames(t_max_jit_gl_vvisf *targetInstance)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	if (targetInstance==NULL)
 		return;
 	if (fm == NULL)
@@ -424,7 +425,7 @@ void max_jit_gl_vvisf_all_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	}
 }
 void max_jit_gl_vvisf_source_filenames(t_max_jit_gl_vvisf *targetInstance)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	if (targetInstance==NULL)
 		return;
 	if (fm == NULL)
@@ -441,7 +442,7 @@ void max_jit_gl_vvisf_source_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	}
 }
 void max_jit_gl_vvisf_filter_filenames(t_max_jit_gl_vvisf *targetInstance)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	if (targetInstance==NULL)
 		return;
 	if (fm == NULL)
@@ -458,7 +459,7 @@ void max_jit_gl_vvisf_filter_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	}
 }
 void max_jit_gl_vvisf_transition_filenames(t_max_jit_gl_vvisf *targetInstance)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	if (targetInstance==NULL)
 		return;
 	if (fm == NULL)
@@ -475,7 +476,7 @@ void max_jit_gl_vvisf_transition_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	}
 }
 void max_jit_gl_vvisf_all_categories(t_max_jit_gl_vvisf *targetInstance)	{
-	post("%s",__func__);
+	//post("%s",__func__);
 	if (targetInstance==NULL)
 		return;
 	if (fm == NULL)
@@ -487,13 +488,13 @@ void max_jit_gl_vvisf_all_categories(t_max_jit_gl_vvisf *targetInstance)	{
 	t_atom				outAtom;
 	
 	for (const auto & category : categories)	{
-		post("\tcat is %s",category.c_str());
+		//post("\tcat is %s",category.c_str());
 		atom_setsym(&outAtom, gensym( category.c_str() ));
 		outlet_anything(targetInstance->filesout, gensym("category"), 1, &outAtom);
 	}
 }
 void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
-	post("%s ... %s",__func__,s->s_name);
+	//post("%s ... %s",__func__,s->s_name);
 	if (targetInstance==NULL || s==NULL)
 		return;
 	if (fm == NULL)
@@ -521,6 +522,18 @@ void max_jit_gl_vvisf_bang(t_max_jit_gl_vvisf *targetInstance)	{
 	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);
 	
 }
+void max_jit_gl_vvisf_float(t_max_jit_gl_vvisf *targetInstance, double n)	{
+	//post("%s",__func__);
+	//	pass the render time to the jitter object
+	t_jit_gl_vvisf			*jitob = (t_jit_gl_vvisf*)max_jit_obex_jitob_get(targetInstance);
+	if (jitob == NULL)
+		return;
+	jitob->renderTimeOverride = n;
+	jit_attr_setlong(jitob, gensym("needsRedraw"), 1);
+	//	tell the jitter object to draw & output
+	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);
+}
+
 
 void max_jit_gl_vvisf_draw(t_max_jit_gl_vvisf *x, t_symbol *s, long argc, t_atom *argv)	{
 	//post("%s",__func__);
