@@ -191,8 +191,9 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 		
 		TI->renderTimeOverride = -1.0;
 		
-		//	allocate the input texture map
-		TI->inputToTextureMap = new std::map<std::string,std::string>();
+		//	allocate the various texture maps
+		TI->inputToHostTexNameMap = new std::map<std::string,std::string>();
+		TI->inputToClientGLTexPtrMap = new std::map<std::string,t_jit_object*>();
 		
 		// TODO : is this right ? 
 		// set up attributes
@@ -247,19 +248,38 @@ void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
 		TI->isfRenderer = NULL;
 	}
 	
-	//	run through the input name to texture map, unregistering for notification on all of the textures in it
-	auto			iter = TI->inputToTextureMap->begin();
-	while (iter != TI->inputToTextureMap->end())	{
-		t_symbol		*textureSym = gensym((char*)iter->second.c_str());
-		if (textureSym != NULL)	{
-			jit_object_detach(textureSym, TI);
+	{
+		//	run through the input name to host texture name map, unregistering for notification on all of the textures in it
+		auto			iter = TI->inputToHostTexNameMap->begin();
+		while (iter != TI->inputToHostTexNameMap->end())	{
+			t_symbol		*textureSym = gensym((char*)iter->second.c_str());
+			if (textureSym != NULL)	{
+				jit_object_detach(textureSym, TI);
+			}
+			++iter;
 		}
-		++iter;
+		//	delete the actual input name to host texture name map
+		if (TI->inputToHostTexNameMap != nullptr)	{
+			delete TI->inputToHostTexNameMap;
+			TI->inputToHostTexNameMap = nullptr;
+		}
 	}
-	//	delete the actual texture map
-	if (TI->inputToTextureMap != nullptr)	{
-		delete TI->inputToTextureMap;
-		TI->inputToTextureMap = nullptr;
+	
+	{
+		//	run through the client textures i created, freeing them
+		auto			iter = TI->inputToClientGLTexPtrMap->begin();
+		while (iter != TI->inputToClientGLTexPtrMap->end())	{
+			auto			txPtr = iter->second;
+			if (txPtr != NULL)	{
+				jit_object_free(txPtr);
+			}
+			++iter;
+		}
+		//	delete the actual client texture map
+		if (TI->inputToClientGLTexPtrMap != nullptr)	{
+			delete TI->inputToClientGLTexPtrMap;
+			TI->inputToClientGLTexPtrMap = nullptr;
+		}
 	}
 
 	// free our ob3d data 
@@ -494,7 +514,7 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 					//	the second msg sym is the name of the incoming jitter texture.  check to see if we're already registered as an observer
 					bool				alreadyRegistered = false;
 					try	{
-						string				&oldJitTexName = TI->inputToTextureMap->at(inputName);
+						string				&oldJitTexName = TI->inputToHostTexNameMap->at(inputName);
 						t_symbol			*oldJitTexNameSym = gensym((char*)oldJitTexName.c_str());
 						if (oldJitTexNameSym != NULL)	{
 							//	if it's the same texture then we're already registered
@@ -513,8 +533,8 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 						if (jit_object_attach(secondMsgSym, targetInstance) == NULL)
 							post("ERR: unable to attach the jitter object to the input texture, %s",__func__);
 						else	{
-							TI->inputToTextureMap->emplace( std::make_pair(inputName, std::string((char*)secondMsgSym->s_name)) );
-							//TI->inputToTextureMap->insert({inputName, std::string((char*)secondMsgSym->s_name)});
+							TI->inputToHostTexNameMap->emplace( std::make_pair(inputName, std::string((char*)secondMsgSym->s_name)) );
+							//TI->inputToHostTexNameMap->insert({inputName, std::string((char*)secondMsgSym->s_name)});
 							
 						}
 					}
@@ -522,7 +542,7 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 					//	finally, pass the jitter texture object to the ISFRenderer, which will "wrap" it with a GLBufferRef from the appropriate pool/GL version to render
 					GLBufferRef			wrapperTex = renderer->applyJitGLTexToInputKey(secondMsgSym, inputName);
 					//	if this was the input image, we need to update the jitter object's last adapt dims, so we know what res to render at next time we're told to do so
-					if (inputName == string("inputImage"))	{
+					if (inputName == string("inputImage") && wrapperTex != nullptr)	{
 						TI->lastAdaptDims[0] = wrapperTex->size.width;
 						TI->lastAdaptDims[1] = wrapperTex->size.height;
 						//post("inputImage detected, adapting to res %d x %d",TI->lastAdaptDims[0],TI->lastAdaptDims[1]);
@@ -540,9 +560,9 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 						
 						//	first use the attr name to look up and detach from any jit.gl.texture objects we're attached to under this input name
 						try	{
-							string				&oldJitTexName = TI->inputToTextureMap->at(inputName);
+							string				&oldJitTexName = TI->inputToHostTexNameMap->at(inputName);
 							t_symbol			*oldJitTexNameSym = gensym((char*)oldJitTexName.c_str());
-							TI->inputToTextureMap->erase(inputName);
+							TI->inputToHostTexNameMap->erase(inputName);
 							if (oldJitTexNameSym != NULL)	{
 								jit_object_detach(oldJitTexNameSym, targetInstance);
 							}
@@ -554,8 +574,8 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 						if (jit_object_attach(secondMsgSym, targetInstance) == NULL)
 							post("ERR: unable to attach the jitter object to the input texture, %s",__func__);
 						else	{
-							TI->inputToTextureMap->emplace( std::make_pair(inputName, std::string((char*)secondMsgSym->s_name)) );
-							//TI->inputToTextureMap->insert({inputName, std::string((char*)secondMsgSym->s_name)});
+							TI->inputToHostTexNameMap->emplace( std::make_pair(inputName, std::string((char*)secondMsgSym->s_name)) );
+							//TI->inputToHostTexNameMap->insert({inputName, std::string((char*)secondMsgSym->s_name)});
 							
 							//	finally, pass the jitter texture object to the ISFRenderer, which will "wrap" it with a GLBufferRef from the appropriate pool/GL version to render
 							renderer->applyJitGLTexToInputKey(secondMsgSym, inputName);
@@ -624,9 +644,10 @@ void jit_gl_vvisf_notify(t_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob
 	
 	if (msg == ps_willfree_j || msg == ps_free_j)	{
 		//	get the jitter object
-		t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(x);
+		//t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(x);
 		//	get the renderer from the jitter object
-		ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(jitObj);
+		//ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(jitObj);
+		ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(x);
 		//	get the ISFDoc that is currently being used by the renderer
 		//ISFDocRef			doc = (renderer==nullptr) ? nullptr : renderer->loadedISFDoc();
 		
@@ -636,8 +657,8 @@ void jit_gl_vvisf_notify(t_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob
 		//	get the name of the jitter texture being freed as a std::string
 		string			jitTextureName = std::string((char*)s->s_name);
 		//	run through the map of input names/jitter texture names
-		auto			iter = x->inputToTextureMap->begin();
-		while (iter != x->inputToTextureMap->end())	{
+		auto			iter = x->inputToHostTexNameMap->begin();
+		while (iter != x->inputToHostTexNameMap->end())	{
 			//	if this item in the map matches the texture being freed...
 			if (iter->second == jitTextureName)	{
 				//	detach from the jitter object, we no longer want to be notified as to its changes (is this safe to do now, in a notify callback?)
@@ -645,7 +666,7 @@ void jit_gl_vvisf_notify(t_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob
 				//	tell the ISF renderer to clear out the texture for this attribute 
 				renderer->applyJitGLTexToInputKey(NULL, iter->first);
 				//	delete the item from the map (this automatically increments the iterator)
-				iter = x->inputToTextureMap->erase(iter);
+				iter = x->inputToHostTexNameMap->erase(iter);
 			}
 			//	else this item in the map doesn't match the texture being freed- increment the iterator and check the next...
 			else
@@ -864,13 +885,13 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 		}
 		
 		//	run through the input name to texture map, unregistering for notification on all of the textures in it
-		auto			iter = TI->inputToTextureMap->begin();
-		while (iter != TI->inputToTextureMap->end())	{
+		auto			iter = TI->inputToHostTexNameMap->begin();
+		while (iter != TI->inputToHostTexNameMap->end())	{
 			t_symbol		*textureSym = gensym((char*)iter->second.c_str());
 			if (textureSym != NULL)	{
 				jit_object_detach(textureSym, TI);
 			}
-			iter = TI->inputToTextureMap->erase(iter);
+			iter = TI->inputToHostTexNameMap->erase(iter);
 		}
 		
 		//	load the file (or load a nil file if we weren't passed any args)

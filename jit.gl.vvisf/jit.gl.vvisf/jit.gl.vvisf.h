@@ -42,7 +42,8 @@ typedef struct _jit_gl_vvisf	{
 	
 	//	ivars (not to be confused with attributes!)
 	ISFRenderer			*isfRenderer;	//	this owns the GL scenes and does all the rendering
-	std::map<std::string,std::string>		*inputToTextureMap;	//	key is string of attribute name, value is string of the jitter object name of the gl texture (turn this into a t_symbol and use it to find the registered object to locate the jitter object)
+	std::map<std::string,std::string>		*inputToHostTexNameMap;	//	key is string of attribute name, value is string of the jitter object name of the gl texture (turn this into a t_symbol and use it to find the registered object to locate the jitter object) owned by the host.  THE HOST OWNS ALL OF THE JIT_GL_TEXTURE OBJECTS REFERENCED BY NAME IN THIS MAP!
+	std::map<std::string,t_jit_object*>		*inputToClientGLTexPtrMap;	//	key is string of attribute name, value is a ptr to the jit_gl_texture object allocated and owned by this object.  THIS OBJECT ALLOCATES AND OWNS AND MUST DELETE ALL OF THE JIT_GL_TEXTURE OBJECTS OWNED BY THIS MAP!
 	
 	// internal jit.gl.texture object
 	t_jit_object		*outputTexObj;

@@ -333,6 +333,7 @@ GLBufferRef ISFRenderer::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const 
 	//post("%s",__func__);
 	
 	GLBufferRef			returnMe = nullptr;
+	
 	lock_guard<recursive_mutex>		lock(_sceneLock);
 	
 	if (_sceneLoaded)	{
@@ -397,11 +398,15 @@ GLBufferRef ISFRenderer::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const 
 				attr->setCurrentImageBuffer(returnMe);
 			}
 		}
-		else
-			post("ERR: no attribute found named %s in %s",static_cast<t_symbol*>(inJitGLTexNameSym)->s_name,__func__);
+		else	{
+			if (inJitGLTexNameSym != NULL)	{
+				post("ERR: no attribute found named %s in %s",static_cast<t_symbol*>(inJitGLTexNameSym)->s_name,__func__);
+			}
+		}
 	}
-	else
+	else	{
 		post("ERR: no file loaded yet, %s",__func__);
+	}
 	
 	return returnMe;
 }

@@ -108,7 +108,7 @@ void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
 		}
 		
 		//	allocate the input texture map
-		//newObjPtr->inputToTextureMap = new std::map<std::string,std::string>();
+		//newObjPtr->inputToHostTexNameMap = new std::map<std::string,std::string>();
 		
 		// instantiate Jitter object with dest_name arg
 		if ((jit_ob = jit_object_new(gensym("jit_gl_vvisf"), dest_name_sym)))	{
@@ -539,11 +539,11 @@ void max_jit_gl_vvisf_draw(t_max_jit_gl_vvisf *x, t_symbol *s, long argc, t_atom
 	//post("%s",__func__);
 	
 	/*
-	//	run through the entries in 'inputToTextureMap', creating GLBufferRefs that wrap the various jitter textures and pushing them to the renderer
+	//	run through the entries in 'inputToHostTexNameMap', creating GLBufferRefs that wrap the various jitter textures and pushing them to the renderer
 	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(x);
 	ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(jitObj);
-	auto				iter = x->inputToTextureMap->begin();
-	while (iter != x->inputToTextureMap->end())	{
+	auto				iter = x->inputToHostTexNameMap->begin();
+	while (iter != x->inputToHostTexNameMap->end())	{
 		string			&jitTextureName = iter->second;
 		t_symbol		*jitTextureNameSym = gensym((char*)jitTextureName.c_str());
 		renderer->applyJitGLTexToInputKey(jitTextureNameSym, iter->first);
