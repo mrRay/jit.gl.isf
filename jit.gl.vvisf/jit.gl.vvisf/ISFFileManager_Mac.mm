@@ -62,8 +62,7 @@ void ISFFileManager_Mac::populateEntries(){
 			vector<string>		cats;
 			cats.push_back(string("Vidvox"));
 			ISFFile				tmpFile = ISFFile(filename, filepath, ISFFileType_Source, description, cats);
-			//_fileEntries[filename] = tmpFile;
-			_fileEntries.emplace(filename, tmpFile);
+			_fileEntries[filename] = tmpFile;
 		}
 		//	DON'T FORGET TO DESTROY THIS GLOBAL BUFFER POOL
 		SetGlobalBufferPool();
@@ -191,8 +190,8 @@ void ISFFileManager_Mac::insertFilesFromDirectory(const string & inDirRaw, const
 				if (!isDir && (CaseInsensitiveCompare(extension,*_fsstr) || CaseInsensitiveCompare(extension,*_fragstr)))	{
 					ISFFile			tmpFile = CreateISFFileFromPath(fullpath);
 					if (tmpFile.isValid())	{
-						//_fileEntries[tmpFile.filename()] = tmpFile;
-						_fileEntries.emplace(tmpFile.filename(), tmpFile);
+						_fileEntries[tmpFile.filename()] = tmpFile;
+						//_fileEntries.emplace(tmpFile.filename(), tmpFile);
 					}
 				}
 				//	if this is supposed to be recursive and this is a directory...

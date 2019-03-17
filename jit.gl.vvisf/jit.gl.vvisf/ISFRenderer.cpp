@@ -330,7 +330,7 @@ void ISFRenderer::render(const GLBufferRef & inTexFromMax, const VVGL::Size & in
 
 
 GLBufferRef ISFRenderer::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const string & inInputName)	{
-	//post("%s",__func__);
+	//post("%s ... %p, %s",__func__,inJitGLTexNameSym,inInputName.c_str());
 	
 	GLBufferRef			returnMe = nullptr;
 	
@@ -391,6 +391,8 @@ GLBufferRef ISFRenderer::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const 
 						nullptr,	//	inReleaseCallback A callback function or lambda that will be executed when the GLBuffer is deallocated.  If the GLBuffer needs to release any other resources when it's freed, this is the appropriate place to do so.
 						tmpPool	//	inPoolRef The pool that the GLBuffer should be created with.  When the GLBuffer is freed, its underlying GL resources will be returned to this pool (where they will be either freed or recycled).
 					);
+					//if (returnMe != nullptr)
+					//	post("\tgl wrapper txture is %s",returnMe->getDescriptionString().c_str());
 					attr->setCurrentImageBuffer(returnMe);
 				}
 			}

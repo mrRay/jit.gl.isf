@@ -25,6 +25,7 @@ using namespace VVISF;
 class ISFFile
 {
 	public:
+		ISFFile() : _filename(""), _path(""), _type(ISFFileType_None), _description("") {}
 		ISFFile(const string & inFilename, const string & inPath, const ISFFileType & inType, const string & inDescription, const vector<string> & inCategories) : _filename(inFilename), _path(inPath), _type(inType), _description(inDescription), _categories(inCategories) {}
 		
 		string			_filename;

@@ -10,6 +10,7 @@
 t_class				*max_jit_gl_vvisf_class;
 
 t_symbol			*ps_jit_gl_texture;
+t_symbol			*ps_jit_matrix;
 t_symbol			*ps_draw;
 t_symbol			*ps_out_tex_sym;
 t_symbol			*ps_file;
@@ -24,6 +25,7 @@ static ISFFileManager_Mac		*fm = NULL;
 int C74_EXPORT main(void)
 {
 	ps_jit_gl_texture = gensym("jit_gl_texture");
+	ps_jit_matrix = gensym("jit_matrix");
 	ps_draw = gensym("draw");
 	ps_out_tex_sym = gensym("out_tex_sym");
 	ps_file = gensym("file");
@@ -514,13 +516,13 @@ void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_s
 
 void max_jit_gl_vvisf_bang(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
-	
+	/*
 	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(targetInstance);
 	if (jitob != NULL)
 		jit_attr_setlong(jitob, gensym("needsRedraw"), 1);
 	
 	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);
-	
+	*/
 }
 void max_jit_gl_vvisf_float(t_max_jit_gl_vvisf *targetInstance, double n)	{
 	//post("%s",__func__);
@@ -529,9 +531,11 @@ void max_jit_gl_vvisf_float(t_max_jit_gl_vvisf *targetInstance, double n)	{
 	if (jitob == NULL)
 		return;
 	jitob->renderTimeOverride = n;
+	/*
 	jit_attr_setlong(jitob, gensym("needsRedraw"), 1);
 	//	tell the jitter object to draw & output
 	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);
+	*/
 }
 
 
