@@ -275,12 +275,17 @@ void ISFRenderer::render(const GLBufferRef & inTexFromMax, const VVGL::Size & in
 		
 		if (renderScene != nullptr)	{
 			try	{
+				
+				if (inRenderTime >= 0.)	{
+					renderScene->setBaseTime( Timestamp() - Timestamp(double(inRenderTime)) );
+				}
+				
 				//	if the host and the scene doing the rendering are using the same version of GL then this is a simple render
 				if (_hostUsesGL4 == _sceneUsesGL4)	{
-					if (inRenderTime < 0.)
+					//if (inRenderTime < 0.)
 						renderScene->renderToBuffer(inTexFromMax, inRenderSize);
-					else
-						renderScene->renderToBuffer(inTexFromMax, inRenderSize, inRenderTime);
+					//else
+					//	renderScene->renderToBuffer(inTexFromMax, inRenderSize, inRenderTime);
 				}
 				//	else there's a GL version mismatch between the host and render scene contexts- i have to render my scene to an IOSurface, and then copy that to the destination buffer i was passed
 				else	{
@@ -307,10 +312,10 @@ void ISFRenderer::render(const GLBufferRef & inTexFromMax, const VVGL::Size & in
 					//post("\trender tex is %s",renderIOSfc->getDescriptionString().c_str());
 					//post("\tmax tex is %s",inTexFromMax->getDescriptionString().c_str());
 					
-					if (inRenderTime < 0.)
+					//if (inRenderTime < 0.)
 						renderScene->renderToBuffer(renderIOSfc, inRenderSize);
-					else
-						renderScene->renderToBuffer(renderIOSfc, inRenderSize, inRenderTime);
+					//else
+					//	renderScene->renderToBuffer(renderIOSfc, inRenderSize, inRenderTime);
 					hostIOSfc = CreateRGBATexFromIOSurfaceID(renderIOSfc->desc.localSurfaceID, false, maxPool);
 					
 					hostCompatibleCopier->ignoreSizeCopy(hostIOSfc, inTexFromMax);
