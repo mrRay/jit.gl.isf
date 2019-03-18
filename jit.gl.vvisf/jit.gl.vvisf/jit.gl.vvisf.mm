@@ -24,6 +24,7 @@ t_symbol			*ps_draw_j;
 //t_symbol			*ps_needsRedraw_j;
 t_symbol			*ps_willfree_j;
 t_symbol			*ps_free_j;
+t_symbol			*ps_jit_gl_texture_j;
 
 
 
@@ -57,6 +58,7 @@ t_jit_err jit_gl_vvisf_init(void)	{
 	//ps_needsRedraw_j = gensym("needsRedraw");
 	ps_willfree_j = gensym("willfree");
 	ps_free_j = gensym("free");
+	ps_jit_gl_texture_j = gensym("jit_gl_texture");
 	
 	// setup our OB3D flags to indicate our capabilities.
 	long			ob3d_flags = JIT_OB3D_NO_MATRIXOUTPUT; // no matrix output
@@ -113,7 +115,7 @@ t_jit_err jit_gl_vvisf_init(void)	{
 	jit_class_addmethod( _jit_gl_vvisf_class, (method)jit_gl_vvisf_jit_matrix, "jit_matrix", A_USURP_LOW, 0);
 	
 	//	this method is how you pass input values to the isf object
-	jit_class_addmethod( _jit_gl_vvisf_class, (method)jit_gl_vvisf_setInputValue, "setInputValue", A_GIMME, 0L );
+	jit_class_addmethod( _jit_gl_vvisf_class, (method)jit_gl_vvisf_setParamValue, "param", A_GIMME, 0L );
 	
 	// add attributes
 	long				attrflags = JIT_ATTR_GET_DEFER_LOW | JIT_ATTR_SET_USURP_LOW;
@@ -303,7 +305,7 @@ void jit_gl_vvisf_loadFile(t_jit_gl_vvisf *targetInstance, const string & inFile
 	post("%s ... %s",__func__,inFilePath.c_str());
 }
 */
-void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
+void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
 	
 	using namespace std;
 	//post("%s, argc is %d",__func__,argc);
@@ -380,7 +382,7 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 	//	get the ISFAttr from the ISFDoc that corresponds to the input name the user supplied
 	ISFAttrRef			attr = doc->input(inputName);
 	if (attr == nullptr)	{
-		post("err: unrecognized input \"%s\"",inputName.c_str());
+		post("err: unrecognized param \"%s\"",inputName.c_str());
 		return;
 	}
 	
@@ -537,7 +539,7 @@ void jit_gl_vvisf_setInputValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 						if (!alreadyRegistered)	{
 							//	attach to the jitter texture we were passed...
 							if (jit_object_attach(secondMsgSym, targetInstance) == NULL)
-								post("ERR: unable to attach the jitter object to the input texture, %s",__func__);
+								post("ERR: unable to attach the jitter object to the param texture, %s",__func__);
 							else	{
 								//	store a record of this attachment in our map so we know to unattach later
 								TI->inputToHostTexNameMap->emplace( std::make_pair(inputName, std::string((char*)secondMsgSym->s_name)) );
@@ -721,13 +723,13 @@ t_jit_err jit_gl_vvisf_jit_matrix(t_jit_gl_vvisf *targetInstance, t_symbol *s, i
 	}
 	*/
 	
-	//	create a "setInputValue" message with "inputImage" as the input name so we don't have to rewrite anything
+	//	create a "param" message with "inputImage" as the input name so we don't have to rewrite anything
 	t_atom			msg[3];
 	jit_atom_setsym(msg, gensym("inputImage"));
 	jit_atom_setsym(msg+1, s);
 	jit_atom_setsym(msg+2, jit_atom_getsym(argv));
 	
-	jit_object_method(TI, gensym("setInputValue"), gensym("setInputValue"), 3, msg);
+	jit_object_method(TI, gensym("param"), gensym("param"), 3, msg);
 	
 	return JIT_ERR_NONE;
 }
@@ -735,13 +737,13 @@ t_jit_err jit_gl_vvisf_jit_matrix(t_jit_gl_vvisf *targetInstance, t_symbol *s, i
 t_jit_err jit_gl_vvisf_jit_gl_texture(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
 	//post("%s",__func__);
 	
-	//	create a "setInputValue" message with "inputImage" as the input name so we don't have to rewrite anything
+	//	create a "param" message with "inputImage" as the input name so we don't have to rewrite anything
 	t_atom			msg[3];
 	jit_atom_setsym(msg, gensym("inputImage"));
 	jit_atom_setsym(msg+1, s);
 	jit_atom_setsym(msg+2, jit_atom_getsym(argv));
 	
-	jit_object_method(TI, gensym("setInputValue"), gensym("setInputValue"), 3, msg);
+	jit_object_method(TI, gensym("param"), gensym("param"), 3, msg);
 	
 	return JIT_ERR_NONE;
 	
@@ -775,6 +777,7 @@ void jit_gl_vvisf_notify(t_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob
 	//post("%s ... %s %s",__func__,msg->s_name,s->s_name);
 	
 	if (msg == ps_willfree_j || msg == ps_free_j)	{
+		post("%s ... %s %s",__func__,msg->s_name,s->s_name);
 		//	get the jitter object
 		//t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(x);
 		//	get the renderer from the jitter object
@@ -991,6 +994,14 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		if (origCglCtx != NULL)	{
 			CGLSetCurrentContext(origCglCtx);
 		}
+		
+		//	publish the texture
+		t_max_jit_gl_vvisf		*mws = (t_max_jit_gl_vvisf*)TI->maxWrapperStruct;
+		if (TI->outputTexObj!=NULL && mws!=NULL && mws->texout!=NULL)	{
+			t_atom			tmpAtom;
+			atom_setsym(&tmpAtom, jit_attr_getsym(TI->outputTexObj, gensym("name")));
+			outlet_anything(mws->texout, ps_jit_gl_texture_j, 1, &tmpAtom);
+		}
 	//}
 	
 	return JIT_ERR_NONE;
@@ -1019,6 +1030,7 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 			TI->file = _jit_sym_nothing;
 		}
 		
+		
 		//	run through the input name to texture map, unregistering for notification on all of the textures in it
 		auto			iter = TI->inputToHostTexNameMap->begin();
 		while (iter != TI->inputToHostTexNameMap->end())	{
@@ -1028,6 +1040,7 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 			}
 			iter = TI->inputToHostTexNameMap->erase(iter);
 		}
+		
 		
 		//	load the file (or load a nil file if we weren't passed any args)
 		if (TI->isfRenderer == nullptr)
@@ -1041,7 +1054,7 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 			}
 			
 			//	fake an input call- this sends information describing the inputs of the loaded file from the appropriate outlet
-			max_jit_gl_vvisf_inputs((t_max_jit_gl_vvisf*)TI->maxWrapperStruct);
+			max_jit_gl_vvisf_getparamlist((t_max_jit_gl_vvisf*)TI->maxWrapperStruct);
 		}
 		
 		

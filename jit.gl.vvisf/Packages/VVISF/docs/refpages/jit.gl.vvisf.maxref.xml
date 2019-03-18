@@ -46,7 +46,7 @@
 		</outlet>
 		<outlet id="1" type="OUTLET_TYPE">
 			<digest>
-				Lists describing the loaded ISF's INPUTs
+				Lists describing the loaded ISF's parameters (INPUTS in the ISF spec)
 			</digest>
 			<description>
 				TEXT_HERE
@@ -81,15 +81,6 @@
 	
 	<!--MESSAGES-->
 	<methodlist>
-		<method name="bang">
-			<arglist />
-			<digest>
-				Renders and outputs a frame.
-			</digest>
-			<description>
-				Renders and outputs a frame.
-			</description>
-		</method>
 		<method name="float">
 			<arglist />
 			<digest>
@@ -110,7 +101,7 @@
 				Reads an ISF file.  If src-name is a path, the file at the path will be loaded- if it's a name of a globally installed file, the globally installed file will be loaded.
 			</description>
 		</method>
-		<method name="inputs">
+		<method name="getparamlist">
 			<arglist />
 			<digest>
 				Dumps lists describing the loaded ISF's inputs out the appropriate outlet.  The first message output is "clear", which cna be used as a token between dumps.
@@ -119,9 +110,9 @@
 				TEXT_HERE
 			</description>
 		</method>
-		<method name="input">
+		<method name="getparam">
 			<arglist>
-				<arg name="input-name" type="symbol" />
+				<arg name="parameter-name" type="symbol" />
 			</arglist>
 			<digest>
 				Gets the properties of "input-name"
@@ -130,10 +121,10 @@
 				Returns the properties (min val, max val, default val, current val) of the specified input.  Values are returned in a list which is sent out the "inputs" outlet.
 			</description>
 		</method>
-		<method name="setInputValue">
+		<method name="param">
 			<arglist>
-				<arg name="input-name" type="symbol" />
-				<arg name="input" optional="0" type="list" />
+				<arg name="parameter-name" type="symbol" />
+				<arg name="new-parameter-value" optional="0" type="list" />
 			</arglist>
 			<digest>
 				Sets the value of one of the loaded ISF's INPUTS

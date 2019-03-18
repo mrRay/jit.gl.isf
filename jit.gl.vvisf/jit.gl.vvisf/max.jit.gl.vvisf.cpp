@@ -67,7 +67,7 @@ int C74_EXPORT main(void)
 	
 	// custom draw handler so we can output our texture.
 	// override default ob3d bang/draw methods
-	addbang((method)max_jit_gl_vvisf_bang);
+	//addbang((method)max_jit_gl_vvisf_bang);
 	addfloat((method)max_jit_gl_vvisf_float);
 	max_addmethod_defer_low((method)max_jit_gl_vvisf_draw, (char*)"draw");
 	
@@ -80,8 +80,8 @@ int C74_EXPORT main(void)
 	addmess((method)max_jit_gl_vvisf_read, (char*)"read", A_SYM, 0L);
 	
 	//	the 'inputs' method causes the object to dump a list describing its inputs (name and type) out the INPUTS outlet
-	addmess((method)max_jit_gl_vvisf_inputs, (char*)"inputs", 0L);
-	addmess((method)max_jit_gl_vvisf_input, (char*)"input", A_SYM, 0L);
+	addmess((method)max_jit_gl_vvisf_getparamlist, (char*)"getparamlist", 0L);
+	addmess((method)max_jit_gl_vvisf_getparam, (char*)"getparam", A_SYM, 0L);
 	
 	addmess((method)max_jit_gl_vvisf_all_filenames, (char*)"all_filenames", 0L);
 	addmess((method)max_jit_gl_vvisf_source_filenames, (char*)"source_filenames", 0L);
@@ -176,7 +176,7 @@ void max_jit_gl_vvisf_assist(t_max_jit_gl_vvisf *x, void *b, long m, long a, cha
 			sprintf(s, "Rendered GL textures out");
 			break;
 		case 1:
-			sprintf(s, "INPUTS information (inputs, input <sym>)");
+			sprintf(s, "param information (\"getparamlist\", \"getparam\" <sym>)");
 			break;
 		case 2:
 			sprintf(s, "File information (filesDump)");
@@ -213,17 +213,22 @@ void max_jit_gl_vvisf_read(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
 	
 	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);
 }
-void max_jit_gl_vvisf_inputs(t_max_jit_gl_vvisf *targetInstance)	{
+void max_jit_gl_vvisf_getparamlist(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
 	//	get the ISF file's INPUTS, dump them out the approrpiate outlet
 	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
 	ISFRenderer			*renderer = (jitObj==NULL) ? NULL : jit_gl_vvisf_get_renderer(jitObj);
 	ISFDocRef			tmpDoc = (renderer==NULL) ? nullptr : renderer->loadedISFDoc();
 	if (tmpDoc != nullptr)	{
+		//	send a "clear" message out the outlet ("getparamlist clear"
 		outlet_anything(targetInstance->inputsout, ps_clear, 0, 0L);
+		//t_atom			tmpAtom;
+		//atom_setsym(&tmpAtom, ps_clear);
+		//outlet_anything(targetInstance->inputsout, gensym("getparamlist"), 1, &tmpAtom);
+		
 		auto				tmpAttrs = tmpDoc->inputs();
 		for (const auto & tmpAttr : tmpAttrs)	{
-			max_jit_gl_vvisf_input(targetInstance, gensym( tmpAttr->name().c_str() ));
+			max_jit_gl_vvisf_getparam(targetInstance, gensym( tmpAttr->name().c_str() ));
 		}
 		/*
 		t_atom				tmpList[2];
@@ -262,7 +267,7 @@ void max_jit_gl_vvisf_inputs(t_max_jit_gl_vvisf *targetInstance)	{
 	}
 	
 }
-void max_jit_gl_vvisf_input(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
+void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
 	//post("%s ... %s",__func__,s->s_name);
 	if (targetInstance==NULL || s==NULL)
 		return;
@@ -404,7 +409,7 @@ void max_jit_gl_vvisf_input(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
 			break;
 		}
 		
-		outlet_anything(targetInstance->inputsout, gensym("inputDetails"), 7, tmpList);
+		outlet_anything(targetInstance->inputsout, gensym("param"), 7, tmpList);
 	}
 }
 
@@ -514,16 +519,16 @@ void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_s
 }
 
 
+	/*
 void max_jit_gl_vvisf_bang(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
-	/*
 	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(targetInstance);
 	if (jitob != NULL)
 		jit_attr_setlong(jitob, gensym("needsRedraw"), 1);
 	
 	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);
-	*/
 }
+	*/
 void max_jit_gl_vvisf_float(t_max_jit_gl_vvisf *targetInstance, double n)	{
 	//post("%s",__func__);
 	//	pass the render time to the jitter object
@@ -564,6 +569,7 @@ void max_jit_gl_vvisf_draw(t_max_jit_gl_vvisf *x, t_symbol *s, long argc, t_atom
 	
 	// query the texture name and send out the texture output 
 	jit_atom_setsym(&a, jit_attr_getsym(jitob, ps_out_tex_sym));
+	
 	outlet_anything(x->texout, ps_jit_gl_texture, 1, &a);
 }
 

@@ -281,7 +281,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 635.5909423828125, 921.0, 101.0, 22.0 ],
+					"patching_rect" : [ 690.5909423828125, 922.0, 101.0, 22.0 ],
 					"text" : "s msgsToISFInlet"
 				}
 
@@ -294,7 +294,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 635.5909423828125, 864.6556396484375, 58.0, 22.0 ],
+					"patching_rect" : [ 690.5909423828125, 865.6556396484375, 58.0, 22.0 ],
 					"text" : "loadbang"
 				}
 
@@ -307,7 +307,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 635.5909423828125, 892.6556396484375, 83.0, 22.0 ],
+					"patching_rect" : [ 690.5909423828125, 893.6556396484375, 83.0, 22.0 ],
 					"text" : "all_categories"
 				}
 
@@ -332,7 +332,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 466.5909423828125, 622.3443603515625, 199.0, 33.0 ],
+					"patching_rect" : [ 466.5909423828125, 627.3443603515625, 199.0, 33.0 ],
 					"text" : "backend, populates UI item list and gates the 'inputImage' stream"
 				}
 
@@ -356,7 +356,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 481.5909423828125, 811.21258544921875, 81.0, 22.0 ],
+					"patching_rect" : [ 479.0909423828125, 766.05694580078125, 81.0, 22.0 ],
 					"text" : "s inUIItemList"
 				}
 
@@ -381,7 +381,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 522.5909423828125, 757.86822509765625, 81.0, 22.0 ],
+					"patching_rect" : [ 588.5909423828125, 837.86822509765625, 81.0, 22.0 ],
 					"text" : "s inUIItemList"
 				}
 
@@ -393,7 +393,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 554.5909423828125, 734.86822509765625, 103.0, 22.0 ],
+					"patching_rect" : [ 620.5909423828125, 811.86822509765625, 103.0, 22.0 ],
 					"text" : "s inputImageGate"
 				}
 
@@ -418,7 +418,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 466.5909423828125, 889.86822509765625, 103.0, 22.0 ],
+					"patching_rect" : [ 464.0909423828125, 844.71258544921875, 103.0, 22.0 ],
 					"text" : "s inputImageGate"
 				}
 
@@ -431,7 +431,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
-					"patching_rect" : [ 466.5909423828125, 865.86822509765625, 22.0, 22.0 ],
+					"patching_rect" : [ 464.0909423828125, 820.71258544921875, 22.0, 22.0 ],
 					"text" : "t 1"
 				}
 
@@ -444,7 +444,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 466.5909423828125, 841.86822509765625, 99.0, 22.0 ],
+					"patching_rect" : [ 464.0909423828125, 796.71258544921875, 99.0, 22.0 ],
 					"text" : "route inputImage"
 				}
 
@@ -514,7 +514,7 @@
 , 			{
 				"box" : 				{
 					"id" : "obj-89",
-					"items" : [ "3d Rotate", ",", "AAAMotionTestISF", ",", "ASCII Art", ",", "Amatorka", ",", "Apply Alpha", ",", "Auto Color Tone", ",", "Auto Colors Histogram", ",", "Auto Levels", ",", "Bad TV", ",", "Bloom", ",", "Boxinator", ",", "Bright", ",", "Bump Distortion", ",", "CGA ColorSpace", ",", "CMYK Halftone", ",", "CMYK Halftone-Lookaround", ",", "Channel Slide", ",", "Chroma Desaturation Mask", ",", "Chroma Mask", ",", "Chroma Zoom", ",", "Circle Splash Distortion", ",", "Circle Warp", ",", "Circle Wrap Distortion", ",", "Circular Feedback Mask", ",", "Circular Screen", ",", "City Lights", ",", "Collage", ",", "Color Blowout", ",", "Color Controls", ",", "Color Invert", ",", "Color Levels", ",", "Color Monochrome", ",", "Color Posterize", ",", "Color Relookup", ",", "Color Replacement", ",", "Convergence", ",", "Corner Color Tint", ",", "Cubic Warp", ",", "Deinterlace", ",", "Diagonal Blur", ",", "Diagonalize", ",", "Dilate", ",", "Dilate-Fast", ",", "Dirty Lens", ",", "Displace", ",", "Dither-Bayer", ",", "Dot Screen", ",", "Double Vision", ",", "Dual Side Scroller And Flip", ",", "Duotone", ",", "Echo Trace", ",", "Edge Blowout", ",", "Edge Blur", ",", "Edge Distort", ",", "Edge Trace", ",", "Edges", ",", "Emboss", ",", "Erode", ",", "Erode-Fast", ",", "Exposure Adjust", ",", "FakeMotionBlur", ",", "False Color", ",", "Fast Blur", ",", "FastMosh", ",", "Flip H", ",", "Flip V", ",", "Flipbook", ",", "Frosted Glass", ",", "Gamma Correction", ",", "Ghosting", ",", "Glitch Shifter", ",", "Gloom", ",", "Glow", ",", "Glow-Fast", ",", "God Rays", ",", "HSVtoRGB", ",", "Hatch Blur", ",", "HorizVertHold", ",", "Hyperspace", ",", "Interlace", ",", "Interlace Mirror", ",", "Kaleidoscope", ",", "Kaleidoscope Tile", ",", "Key Frame Artifacts", ",", "Layer Mask", ",", "Layer Position", ",", "Lens Flare", ",", "Line Screen", ",", "Luminance Posterize", ",", "Maximum Component", ",", "Median", ",", "Meta Image", ",", "Micro Buffer", ",", "Micro Buffer RGB", ",", "Minimum Component", ",", "Mirror", ",", "Mirror Edge", ",", "MissEtikate", ",", "Monochrome", ",", "Motion Heat Map", ",", "Motion Mask", ",", "Multi Hue Shift", ",", "Multi Pass Gaussian Blur", ",", "Multi-Pixellate", ",", "MultiFrame 2x2", ",", "MultiFrame 3x3", ",", "Neon", ",", "Night Vision", ",", "Noise Adapt", ",", "Noise Displace", ",", "Noise Pixellate", ",", "Optical Flow Distort", ",", "Optical Flow Generator", ",", "Pixel Shifter", ",", "Pixellate", ",", "Poly Glitch", ",", "Posterize", ",", "Power Warp", ",", "Quad Mask", ",", "Quad Tile", ",", "RGB EQ", ",", "RGB Halftone", ",", "RGB Halftone-lookaround", ",", "RGB Invert", ",", "RGB Strobe", ",", "RGB Trails 3.0", ",", "RGBA Swap", ",", "RGBtoHSV", ",", "Radial Replicate", ",", "Random Freeze", ",", "Random Squares Mask", ",", "Replicate", ",", "Replicate Random", ",", "Resize Glitch", ",", "Ripples", ",", "Rotate", ",", "Sepia Tone", ",", "Set Alpha", ",", "Shake", ",", "Shape Mask", ",", "Shape Morph Feedback Mask", ",", "Shape Morph Wrap", ",", "Sharpen Luminance", ",", "Sharpen RGB", ",", "Shockwave", ",", "Shockwave Pulse", ",", "Show Alpha", ",", "Side Scroller And Flip", ",", "Sine Warp Tile", ",", "Sketch", ",", "Sliding Strips", ",", "Slit Scan", ",", "Smoke Screen", ",", "Soft Blur", ",", "Soft Flip", ",", "Solarize", ",", "Sphere Map", ",", "Strobe", ",", "Thermal Camera", ",", "Time Glitch RGB", ",", "Toon", ",", "Trail Mask", ",", "Trapezoid Distortion", ",", "Triangle Warp", ",", "Triangles", ",", "Trio Tone", ",", "Triple Rotate", ",", "Twirl", ",", "Unsharp Mask", ",", "VHS Glitch", ",", "VVMotionBlur 3.0", ",", "Vertex Manipulator", ",", "Vertical Tearing", ",", "Vibrance", ",", "Waveform Displace", ",", "White Point Adjust", ",", "XYZoom", ",", "Zoom", ",", "Zooming Feedback", ",", "[NV15]_Space_Curvature_llj3Rz-asFX", ",", "calvin", ",", "notebook_drawings_XtVGD1", ",", "oil_paint_brush_MtKcDG", ",", "v002 Bleach Bypass", ",", "v002 Crosshatch", ",", "v002 Dilate", ",", "v002 Erode", ",", "v002 Light Leak", ",", "v002 Technicolor", ",", "v002 Vignette", ",", "v002-CRT-Displacement", ",", "v002-CRT-Mask" ],
+					"items" : "<empty>",
 					"maxclass" : "umenu",
 					"numinlets" : 1,
 					"numoutlets" : 3,
@@ -631,7 +631,7 @@
 , 			{
 				"box" : 				{
 					"id" : "obj-80",
-					"items" : [ "PIXELSPIRIT", ",", "Automatically Converted", ",", "Shadertoy", ",", "Geometry Adjustment", ",", "XXX", ",", "Stylize", ",", "Retro", ",", "MIX", ",", "Transition", ",", "Film", ",", "raymarching", ",", "motionblur", ",", "antialiasing", ",", "screw", ",", "bolt", ",", "nut", ",", "procedural", ",", "3d", ",", "distancefield", ",", "Color Adjustment", ",", "Color Effect", ",", "Glitch", ",", "Generator", ",", "Blur", ",", "Duotone", ",", "Distortion Effect", ",", "Halftone Effect", ",", "Masking", ",", "Toneburst", ",", "Feedback", ",", "Colors", ",", "Color", ",", "Zoom", ",", "Vidvox", ",", "Clock", ",", "Wipe", ",", "Utility", ",", "Special", ",", "Morph", ",", "Distortion", ",", "Tile Effect", ",", "icalvin102", ",", "Sharpen", ",", "Audio Reactive", ",", "ic102_filter", ",", "GLSLSandbox", ",", "v002" ],
+					"items" : "<empty>",
 					"maxclass" : "umenu",
 					"numinlets" : 1,
 					"numoutlets" : 3,
@@ -809,7 +809,7 @@
 					"numinlets" : 0,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 466.5909423828125, 658.86822509765625, 116.0, 22.0 ],
+					"patching_rect" : [ 466.5909423828125, 663.86822509765625, 116.0, 22.0 ],
 					"text" : "r msgsFromINPUTS"
 				}
 
@@ -856,7 +856,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 481.5909423828125, 788.21258544921875, 133.0, 22.0 ],
+					"patching_rect" : [ 479.0909423828125, 743.05694580078125, 133.0, 22.0 ],
 					"text" : "sprintf append %s (%s)"
 				}
 
@@ -881,7 +881,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "clear", "int" ],
-					"patching_rect" : [ 522.5909423828125, 711.86822509765625, 51.0, 22.0 ],
+					"patching_rect" : [ 588.5909423828125, 783.86822509765625, 51.0, 22.0 ],
 					"text" : "t clear 0"
 				}
 
@@ -896,15 +896,15 @@
 					"numinlets" : 3,
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "" ],
-					"patching_rect" : [ 466.5909423828125, 688.86822509765625, 131.0, 22.0 ],
-					"text" : "route inputDetails clear"
+					"patching_rect" : [ 466.5909423828125, 695.71258544921875, 103.0, 22.0 ],
+					"text" : "route param clear"
 				}
 
 			}
 , 			{
 				"box" : 				{
 					"id" : "obj-27",
-					"items" : [ "inputImage", "(image)", ",", "size", "(float)", ",", "gamma", "(float)", ",", "tint", "(float)", ",", "tintColor", "(color)", ",", "alphaMode", "(bool)" ],
+					"items" : "<empty>",
 					"maxclass" : "umenu",
 					"numinlets" : 1,
 					"numoutlets" : 3,
@@ -935,8 +935,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 828.0909423828125, 739.86822509765625, 177.0, 22.0 ],
-					"text" : "setInputValue inputImage $1 $2"
+					"patching_rect" : [ 828.0909423828125, 739.86822509765625, 139.0, 22.0 ],
+					"text" : "param inputImage $1 $2"
 				}
 
 			}
@@ -980,34 +980,34 @@
 									"outputmode" : [ 1 ],
 									"out_name" : [ "u139003754" ],
 									"dim" : [ 1, 1 ],
-									"position" : [ 0.0 ],
-									"dstrect" : [ 0, 0, 1, 1 ],
-									"output_texture" : [ 0 ],
-									"autostart" : [ 1 ],
-									"usedstrect" : [ 0 ],
-									"vol" : [ 1.0 ],
-									"time_secs" : [ 0.0 ],
-									"rate" : [ 1.0 ],
+									"looppoints" : [ 0, 0 ],
 									"drawto" : [ "" ],
-									"adapt" : [ 1 ],
-									"usesrcrect" : [ 0 ],
-									"loopend" : [ 0 ],
-									"framereport" : [ 0 ],
-									"looppoints_ms" : [ 0, 0 ],
-									"time" : [ 0 ],
-									"interp" : [ 0 ],
-									"automatic" : [ 0 ],
-									"texture_name" : [ "u737003752" ],
-									"srcrect" : [ 0, 0, 1, 1 ],
-									"time_ms" : [ 0 ],
-									"unique" : [ 0 ],
-									"loopreport" : [ 0 ],
-									"colormode" : [ "argb" ],
-									"engine" : [ "avf" ],
-									"looppoints_secs" : [ 0.0, 0.0 ],
 									"moviefile" : [ "" ],
+									"usesrcrect" : [ 0 ],
+									"texture_name" : [ "u737003752" ],
+									"looppoints_ms" : [ 0, 0 ],
+									"loopreport" : [ 0 ],
+									"time" : [ 0 ],
+									"automatic" : [ 0 ],
+									"dstrect" : [ 0, 0, 1, 1 ],
+									"rate" : [ 1.0 ],
+									"framereport" : [ 0 ],
+									"unique" : [ 0 ],
+									"time_ms" : [ 0 ],
+									"looppoints_secs" : [ 0.0, 0.0 ],
 									"loopstart" : [ 0 ],
-									"looppoints" : [ 0, 0 ]
+									"time_secs" : [ 0.0 ],
+									"loopend" : [ 0 ],
+									"engine" : [ "avf" ],
+									"position" : [ 0.0 ],
+									"autostart" : [ 1 ],
+									"interp" : [ 0 ],
+									"output_texture" : [ 0 ],
+									"usedstrect" : [ 0 ],
+									"srcrect" : [ 0, 0, 1, 1 ],
+									"vol" : [ 1.0 ],
+									"adapt" : [ 1 ],
+									"colormode" : [ "argb" ]
 								}
 
 							}
@@ -1020,34 +1020,34 @@
 									"outputmode" : [ 1 ],
 									"out_name" : [ "u139003754" ],
 									"dim" : [ 1, 1 ],
-									"position" : [ 0.0 ],
-									"dstrect" : [ 0, 0, 1, 1 ],
-									"output_texture" : [ 0 ],
-									"autostart" : [ 1 ],
-									"usedstrect" : [ 0 ],
-									"vol" : [ 1.0 ],
-									"time_secs" : [ 0.0 ],
-									"rate" : [ 1.0 ],
+									"looppoints" : [ 0, 0 ],
 									"drawto" : [ "" ],
-									"adapt" : [ 1 ],
-									"usesrcrect" : [ 0 ],
-									"loopend" : [ 0 ],
-									"framereport" : [ 0 ],
-									"looppoints_ms" : [ 0, 0 ],
-									"time" : [ 0 ],
-									"interp" : [ 0 ],
-									"automatic" : [ 0 ],
-									"texture_name" : [ "u737003752" ],
-									"srcrect" : [ 0, 0, 1, 1 ],
-									"time_ms" : [ 0 ],
-									"unique" : [ 0 ],
-									"loopreport" : [ 0 ],
-									"colormode" : [ "argb" ],
-									"engine" : [ "avf" ],
-									"looppoints_secs" : [ 0.0, 0.0 ],
 									"moviefile" : [ "" ],
+									"usesrcrect" : [ 0 ],
+									"texture_name" : [ "u737003752" ],
+									"looppoints_ms" : [ 0, 0 ],
+									"loopreport" : [ 0 ],
+									"time" : [ 0 ],
+									"automatic" : [ 0 ],
+									"dstrect" : [ 0, 0, 1, 1 ],
+									"rate" : [ 1.0 ],
+									"framereport" : [ 0 ],
+									"unique" : [ 0 ],
+									"time_ms" : [ 0 ],
+									"looppoints_secs" : [ 0.0, 0.0 ],
 									"loopstart" : [ 0 ],
-									"looppoints" : [ 0, 0 ]
+									"time_secs" : [ 0.0 ],
+									"loopend" : [ 0 ],
+									"engine" : [ "avf" ],
+									"position" : [ 0.0 ],
+									"autostart" : [ 1 ],
+									"interp" : [ 0 ],
+									"output_texture" : [ 0 ],
+									"usedstrect" : [ 0 ],
+									"srcrect" : [ 0, 0, 1, 1 ],
+									"vol" : [ 1.0 ],
+									"adapt" : [ 1 ],
+									"colormode" : [ "argb" ]
 								}
 
 							}
@@ -1060,34 +1060,34 @@
 									"outputmode" : [ 1 ],
 									"out_name" : [ "u139003754" ],
 									"dim" : [ 1, 1 ],
-									"position" : [ 0.0 ],
-									"dstrect" : [ 0, 0, 1, 1 ],
-									"output_texture" : [ 0 ],
-									"autostart" : [ 1 ],
-									"usedstrect" : [ 0 ],
-									"vol" : [ 1.0 ],
-									"time_secs" : [ 0.0 ],
-									"rate" : [ 1.0 ],
+									"looppoints" : [ 0, 0 ],
 									"drawto" : [ "" ],
-									"adapt" : [ 1 ],
-									"usesrcrect" : [ 0 ],
-									"loopend" : [ 0 ],
-									"framereport" : [ 0 ],
-									"looppoints_ms" : [ 0, 0 ],
-									"time" : [ 0 ],
-									"interp" : [ 0 ],
-									"automatic" : [ 0 ],
-									"texture_name" : [ "u737003752" ],
-									"srcrect" : [ 0, 0, 1, 1 ],
-									"time_ms" : [ 0 ],
-									"unique" : [ 0 ],
-									"loopreport" : [ 0 ],
-									"colormode" : [ "argb" ],
-									"engine" : [ "avf" ],
-									"looppoints_secs" : [ 0.0, 0.0 ],
 									"moviefile" : [ "" ],
+									"usesrcrect" : [ 0 ],
+									"texture_name" : [ "u737003752" ],
+									"looppoints_ms" : [ 0, 0 ],
+									"loopreport" : [ 0 ],
+									"time" : [ 0 ],
+									"automatic" : [ 0 ],
+									"dstrect" : [ 0, 0, 1, 1 ],
+									"rate" : [ 1.0 ],
+									"framereport" : [ 0 ],
+									"unique" : [ 0 ],
+									"time_ms" : [ 0 ],
+									"looppoints_secs" : [ 0.0, 0.0 ],
 									"loopstart" : [ 0 ],
-									"looppoints" : [ 0, 0 ]
+									"time_secs" : [ 0.0 ],
+									"loopend" : [ 0 ],
+									"engine" : [ "avf" ],
+									"position" : [ 0.0 ],
+									"autostart" : [ 1 ],
+									"interp" : [ 0 ],
+									"output_texture" : [ 0 ],
+									"usedstrect" : [ 0 ],
+									"srcrect" : [ 0, 0, 1, 1 ],
+									"vol" : [ 1.0 ],
+									"adapt" : [ 1 ],
+									"colormode" : [ "argb" ]
 								}
 
 							}
@@ -1209,15 +1209,6 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-18", 0 ],
-					"order" : 0,
-					"source" : [ "obj-17", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-2", 0 ],
-					"order" : 1,
 					"source" : [ "obj-17", 0 ]
 				}
 
@@ -1226,6 +1217,15 @@
 				"patchline" : 				{
 					"destination" : [ "obj-16", 0 ],
 					"hidden" : 1,
+					"order" : 0,
+					"source" : [ "obj-18", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-28", 0 ],
+					"order" : 1,
 					"source" : [ "obj-18", 0 ]
 				}
 
