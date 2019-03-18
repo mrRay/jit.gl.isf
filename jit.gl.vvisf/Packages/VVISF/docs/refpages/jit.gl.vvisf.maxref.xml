@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="jit.gl.vvisf" module="VVISF" category="VVISF">
+	
+	<digest>
+		Render ISF files to GL textures
+	</digest>
+	
+	<description>
+		Use <o>jit.gl.vvisf</o> to render ISF files to GL textures.
+	</description>
+	
+	<!--METADATA-->
+	<metadatalist>
+		<metadata name="author">
+			Vidvox
+		</metadata>
+		<metadata name="tag">
+			TEXT_HERE
+		</metadata>
+	</metadatalist>
+	
+	<!--INLETS-->
+	<inletlist>
+		<inlet id="0" type="INLET_TYPE">
+			<digest>
+				GL textures, messages in
+			</digest>
+			<description>
+				TEXT_HERE
+			</description>
+		</inlet>
+	</inletlist>
+	
+	<!--OUTLETS-->
+	<outletlist>
+		<outlet id="0" type="matrix">
+			<digest>
+				Rendered GL textures out
+			</digest>
+			<description>
+				TEXT_HERE
+			</description>
+		</outlet>
+		<outlet id="1" type="OUTLET_TYPE">
+			<digest>
+				Lists describing the loaded ISF's INPUTs
+			</digest>
+			<description>
+				TEXT_HERE
+			</description>
+		</outlet>
+		<outlet id="2" type="OUTLET_TYPE">
+			<digest>
+				Lists describing ISF files installed on the system
+			</digest>
+			<description>
+				TEXT_HERE
+			</description>
+		</outlet>
+		<outlet id="3" type="OUTLET_TYPE">
+			<digest>
+				DumpOut
+			</digest>
+			<description>
+				TEXT_HERE
+			</description>
+		</outlet>
+	</outletlist>
+	
+	<!--MOP-->
+	<mop matrixinputcount="1" matrixoutputcount="1">
+		<matrixoutput name="out" planelink="1" typelink="1" dimlink="1" minplanecount="4" maxplanecount="4" mindimcount="1" maxdimcount="32">
+			<types>
+				char
+			</types>
+		</matrixoutput>
+	</mop>
+	
+	<!--MESSAGES-->
+	<methodlist>
+		<method name="bang">
+			<arglist />
+			<digest>
+				Renders and outputs a frame.
+			</digest>
+			<description>
+				Renders and outputs a frame.
+			</description>
+		</method>
+		<method name="float">
+			<arglist />
+			<digest>
+				Renders and outputs a frame at the given time in seconds.
+			</digest>
+			<description>
+				Renders and outputs a frame at the given time in seconds.
+			</description>
+		</method>
+		<method name="read">
+			<arglist>
+				<arg name="src-name" type="symbol" />
+			</arglist>
+			<digest>
+				Reads an ISF file from disk.
+			</digest>
+			<description>
+				Reads an ISF file.  If src-name is a path, the file at the path will be loaded- if it's a name of a globally installed file, the globally installed file will be loaded.
+			</description>
+		</method>
+		<method name="inputs">
+			<arglist />
+			<digest>
+				Dumps lists describing the loaded ISF's inputs out the appropriate outlet.  The first message output is "clear", which cna be used as a token between dumps.
+			</digest>
+			<description>
+				TEXT_HERE
+			</description>
+		</method>
+		<method name="input">
+			<arglist>
+				<arg name="input-name" type="symbol" />
+			</arglist>
+			<digest>
+				Gets the properties of "input-name"
+			</digest>
+			<description>
+				Returns the properties (min val, max val, default val, current val) of the specified input.  Values are returned in a list which is sent out the "inputs" outlet.
+			</description>
+		</method>
+		<method name="setInputValue">
+			<arglist>
+				<arg name="input-name" type="symbol" />
+				<arg name="input" optional="0" type="list" />
+			</arglist>
+			<digest>
+				Sets the value of one of the loaded ISF's INPUTS
+			</digest>
+			<description>
+				The number and type of args depends on the type of the input- 'long' INPUTS will expect 'long' values, 'float' INPUTS will expect 'float' values, "image" INPUTS will expect jitter matrices/textures.
+			</description>
+		</method>
+		<method name="all_filenames">
+			<arglist />
+			<digest>
+				List all installed ISF filenames.
+			</digest>
+			<description>
+				Dump a list describing all of the ISF files already installed on this system.
+			</description>
+		</method>
+		<method name="source_filenames">
+			<arglist />
+			<digest>
+				List all ISF source/generator filenames.
+			</digest>
+			<description>
+				Dump a list describing the ISF files installed on this system that are sources/generators (ie: not filters or transitions).
+			</description>
+		</method>
+		<method name="filter_filenames">
+			<arglist />
+			<digest>
+				List all ISF filter filenames.
+			</digest>
+			<description>
+				Dump a list describing the ISF files installed on this system that are image filters (they require an image input to function)
+			</description>
+		</method>
+		<method name="transition_filenames">
+			<arglist />
+			<digest>
+				List all ISF transition filenames.
+			</digest>
+			<description>
+				Dump a list describing the ISF files installed on this system that are transitions (they composite two images together)
+			</description>
+		</method>
+		<method name="all_categories">
+			<arglist />
+			<digest>
+				List all categories.
+			</digest>
+			<description>
+				Dump a list describing all of the ISF categories used across all installed ISF files.
+			</description>
+		</method>
+		<method name="category">
+			<arglist>
+				<arg name="category-name" type="symbol" />
+			</arglist>
+			<digest>
+				List all ISFs in passed category name.
+			</digest>
+			<description>
+				Dump a list describing all of the ISF filenames that are in the passed category.
+			</description>
+		</method>
+	</methodlist>
+	
+	<!--ATTRIBUTES-->
+	<attributelist>
+		<attribute name="adapt" get="1" set="1" type="bool" size="1">
+			<digest>
+				If enabled, render size will match input texture size.
+			</digest>
+			<description>
+				If enabled, render size will match input texture size (or last input texture size if rendering was triggered by a bang or time value).
+			</description>
+		</attribute>
+		<attribute name="dim" get="1" set="1" type="int" size="2">
+			<digest>
+				The size at which this object should render if adapt is 0
+			</digest>
+			<description>
+				The size at which this object should render if adapt is 0
+			</description>
+		</attribute>
+		<attribute name="file" get="1" set="1" type="symbol" size="1">
+			<digest>
+				Path of the currently-loaded file.
+			</digest>
+			<description>
+			</description>
+		</attribute>
+	</attributelist>
+	
+	<!--SEEALSO-->
+	<seealsolist>
+		<seealso name="jit.gl.texture" />
+		<seealso display="Video and Graphics 01: Display a Video" module="Video and Graphics" name="01-Display a Video" type="tutorial">
+			Video and Graphics 01: Display a Video
+		</seealso>
+		<seealso display="Video and Graphics 09: Building Live Video Effects" module="Video and Graphics" name="09-Building Live Video Effects" type="tutorial">
+			Video and Graphics 09: Building Live Video Effects
+		</seealso>
+		<seealso display="Video Engines" module="Video and Graphics" name="01-Video Engines" type="vignette">
+			Video Engines
+		</seealso>
+		<seealso display="Direct Texture Output" module="Video and Graphics" name="02-GL Texture Output" type="vignette">
+			GL Texture Output
+		</seealso>
+	</seealsolist>
+	<discussion>
+		DISCUSSION_TEXT_HERE
+	</discussion>
+</c74object>
