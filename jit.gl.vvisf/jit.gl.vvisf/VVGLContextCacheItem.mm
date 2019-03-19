@@ -14,14 +14,14 @@ VVGLContextCacheItem::VVGLContextCacheItem(const GLContextRef & inCtxToCache)	{
 	cout << __PRETTY_FUNCTION__ << endl;
 	
 	if (inCtxToCache->version == GLVersion_2)	{
-		gl2Context = inCtxToCache;
+		gl2Context = inCtxToCache->newContextSharingMe();
 		gl2Pool = make_shared<GLBufferPool>(gl2Context);
 	
 		gl4Context = CreateNewGLContextRef(NULL, CreateGL4PixelFormat());
 		gl4Pool = make_shared<GLBufferPool>(gl4Context);
 	}
 	else if (inCtxToCache->version == GLVersion_4)	{
-		gl4Context = inCtxToCache;
+		gl4Context = inCtxToCache->newContextSharingMe();
 		gl4Pool = make_shared<GLBufferPool>(gl4Context);
 	
 		gl2Context = CreateNewGLContextRef(NULL, CreateDefaultPixelFormat());

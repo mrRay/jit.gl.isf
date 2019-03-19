@@ -584,7 +584,7 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 								jit_attr_setsym(clientTex, gensym("defaultimage"), gensym("white"));
 								jit_attr_setlong(clientTex, gensym("rectangle"), 1);
 								jit_attr_setsym(clientTex, gensym("mode"), gensym("dynamic"));
-								jit_attr_setlong(clientTex, gensym("flip"), 0);
+								jit_attr_setlong(clientTex, ps_flip_j, 0);
 								
 								//	add the client texture to the map
 								TI->inputToClientGLTexPtrMap->emplace(inputName, clientTex);
@@ -599,7 +599,7 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 									}
 								} catch(...) {}
 								
-								//	we just created a gl texture- we have to bind it to this context before we can do anything with it...
+								//	we just created a gl texture- we have to bind it to this context before we can use it...
 								t_symbol			*context = jit_attr_getsym(TI, ps_drawto_j);
 								if (context == NULL)	{
 									post("ERR: context NULL in %s",__func__);
@@ -607,8 +607,6 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 								else	{
 									jit_attr_setsym(clientTex, ps_drawto_j, context);
 		
-									// our texture has to be bound in the new context before we can use it
-									// http://cycling74.com/forums/topic.php?id=29197
 									t_jit_gl_drawinfo			drawInfo;
 									t_symbol			*texName = jit_attr_getsym(clientTex, gensym("name"));
 									if (texName == NULL)	{
@@ -677,7 +675,7 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 }
 
 t_jit_err jit_gl_vvisf_jit_matrix(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
-	post("%s ... %s",__func__,s->s_name);
+	//post("%s ... %s",__func__,s->s_name);
 	//post("%s, argc is %d",__func__,argc);
 	
 	/*
@@ -777,7 +775,7 @@ void jit_gl_vvisf_notify(t_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob
 	//post("%s ... %s %s",__func__,msg->s_name,s->s_name);
 	
 	if (msg == ps_willfree_j || msg == ps_free_j)	{
-		post("%s ... %s %s",__func__,msg->s_name,s->s_name);
+		//post("%s ... %s %s",__func__,msg->s_name,s->s_name);
 		//	get the jitter object
 		//t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(x);
 		//	get the renderer from the jitter object
@@ -987,6 +985,9 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		TI->isfRenderer->render(wrapperTex, renderSize, TI->renderTimeOverride);
 		//	always reset the renderTimeOverride
 		TI->renderTimeOverride = -1.0;
+		
+		//	update the 'flip' flag on the output texture
+		//jit_attr_setlong(TI->outputTexObj, ps_flip_j, (wrapperTex->flipped)?1:0);
 		
 		//jit_attr_setlong(targetInstance, ps_needsRedraw_j, 0);
 		

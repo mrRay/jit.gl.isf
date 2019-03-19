@@ -381,7 +381,9 @@ GLBufferRef ISFRenderer::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const 
 					//post("tex name is %d, dims are %f x %f",texName,tmpSize.width,tmpSize.height);
 					VVGL::Rect			tmpRect = VVGL::Rect(0, 0, tmpSize.width, tmpSize.height);
 					GLBufferPoolRef		tmpPool = _gl2Scene->privatePool();
-					bool				tmpFlipped = (jit_attr_getlong(jitTexture, ps_flip_r)>0) ? false : true;
+					//bool				tmpFlipped = (jit_attr_getlong(jitTexture, ps_flip_r)>0) ? true : false;
+					bool				tmpFlipped = false;
+					//post("tex %d flip is %d",texName,tmpFlipped);
 					returnMe = CreateFromExistingGLTexture(
 						texName,	//	inTexName The name of the OpenGL texture that will be used to populate the GLBuffer.
 						//GLBuffer::Target_Rect,	//	inTexTarget The texture target of the OpenGL texture (GLBuffer::Target)
