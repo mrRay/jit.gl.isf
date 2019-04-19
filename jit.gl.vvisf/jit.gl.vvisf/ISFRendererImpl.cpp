@@ -407,6 +407,7 @@ void ISFRendererImpl::setBufferForInputKey(const MyBufferRef & inBuffer, const s
 			}
 			//	...else the render scene context and the input buffer context are *not* compatible...
 			else	{
+#if defined(VVGL_SDK_MAC)
 				//	copy the buffer we were passed (from the host) to an IOSurface-backed buffer from the host-compatible pool using the host-compatible copier
 				GLBufferPoolRef		hostBP = inBufferRaw->parentBufferPool;
 				GLBufferRef			hostIOSfcTex = CreateRGBATexIOSurface(inBufferRaw->srcRect.size, false, hostBP);
@@ -421,6 +422,9 @@ void ISFRendererImpl::setBufferForInputKey(const MyBufferRef & inBuffer, const s
 				renderIOSfcTex->associatedBuffer = hostIOSfcTex;
 				//	pass this texture to the attr...
 				attr->setCurrentImageBuffer(renderIOSfcTex);
+#elif defined(VVGL_SDK_WIN)
+				cout << "ERR: ctx mismatch in " << __PRETTY_FUNCTION__ << endl;
+#endif
 			}
 			
 			

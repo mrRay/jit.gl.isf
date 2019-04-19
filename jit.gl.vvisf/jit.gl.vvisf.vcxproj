@@ -93,7 +93,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.mxe64</TargetExt>
-    <LibraryPath>$(ProjectDir)..\..\ISFSandbox_win\external\GLEW\win_64;$(ProjectDir)x64\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)..\..\ISFSandbox_win\external\GLEW\win_x64;$(ProjectDir)x64\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

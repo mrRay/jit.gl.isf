@@ -18,7 +18,8 @@ VVGLContextCacheItemImpl::VVGLContextCacheItemImpl(const CGLContextObj & inCtx) 
 	
 	_crossCompatibleContexts = true;
 	GLContextRef			hostCtx = CreateGLContextRefUsing(inCtx, inCtx);
-	
+	setHostGLVersion(hostCtx->version);
+
 	if (hostCtx == nullptr)	{
 		cout << "ERR: unable to create host ctx wrapper, " << __PRETTY_FUNCTION__ << endl;
 	}
@@ -71,6 +72,7 @@ VVGLContextCacheItemImpl::VVGLContextCacheItemImpl(const HGLRC & inHostCtx, cons
 
 	_crossCompatibleContexts = false;
 	hostCtx = CreateGLContextRefUsing(inHostCtx, inHostDevCtx);
+	setHostGLVersion(hostCtx->version);
 
 	if (hostCtx == nullptr) {
 		cout << "ERR: unable to create host ctx wrapper, " << __PRETTY_FUNCTION__ << endl;
