@@ -14,19 +14,27 @@
 		1A12A53F2231C0FE0099918C /* ISFRenderer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1A12A53D2231C0FE0099918C /* ISFRenderer.hpp */; };
 		1A28706D2230501800BFACA1 /* libVVGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A28706C2230501800BFACA1 /* libVVGL.a */; };
 		1A28706F2230502300BFACA1 /* libVVISF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A28706E2230502300BFACA1 /* libVVISF.a */; };
-		1A58CEC12231AA3600B6E9F0 /* VVGLContextCacheItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.mm */; };
+		1A58CEC12231AA3600B6E9F0 /* VVGLContextCacheItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.cpp */; };
 		1A58CEC22231AA3600B6E9F0 /* VVGLContextCacheItem.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1A58CEC02231AA3600B6E9F0 /* VVGLContextCacheItem.hpp */; };
 		1A66C7BC223596ED0047F82F /* jit.gl.vvisf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A66C7BB223596ED0047F82F /* jit.gl.vvisf.h */; };
 		1A66C7BE223596F40047F82F /* max.jit.gl.vvisf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A66C7BD223596F40047F82F /* max.jit.gl.vvisf.h */; };
 		1A8AA66522404CBC008C9576 /* ISFFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A8AA66322404CBC008C9576 /* ISFFile.cpp */; };
 		1A8AA66622404CBC008C9576 /* ISFFile.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1A8AA66422404CBC008C9576 /* ISFFile.hpp */; };
+		1A9265ED22693E0F0008DD0E /* ISFRendererImpl.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1A9265EB22693E0F0008DD0E /* ISFRendererImpl.hpp */; };
+		1A9265EE22693E0F0008DD0E /* ISFRendererImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A9265EC22693E0F0008DD0E /* ISFRendererImpl.cpp */; };
+		1A9265F322693E220008DD0E /* MyBufferImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A9265EF22693E210008DD0E /* MyBufferImpl.cpp */; };
+		1A9265F422693E220008DD0E /* MyBuffer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1A9265F022693E210008DD0E /* MyBuffer.hpp */; };
+		1A9265F522693E220008DD0E /* MyBufferImpl.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1A9265F122693E210008DD0E /* MyBufferImpl.hpp */; };
+		1A9265F622693E220008DD0E /* MyBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A9265F222693E210008DD0E /* MyBuffer.cpp */; };
+		1A9265F922693E2C0008DD0E /* VVGLContextCacheItemImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A9265F722693E2C0008DD0E /* VVGLContextCacheItemImpl.cpp */; };
+		1A9265FA22693E2C0008DD0E /* VVGLContextCacheItemImpl.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1A9265F822693E2C0008DD0E /* VVGLContextCacheItemImpl.hpp */; };
 		1AA7025D223A6623001B93B0 /* Default ColorBars.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1AA7025C223A6623001B93B0 /* Default ColorBars.fs */; };
 		1AAB27DC223998C100F52F74 /* ISFFileManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB27DA223998C100F52F74 /* ISFFileManager.cpp */; };
 		1AAB27DD223998C100F52F74 /* ISFFileManager.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1AAB27DB223998C100F52F74 /* ISFFileManager.hpp */; };
 		1AAB27E0223998CD00F52F74 /* ISFFileManager_Mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB27DE223998CD00F52F74 /* ISFFileManager_Mac.mm */; };
 		1AAB27E1223998CD00F52F74 /* ISFFileManager_Mac.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1AAB27DF223998CD00F52F74 /* ISFFileManager_Mac.hpp */; };
 		1B8F532E11CFB4FE009968B9 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B8F532D11CFB4FE009968B9 /* OpenGL.framework */; };
-		1B8F534911CFB5AE009968B9 /* jit.gl.vvisf.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.mm */; };
+		1B8F534911CFB5AE009968B9 /* jit.gl.vvisf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.cpp */; };
 		1B8F541B11CFCF98009968B9 /* max.jit.gl.vvisf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F541A11CFCF98009968B9 /* max.jit.gl.vvisf.cpp */; };
 		1B8F573111D02E84009968B9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B8F573011D02E84009968B9 /* Cocoa.framework */; };
 		1B8F574411D02EBD009968B9 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B8F574311D02EBD009968B9 /* AGL.framework */; };
@@ -70,19 +78,27 @@
 		1A12A53D2231C0FE0099918C /* ISFRenderer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ISFRenderer.hpp; path = jit.gl.vvisf/ISFRenderer.hpp; sourceTree = "<group>"; };
 		1A28706C2230501800BFACA1 /* libVVGL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libVVGL.a; path = ../../ISFSandbox/VVGL/bin/libVVGL.a; sourceTree = "<group>"; };
 		1A28706E2230502300BFACA1 /* libVVISF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libVVISF.a; path = ../../ISFSandbox/VVISF/bin/libVVISF.a; sourceTree = "<group>"; };
-		1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = VVGLContextCacheItem.mm; path = jit.gl.vvisf/VVGLContextCacheItem.mm; sourceTree = "<group>"; };
+		1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VVGLContextCacheItem.cpp; path = jit.gl.vvisf/VVGLContextCacheItem.cpp; sourceTree = "<group>"; };
 		1A58CEC02231AA3600B6E9F0 /* VVGLContextCacheItem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VVGLContextCacheItem.hpp; path = jit.gl.vvisf/VVGLContextCacheItem.hpp; sourceTree = "<group>"; };
 		1A66C7BB223596ED0047F82F /* jit.gl.vvisf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jit.gl.vvisf.h; path = jit.gl.vvisf/jit.gl.vvisf.h; sourceTree = "<group>"; };
 		1A66C7BD223596F40047F82F /* max.jit.gl.vvisf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = max.jit.gl.vvisf.h; path = jit.gl.vvisf/max.jit.gl.vvisf.h; sourceTree = "<group>"; };
 		1A8AA66322404CBC008C9576 /* ISFFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ISFFile.cpp; path = jit.gl.vvisf/ISFFile.cpp; sourceTree = "<group>"; };
 		1A8AA66422404CBC008C9576 /* ISFFile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ISFFile.hpp; path = jit.gl.vvisf/ISFFile.hpp; sourceTree = "<group>"; };
+		1A9265EB22693E0F0008DD0E /* ISFRendererImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ISFRendererImpl.hpp; path = jit.gl.vvisf/ISFRendererImpl.hpp; sourceTree = "<group>"; };
+		1A9265EC22693E0F0008DD0E /* ISFRendererImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ISFRendererImpl.cpp; path = jit.gl.vvisf/ISFRendererImpl.cpp; sourceTree = "<group>"; };
+		1A9265EF22693E210008DD0E /* MyBufferImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MyBufferImpl.cpp; path = jit.gl.vvisf/MyBufferImpl.cpp; sourceTree = "<group>"; };
+		1A9265F022693E210008DD0E /* MyBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MyBuffer.hpp; path = jit.gl.vvisf/MyBuffer.hpp; sourceTree = "<group>"; };
+		1A9265F122693E210008DD0E /* MyBufferImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MyBufferImpl.hpp; path = jit.gl.vvisf/MyBufferImpl.hpp; sourceTree = "<group>"; };
+		1A9265F222693E210008DD0E /* MyBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MyBuffer.cpp; path = jit.gl.vvisf/MyBuffer.cpp; sourceTree = "<group>"; };
+		1A9265F722693E2C0008DD0E /* VVGLContextCacheItemImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VVGLContextCacheItemImpl.cpp; path = jit.gl.vvisf/VVGLContextCacheItemImpl.cpp; sourceTree = "<group>"; };
+		1A9265F822693E2C0008DD0E /* VVGLContextCacheItemImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VVGLContextCacheItemImpl.hpp; path = jit.gl.vvisf/VVGLContextCacheItemImpl.hpp; sourceTree = "<group>"; };
 		1AA7025C223A6623001B93B0 /* Default ColorBars.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = "Default ColorBars.fs"; path = "jit.gl.vvisf/Default ColorBars.fs"; sourceTree = "<group>"; };
 		1AAB27DA223998C100F52F74 /* ISFFileManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ISFFileManager.cpp; path = jit.gl.vvisf/ISFFileManager.cpp; sourceTree = "<group>"; };
 		1AAB27DB223998C100F52F74 /* ISFFileManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ISFFileManager.hpp; path = jit.gl.vvisf/ISFFileManager.hpp; sourceTree = "<group>"; };
 		1AAB27DE223998CD00F52F74 /* ISFFileManager_Mac.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = ISFFileManager_Mac.mm; path = jit.gl.vvisf/ISFFileManager_Mac.mm; sourceTree = "<group>"; };
 		1AAB27DF223998CD00F52F74 /* ISFFileManager_Mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ISFFileManager_Mac.hpp; path = jit.gl.vvisf/ISFFileManager_Mac.hpp; sourceTree = "<group>"; };
 		1B8F532D11CFB4FE009968B9 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = jit.gl.vvisf.mm; path = jit.gl.vvisf/jit.gl.vvisf.mm; sourceTree = "<group>"; };
+		1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jit.gl.vvisf.cpp; path = jit.gl.vvisf/jit.gl.vvisf.cpp; sourceTree = "<group>"; };
 		1B8F541A11CFCF98009968B9 /* max.jit.gl.vvisf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = max.jit.gl.vvisf.cpp; path = jit.gl.vvisf/max.jit.gl.vvisf.cpp; sourceTree = "<group>"; };
 		1B8F573011D02E84009968B9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		1B8F574311D02EBD009968B9 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = System/Library/Frameworks/AGL.framework; sourceTree = SDKROOT; };
@@ -147,13 +163,21 @@
 			isa = PBXGroup;
 			children = (
 				1A66C7BB223596ED0047F82F /* jit.gl.vvisf.h */,
-				1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.mm */,
+				1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.cpp */,
 				1A66C7BD223596F40047F82F /* max.jit.gl.vvisf.h */,
 				1B8F541A11CFCF98009968B9 /* max.jit.gl.vvisf.cpp */,
 				1A58CEC02231AA3600B6E9F0 /* VVGLContextCacheItem.hpp */,
-				1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.mm */,
+				1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.cpp */,
+				1A9265F722693E2C0008DD0E /* VVGLContextCacheItemImpl.cpp */,
+				1A9265F822693E2C0008DD0E /* VVGLContextCacheItemImpl.hpp */,
 				1A12A53C2231C0FE0099918C /* ISFRenderer.cpp */,
 				1A12A53D2231C0FE0099918C /* ISFRenderer.hpp */,
+				1A9265EC22693E0F0008DD0E /* ISFRendererImpl.cpp */,
+				1A9265EB22693E0F0008DD0E /* ISFRendererImpl.hpp */,
+				1A9265F222693E210008DD0E /* MyBuffer.cpp */,
+				1A9265F022693E210008DD0E /* MyBuffer.hpp */,
+				1A9265EF22693E210008DD0E /* MyBufferImpl.cpp */,
+				1A9265F122693E210008DD0E /* MyBufferImpl.hpp */,
 				1AAB27DA223998C100F52F74 /* ISFFileManager.cpp */,
 				1AAB27DB223998C100F52F74 /* ISFFileManager.hpp */,
 				1AAB27DE223998CD00F52F74 /* ISFFileManager_Mac.mm */,
@@ -199,9 +223,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A66C7BE223596F40047F82F /* max.jit.gl.vvisf.h in Headers */,
+				1A9265F422693E220008DD0E /* MyBuffer.hpp in Headers */,
 				1A12A53F2231C0FE0099918C /* ISFRenderer.hpp in Headers */,
+				1A9265FA22693E2C0008DD0E /* VVGLContextCacheItemImpl.hpp in Headers */,
 				1A58CEC22231AA3600B6E9F0 /* VVGLContextCacheItem.hpp in Headers */,
+				1A9265F522693E220008DD0E /* MyBufferImpl.hpp in Headers */,
 				1AAB27E1223998CD00F52F74 /* ISFFileManager_Mac.hpp in Headers */,
+				1A9265ED22693E0F0008DD0E /* ISFRendererImpl.hpp in Headers */,
 				1AAB27DD223998C100F52F74 /* ISFFileManager.hpp in Headers */,
 				1A8AA66622404CBC008C9576 /* ISFFile.hpp in Headers */,
 				1A66C7BC223596ED0047F82F /* jit.gl.vvisf.h in Headers */,
@@ -328,13 +356,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B8F534911CFB5AE009968B9 /* jit.gl.vvisf.mm in Sources */,
+				1A9265F322693E220008DD0E /* MyBufferImpl.cpp in Sources */,
+				1B8F534911CFB5AE009968B9 /* jit.gl.vvisf.cpp in Sources */,
+				1A9265F922693E2C0008DD0E /* VVGLContextCacheItemImpl.cpp in Sources */,
 				1A12A53E2231C0FE0099918C /* ISFRenderer.cpp in Sources */,
 				1AAB27E0223998CD00F52F74 /* ISFFileManager_Mac.mm in Sources */,
 				1A8AA66522404CBC008C9576 /* ISFFile.cpp in Sources */,
 				1B8F541B11CFCF98009968B9 /* max.jit.gl.vvisf.cpp in Sources */,
 				1AAB27DC223998C100F52F74 /* ISFFileManager.cpp in Sources */,
-				1A58CEC12231AA3600B6E9F0 /* VVGLContextCacheItem.mm in Sources */,
+				1A9265F622693E220008DD0E /* MyBuffer.cpp in Sources */,
+				1A58CEC12231AA3600B6E9F0 /* VVGLContextCacheItem.cpp in Sources */,
+				1A9265EE22693E0F0008DD0E /* ISFRendererImpl.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

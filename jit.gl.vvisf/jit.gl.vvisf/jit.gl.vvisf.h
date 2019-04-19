@@ -3,25 +3,31 @@
 
 
 
+/*
+#include "VVGL.hpp"
+#include "VVISF.hpp"
+*/
+#include "ISFRenderer.hpp"
 
 #include "jit.common.h"
 #include "jit.gl.h"
-#include "jit.gl.ob3d.h"
+//#include "jit.gl.ob3d.h"
 #include "ext_obex.h"
 
-#include "VVGL.hpp"
-#include "VVISF.hpp"
-#include "ISFRenderer.hpp"
+//#include "VVISF.hpp"
 
 #include <map>
 #include <string>
+#include "MyBuffer.hpp"
 
 
 
 
+/*
 BEGIN_USING_C_LINKAGE
 t_jit_err jit_ob3d_dest_name_set(t_jit_object *targetInstance, void *attr, long argc, t_atom *argv);
 END_USING_C_LINKAGE
+*/
 
 
 
@@ -31,7 +37,7 @@ typedef struct _jit_gl_vvisf	{
 	t_object			ob;			
 	// 3d object extension.	 This is what all objects in the GL group have in common.
 	void				*ob3d;
-		
+	
 	//	attributes (automatically recognized by max)
 	t_symbol			*file;	//	
 	t_atom_long			adapt;	//	if 1, render resolution is the resolution of the incoming texture.  if 0, render resolution is 'dim' attribute.
@@ -42,8 +48,13 @@ typedef struct _jit_gl_vvisf	{
 	
 	//	ivars (not to be confused with attributes!)
 	ISFRenderer			*isfRenderer;	//	this owns the GL scenes and does all the rendering
-	std::map<std::string,std::string>		*inputToHostTexNameMap;	//	key is string of attribute name, value is string of the jitter object name of the gl texture (turn this into a t_symbol and use it to find the registered object to locate the jitter object) owned by the host.  THE HOST OWNS ALL OF THE JIT_GL_TEXTURE OBJECTS REFERENCED BY NAME IN THIS MAP!
-	std::map<std::string,t_jit_object*>		*inputToClientGLTexPtrMap;	//	key is string of attribute name, value is a ptr to the jit_gl_texture object allocated and owned by this object.  THIS OBJECT ALLOCATES AND OWNS AND MUST DELETE ALL OF THE JIT_GL_TEXTURE OBJECTS OWNED BY THIS MAP!
+	
+	//	key is string of attribute name, value is string of the jitter object name of the gl texture (turn this into a t_symbol and use it to find the registered object to locate the jitter object) owned by the host.  THE HOST- NOT SELF- OWNS ALL OF THE JIT_GL_TEXTURE OBJECTS REFERENCED BY NAME IN THIS MAP!
+	std::map<std::string,std::string>		*inputToHostTexNameMap;
+	
+	//	key is string of attribute name, value is a ptr to the jit_gl_texture object allocated and owned by this object.  THIS OBJECT ALLOCATES AND OWNS AND MUST DELETE ALL OF THE JIT_GL_TEXTURE OBJECTS OWNED BY THIS MAP!
+	std::map<std::string,t_jit_object*>		*inputToClientGLTexPtrMap;
+	
 	t_symbol			*creationName;	//	the symbol passed on instance creation
 	
 	// internal jit.gl.texture object
@@ -89,6 +100,9 @@ t_jit_err jit_gl_vvisf_setattr_dim(t_jit_gl_vvisf *targetInstance, void *attr, l
 
 //	getters
 ISFRenderer * jit_gl_vvisf_get_renderer(t_jit_gl_vvisf *targetInstance);
+
+//	misc
+MyBufferRef jit_gl_vvisf_apply_jit_tex_for_input_key(t_jit_gl_vvisf *targetInstance, t_symbol *inJitGLTexNameSym, const std::string & inInputName);
 
 // for our internal texture
 extern t_symbol			*ps_jit_gl_texture;

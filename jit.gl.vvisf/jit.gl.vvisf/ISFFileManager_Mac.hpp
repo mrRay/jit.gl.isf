@@ -3,6 +3,8 @@
 
 #include "ISFFileManager.hpp"
 
+#include <vector>
+
 
 
 
@@ -14,23 +16,23 @@ class ISFFileManager_Mac : virtual public ISFFileManager
 		//	clears my local map of entries, repopulates it with the appropriate directories
 		virtual void populateEntries();
 		//	the returned ISFFile should have its "isValid()" method queried to determine if it's valid or not (if a file entry was found or not)
-		virtual ISFFile fileEntryForName(const string & inName);
+		virtual ISFFile fileEntryForName(const std::string & inName);
 		
-		virtual vector<string> fileNames();
-		virtual vector<string> generatorNames();
-		virtual vector<string> filterNames();
-		virtual vector<string> transitionNames();
-		virtual vector<string> categories();
-		virtual vector<string> fileNamesForCategory(const string & inCategory);
+		virtual std::vector<std::string> fileNames();
+		virtual std::vector<std::string> generatorNames();
+		virtual std::vector<std::string> filterNames();
+		virtual std::vector<std::string> transitionNames();
+		virtual std::vector<std::string> categories();
+		virtual std::vector<std::string> fileNamesForCategory(const std::string & inCategory);
 		
 	private:
-		void insertFilesFromDirectory(const string & inDirRaw, const bool & inRecursive=false);
+		void insertFilesFromDirectory(const std::string & inDirRaw, const bool & inRecursive=false);
 };
 
 
 
 
-ISFFile CreateISFFileFromPath(const string & inPath);
+ISFFile CreateISFFileFromPath(const std::string & inPath);
 
 
 

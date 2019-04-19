@@ -1,8 +1,17 @@
 #include "max.jit.gl.vvisf.h"
 
 #include "jit.gl.vvisf.h"
+
 #include "ISFRenderer.hpp"
+#include "ISFAttr.hpp"
+#include "VVISF_Base.hpp"
+
+#if defined(VVGL_SDK_MAC)
 #include "ISFFileManager_Mac.hpp"
+#elif defined(VVGL_SDK_WIN)
+#include "ISFFileManager_Win.hpp"
+#endif
+
 
 
 
@@ -17,7 +26,14 @@ t_symbol			*ps_file;
 t_symbol			*ps_clear;
 t_symbol			*ps_glid;
 
+#if defined(VVGL_SDK_MAC)
 static ISFFileManager_Mac		*fm = NULL;
+#elif defined(VVGL_SDK_WIN)
+static ISFFileManager_Win		*fm = NULL;
+#endif
+
+using namespace std;
+
 
 
 
@@ -32,10 +48,16 @@ int C74_EXPORT main(void)
 	ps_clear = gensym("clear");
 	ps_glid = gensym("glid");
 	
+	
 	if (fm == NULL)	{
+#if defined(VVGL_SDK_MAC)
 		fm = new ISFFileManager_Mac;
+#elif defined(VVGL_SDK_WIN)
+		fm = new ISFFileManager_Win;
+#endif
 		fm->populateEntries();
 	}
+	
 	
 	void			*classex;
 	void			*jitclass;
@@ -196,14 +218,15 @@ void max_jit_gl_vvisf_anything(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, 
 */
 void max_jit_gl_vvisf_read(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
 	//post("%s ... %s",__func__,s->s_name);
-	if (s == nil)
+	
+	if (s == NULL)
 		return;
 	
 	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(targetInstance);
 	if (jitob != NULL)	{
-		bool				foundTheFile = false;
+		//bool				foundTheFile = false;
 		//	we don't know if the passed symbol is a filename or a path- assume a filename at first
-		string				inStr((char*)s->s_name);
+		std::string				inStr((char*)s->s_name);
 		ISFFile				fileEntry = fm->fileEntryForName(inStr);
 		if (fileEntry.isValid())
 			jit_attr_setsym( jitob, ps_file, gensym(fileEntry.path().c_str()) );
@@ -212,9 +235,29 @@ void max_jit_gl_vvisf_read(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
 	}
 	
 	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);
+	
 }
 void max_jit_gl_vvisf_getparamlist(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
+	
+	//	get the ISF file's INPUTS, dump them out the approrpiate outlet
+	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
+	ISFRenderer			*renderer = (jitObj == NULL) ? NULL : jit_gl_vvisf_get_renderer(jitObj);
+	if (renderer == NULL)
+		return;
+	std::vector<std::string>	tmpNames = renderer->paramNames();
+	if (tmpNames.size() < 1)
+		return;
+	//	send a "clear" message out the outlet ("getparamlist clear"
+	outlet_anything(targetInstance->inputsout, ps_clear, 0, 0L);
+
+	//	now run through the param names, triggering a "get param" message for each param (this goes through the max infrastructure)
+	for (const auto & tmpName : tmpNames) {
+		max_jit_gl_vvisf_getparam(targetInstance, gensym(tmpName.c_str()));
+	}
+
+
+	/*
 	//	get the ISF file's INPUTS, dump them out the approrpiate outlet
 	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
 	ISFRenderer			*renderer = (jitObj==NULL) ? NULL : jit_gl_vvisf_get_renderer(jitObj);
@@ -230,53 +273,21 @@ void max_jit_gl_vvisf_getparamlist(t_max_jit_gl_vvisf *targetInstance)	{
 		for (const auto & tmpAttr : tmpAttrs)	{
 			max_jit_gl_vvisf_getparam(targetInstance, gensym( tmpAttr->name().c_str() ));
 		}
-		/*
-		t_atom				tmpList[2];
-		auto				tmpAttrs = tmpDoc->inputs();
-		for (const auto & tmpAttr : tmpAttrs)	{
-			atom_setsym(tmpList+0, gensym(tmpAttr->name().c_str()));	//	input name
-			
-			switch (tmpAttr->type())	{
-			case ISFValType_None:
-				break;
-			case ISFValType_Event:
-				break;
-			case ISFValType_Bool:
-				break;
-			case ISFValType_Long:
-				break;
-			case ISFValType_Float:
-				break;
-			case ISFValType_Point2D:
-				break;
-			case ISFValType_Color:
-				break;
-			case ISFValType_Cube:
-				break;
-			case ISFValType_Image:
-				break;
-			case ISFValType_Audio:
-				break;
-			case ISFValType_AudioFFT:
-				break;
-			}
-			
-			outlet_anything(targetInstance->inputsout, gensym("input"), 1, tmpList);
-		}
-		*/
 	}
-	
+	*/
 }
 void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
 	//post("%s ... %s",__func__,s->s_name);
 	if (targetInstance==NULL || s==NULL)
 		return;
+	
 	//	get the ISF file's INPUTS, dump them out the approrpiate outlet
 	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
 	ISFRenderer			*renderer = (jitObj==NULL) ? NULL : jit_gl_vvisf_get_renderer(jitObj);
-	ISFDocRef			tmpDoc = (renderer==NULL) ? nullptr : renderer->loadedISFDoc();
+	//ISFDocRef			tmpDoc = (renderer==NULL) ? nullptr : renderer->loadedISFDoc();
 	string				attrName = string((char*)s->s_name);
-	ISFAttrRef			tmpAttr = (tmpDoc==nullptr) ? nullptr : tmpDoc->input(attrName);
+	//ISFAttrRef			tmpAttr = (tmpDoc==nullptr) ? nullptr : tmpDoc->input(attrName);
+	ISFAttrRef			tmpAttr = (renderer == nullptr) ? nullptr : renderer->paramNamed(attrName);
 	ISFVal				tmpVal;
 	if (tmpAttr != nullptr)	{
 		t_atom				tmpList[7];
@@ -411,11 +422,13 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	
 		
 		outlet_anything(targetInstance->inputsout, gensym("param"), 7, tmpList);
 	}
+	
 }
 
 
 void max_jit_gl_vvisf_all_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
+	
 	if (targetInstance==NULL)
 		return;
 	if (fm == NULL)
@@ -430,9 +443,11 @@ void max_jit_gl_vvisf_all_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 		atom_setsym(&outAtom, gensym( filename.c_str() ));
 		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
 	}
+	
 }
 void max_jit_gl_vvisf_source_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
+	
 	if (targetInstance==NULL)
 		return;
 	if (fm == NULL)
@@ -447,9 +462,11 @@ void max_jit_gl_vvisf_source_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 		atom_setsym(&outAtom, gensym( filename.c_str() ));
 		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
 	}
+	
 }
 void max_jit_gl_vvisf_filter_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
+	
 	if (targetInstance==NULL)
 		return;
 	if (fm == NULL)
@@ -464,9 +481,11 @@ void max_jit_gl_vvisf_filter_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 		atom_setsym(&outAtom, gensym( filename.c_str() ));
 		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
 	}
+	
 }
 void max_jit_gl_vvisf_transition_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
+	
 	if (targetInstance==NULL)
 		return;
 	if (fm == NULL)
@@ -481,9 +500,11 @@ void max_jit_gl_vvisf_transition_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 		atom_setsym(&outAtom, gensym( filename.c_str() ));
 		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
 	}
+	
 }
 void max_jit_gl_vvisf_all_categories(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
+	
 	if (targetInstance==NULL)
 		return;
 	if (fm == NULL)
@@ -499,9 +520,11 @@ void max_jit_gl_vvisf_all_categories(t_max_jit_gl_vvisf *targetInstance)	{
 		atom_setsym(&outAtom, gensym( category.c_str() ));
 		outlet_anything(targetInstance->filesout, gensym("category"), 1, &outAtom);
 	}
+	
 }
 void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
 	//post("%s ... %s",__func__,s->s_name);
+	
 	if (targetInstance==NULL || s==NULL)
 		return;
 	if (fm == NULL)
@@ -516,6 +539,7 @@ void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_s
 		atom_setsym(&outAtom, gensym( filename.c_str() ));
 		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
 	}
+	
 }
 
 

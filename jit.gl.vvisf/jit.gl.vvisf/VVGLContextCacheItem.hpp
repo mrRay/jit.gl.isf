@@ -1,49 +1,61 @@
-#include "VVISF.hpp"
+#ifndef VVGLContextCacheItem_h
+#define VVGLContextCacheItem_h
+
+#include <memory>
+
+#if defined(VVGL_SDK_MAC)
+	#include <OpenGL/OpenGL.h>
+#elif defined(VVGL_SDK_WIN)
+	#include <Windows.h>
+	//#include <GL/glew.h>
+	//#include <GL/wglew.h>
+#endif	//	VVGL_SDK_WIN
 
 
-/*		caches a GL context (provided on init by the host, expected to be a GL2-based context).  also creates a pool and copier that shares the context (the pool and copier create their own contexts)			*/
 
 
-using namespace VVGL;
-using namespace VVISF;
-
+//	private implementation class, should never need to use or work with directly
+class VVGLContextCacheItemImpl;
+//	"itemRef" == shared_ptr
 class VVGLContextCacheItem;
-using VVGLContextCacheItemRef = shared_ptr<VVGLContextCacheItem>;
+using VVGLContextCacheItemRef = std::shared_ptr<VVGLContextCacheItem>;
 
 
-class VVGLContextCacheItem	{
-	private:
-		GLVersion				hostGLVersion = GLVersion_2;
-		
-		GLContextRef			gl2Context = nullptr;	//	this is the shared ctx for gl2 contexts
-		GLBufferPoolRef			gl2Pool = nullptr;
-		
-		GLContextRef			gl4Context = nullptr;	//	this is the shared ctx for gl4 contexts
-		GLBufferPoolRef			gl4Pool = nullptr;
-		
-		GLTexToTexCopierRef		gl2Copier = nullptr;
-		GLTexToTexCopierRef		gl4Copier = nullptr;
-	
-	public:
-		VVGLContextCacheItem() = default;
-		VVGLContextCacheItem(const GLContextRef & inCtxToCache);	//	"retains" passed ctx, DOES NOT CREATE A NEW CTX OF THE SAME VERSION (creates a ctx of the "other" vers, so if you pass it a gl2 ctx, the gl2 ctx will be retained and a gl4 ctx will be created)
-		~VVGLContextCacheItem();
-		
-		VVGLContextCacheItem & operator=(const VVGLContextCacheItem & n);
-		VVGLContextCacheItem & operator=(const VVGLContextCacheItemRef & n);
-		
-		inline GLContextRef getGL2Context() const { return gl2Context; };
-		inline GLBufferPoolRef getGL2Pool() const { return gl2Pool; };
-		inline GLContextRef getGL4Context() const { return gl4Context; };
-		inline GLBufferPoolRef getGL4Pool() const { return gl4Pool; };
-		
-		inline GLTexToTexCopierRef getGL2Copier() const { return gl2Copier; };
-		inline GLTexToTexCopierRef getGL4Copier() const { return gl4Copier; };
-		
-		inline void setHostGLVersion(const GLVersion & n) { hostGLVersion=n; };
-		inline GLVersion getHostGLVersion() { return hostGLVersion; }
+
+
+class VVGLContextCacheItem {
+private:
+	//	private implementation ivar to ensure complete separation of GL stuff between VVGL/VVISF and jitter
+	VVGLContextCacheItemImpl		*_pi = nullptr;
+
+public:
+	VVGLContextCacheItem();
+	VVGLContextCacheItem(VVGLContextCacheItemImpl * inPrivImplAssumesOwnership);
+	~VVGLContextCacheItem();
+
+#if defined(VVGL_SDK_MAC)
+	bool matchesContext(const CGLContextObj & inCtx);
+#elif defined(VVGL_SDK_WIN)
+	bool matchesContext(const HGLRC & inGLCtx, const HDC & inDevCtx);
+#endif
+
+	VVGLContextCacheItemImpl * pi() { return _pi; }
 };
 
+
+
+
+
+
+#if defined(VVGL_SDK_MAC)
 VVGLContextCacheItemRef GetCacheItemForContext(const CGLContextObj & inHostCtx);
-VVGLContextCacheItemRef GetCacheItemForContext(const GLContextRef & inHostCtx);
+#elif defined(VVGL_SDK_WIN)
+VVGLContextCacheItemRef GetCacheItemForContext(const HGLRC & inHostCtx, const HDC & inHostDevCtx);
+#endif
+//VVGLContextCacheItemRef GetCacheItemForContext(const GLContextRef & inHostCtx);
 void ReturnCacheItemToPool(const VVGLContextCacheItemRef & inItem);
+
+
+
+
+#endif	//	VVGLContextCacheItem_h

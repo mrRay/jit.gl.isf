@@ -1,9 +1,14 @@
 
 #include "jit.gl.vvisf.h"
 
-#import <Cocoa/Cocoa.h>
-
 #include "max.jit.gl.vvisf.h"
+
+#include "VVGLContextCacheItem.hpp"
+
+//#include "VVGL_Geom.hpp"
+#include "ISFAttr.hpp"
+#include "VVISF_Base.hpp"
+#include "MyBuffer.hpp"
 
 
 
@@ -25,6 +30,7 @@ t_symbol			*ps_draw_j;
 t_symbol			*ps_willfree_j;
 t_symbol			*ps_free_j;
 t_symbol			*ps_jit_gl_texture_j;
+t_symbol			*ps_gltarget_j;
 
 
 
@@ -59,6 +65,7 @@ t_jit_err jit_gl_vvisf_init(void)	{
 	ps_willfree_j = gensym("willfree");
 	ps_free_j = gensym("free");
 	ps_jit_gl_texture_j = gensym("jit_gl_texture");
+	ps_gltarget_j = gensym("gltarget");
 	
 	// setup our OB3D flags to indicate our capabilities.
 	long			ob3d_flags = JIT_OB3D_NO_MATRIXOUTPUT; // no matrix output
@@ -188,6 +195,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 	
 	// make jit object
 	if ((targetInstance = (t_jit_gl_vvisf *)jit_object_alloc(_jit_gl_vvisf_class)))	{
+		
 		TI->isfRenderer = new ISFRenderer(/*targetInstance*/);
 		
 		TI->adapt = 1;
@@ -221,7 +229,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 			jit_attr_setlong_array(TI->outputTexObj, _jit_sym_dim, 2, TI->dim);
 		}
 		else	{
-			post("error creating internal texture object");
+			post("jit.gl.vvisf: ERR: creating internal texture object");
 			jit_object_error((t_object *)targetInstance,(char*)"jit.gl.syphonserver: could not create texture");
 		}
 		
@@ -246,11 +254,12 @@ void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
 	//}
 	
 	//[pool drain];
-	
+
 	if (TI->isfRenderer != NULL)	{
 		delete TI->isfRenderer;
 		TI->isfRenderer = NULL;
 	}
+	
 	
 	{
 		//	run through the input name to host texture name map, unregistering for notification on all of the textures in it
@@ -285,6 +294,7 @@ void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
 			TI->inputToClientGLTexPtrMap = nullptr;
 		}
 	}
+	
 
 	// free our ob3d data 
 	if(targetInstance)
@@ -302,56 +312,58 @@ void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
 
 /*
 void jit_gl_vvisf_loadFile(t_jit_gl_vvisf *targetInstance, const string & inFilePath)	{
-	post("%s ... %s",__func__,inFilePath.c_str());
+	//post("%s ... %s",__func__,inFilePath.c_str());
 }
 */
 void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
 	
 	using namespace std;
+	using namespace VVISF;
+
 	//post("%s, argc is %d",__func__,argc);
 	
-	/*
-	{
-		t_atom			*aptr = argv;
-		long			i = 0;
-		for (i=0; i<argc; i++)	{
-			switch (atom_gettype(aptr))	{
-			case A_NOTHING:
-				post("\targ %d is null", i);
-				break;
-			case A_LONG:
-			case A_DEFLONG:
-				post("\targ %d is %d", i, (int)aptr->a_w.w_long);
-				break;
-			case A_FLOAT:
-			case A_DEFFLOAT:
-				post("\targ %d is %f", i, aptr->a_w.w_float);
-				break;
-			case A_SYM:
-			case A_DEFSYM:
-				post("\targ %d is %s", i, aptr->a_w.w_sym->s_name);
-				break;
-			case A_OBJ:
-				post("\targ %d is an object", i);
-				break;
-			case A_GIMME:
-			case A_CANT:
-			case A_SEMI:
-			case A_COMMA:
-			case A_DOLLAR:
-			case A_DOLLSYM:
-			case A_GIMMEBACK:
-			case A_DEFER:
-			case A_USURP:
-			case A_DEFER_LOW:
-			case A_USURP_LOW:
-				post("\targ %d is some other type",argc);
-				break;
-			}
-			++aptr;
-		}
-	}
-	*/
+	
+	//{
+	//	t_atom			*aptr = argv;
+	//	long			i = 0;
+	//	for (i=0; i<argc; i++)	{
+	//		switch (atom_gettype(aptr))	{
+	//		case A_NOTHING:
+	//			post("\targ %d is null", i);
+	//			break;
+	//		case A_LONG:
+	//		case A_DEFLONG:
+	//			post("\targ %d is %d", i, (int)aptr->a_w.w_long);
+	//			break;
+	//		case A_FLOAT:
+	//		case A_DEFFLOAT:
+	//			post("\targ %d is %f", i, aptr->a_w.w_float);
+	//			break;
+	//		case A_SYM:
+	//		case A_DEFSYM:
+	//			post("\targ %d is %s", i, aptr->a_w.w_sym->s_name);
+	//			break;
+	//		case A_OBJ:
+	//			post("\targ %d is an object", i);
+	//			break;
+	//		case A_GIMME:
+	//		case A_CANT:
+	//		case A_SEMI:
+	//		case A_COMMA:
+	//		case A_DOLLAR:
+	//		case A_DOLLSYM:
+	//		case A_GIMMEBACK:
+	//		case A_DEFER:
+	//		case A_USURP:
+	//		case A_DEFER_LOW:
+	//		case A_USURP_LOW:
+	//			post("\targ %d is some other type",argc);
+	//			break;
+	//		}
+	//		++aptr;
+	//	}
+	//}
+	
 	if (argv == NULL)
 		return;
 	
@@ -365,6 +377,7 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 	//	return;
 	//}
 	
+	/*
 	//	get the jitter object
 	//t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
 	//	get the renderer from the jitter object
@@ -375,16 +388,21 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 		//post("ERR: bailing, no ISF file loaded yet, %s",__func__);
 		return;
 	}
+	*/
 	//	's' would ordinarily be the message/method name, but in this case it's the name of the input
 	t_atom				*inputNameAtom = argv;
 	string				inputName = string( (char*)jit_atom_getsym(inputNameAtom)->s_name );
 	t_atom				*argAtoms = argv + 1;
+	/*
 	//	get the ISFAttr from the ISFDoc that corresponds to the input name the user supplied
 	ISFAttrRef			attr = doc->input(inputName);
+	*/
+	ISFAttrRef			attr = TI->isfRenderer->paramNamed(inputName);
 	if (attr == nullptr)	{
-		post("err: unrecognized param \"%s\"",inputName.c_str());
+		post("jit.gl.vvisf: ERR: unrecognized param \"%s\"",inputName.c_str());
 		return;
 	}
+	//VVISF::ISFValType			attrType = TI->isfRenderer->valueTypeForParamNamed(inputName);
 	
 	
 	//	flag myself as needing to redraw
@@ -392,7 +410,12 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 	
 	
 	//	get the host context, we'll need to restore it later
+#if defined(VVGL_SDK_WIN)
+	HGLRC				origGLCtx = wglGetCurrentContext();
+	HDC					origDevCtx = wglGetCurrentDC();
+#elif defined(VVGL_SDK_MAC)
 	CGLContextObj		origCglCtx = CGLGetCurrentContext();
+#endif
 	
 	
 	//	based on the type of the attribute, assemble a value from the input values, showing a warning if we can't
@@ -400,20 +423,23 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 	case ISFValType_None:	//	unrecognized value type, do nothing
 		break;
 	case ISFValType_Event:	//	event-type ISF attribute
-		attr->setCurrentVal(ISFEventVal(true));
+		//attr->setCurrentVal(ISFEventVal(true));
+		TI->isfRenderer->setCurrentValForParamNamed(ISFEventVal(true), inputName);
 		break;
 	case ISFValType_Bool:	//	bool-type ISF attribute
 		switch (atom_gettype(argAtoms))	{
 		case A_LONG:
 		case A_DEFLONG:
-			attr->setCurrentVal( (jit_atom_getlong(argAtoms)>0) ? ISFBoolVal(true) : ISFBoolVal(false) );
+			//attr->setCurrentVal( (jit_atom_getlong(argAtoms)>0) ? ISFBoolVal(true) : ISFBoolVal(false) );
+			TI->isfRenderer->setCurrentValForParamNamed((jit_atom_getlong(argAtoms) > 0) ? ISFBoolVal(true) : ISFBoolVal(false), inputName);
 			break;
 		case A_FLOAT:
 		case A_DEFFLOAT:
-			attr->setCurrentVal( (jit_atom_getlong(argAtoms)>0.0) ? ISFBoolVal(true) : ISFBoolVal(false) );
+			//attr->setCurrentVal( (jit_atom_getlong(argAtoms)>0.0) ? ISFBoolVal(true) : ISFBoolVal(false) );
+			TI->isfRenderer->setCurrentValForParamNamed( (jit_atom_getlong(argAtoms)>0.0) ? ISFBoolVal(true) : ISFBoolVal(false), inputName );
 			break;
 		default:
-			post("ERR: arg is wrong type, attr %s is a bool",s->s_name);
+			post("jit.gl.vvisf: ERR: arg is wrong type, attr %s is a bool",s->s_name);
 			break;
 		}
 		break;
@@ -421,11 +447,13 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 		switch (atom_gettype(argAtoms))	{
 		case A_LONG:
 		case A_DEFLONG:
-			attr->setCurrentVal( ISFLongVal(jit_atom_getlong(argAtoms)) );
+			//attr->setCurrentVal( ISFLongVal(jit_atom_getlong(argAtoms)) );
+			TI->isfRenderer->setCurrentValForParamNamed(ISFLongVal(jit_atom_getlong(argAtoms)), inputName);
 			break;
 		case A_FLOAT:
 		case A_DEFFLOAT:
-			attr->setCurrentVal( ISFLongVal(jit_atom_getlong(argAtoms)) );
+			//attr->setCurrentVal( ISFLongVal(jit_atom_getlong(argAtoms)) );
+			TI->isfRenderer->setCurrentValForParamNamed(ISFLongVal(jit_atom_getlong(argAtoms)), inputName);
 			break;
 		case A_SYM:
 		case A_DEFSYM:
@@ -433,18 +461,21 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 				string			tmpStr = std::string( (char*)jit_atom_getsym(argAtoms)->s_name );
 				vector<string>		&labels = attr->labelArray();
 				vector<int32_t>		&vals = attr->valArray();
+				//vector<string>		&labels = TI->isfRenderer->labelArrayForParamNamed(inputName);
+				//vector<int32_t>		&vals = TI->isfRenderer->valsArrayForParamNamed(inputName);;
 				int					tmpIndex = 0;
 				int					foundIndex = -1;
 				if (labels.size() < 1)
-					post("ERR: arg is wrong type, attr %s is a long",s->s_name);
+					post("jit.gl.vvisf: ERR: arg is wrong type, attr %s is a long",s->s_name);
 				else	{
 					for (const string & label : labels)	{
 						if (label == tmpStr)	{
 							if (tmpIndex>=0 && tmpIndex<vals.size())	{
-								attr->setCurrentVal( ISFLongVal(vals[tmpIndex]) );
+								//attr->setCurrentVal( ISFLongVal(vals[tmpIndex]) );
+								TI->isfRenderer->setCurrentValForParamNamed(ISFLongVal(vals[tmpIndex]), inputName);
 							}
 							else	{
-								post("ERR: label is valid, but doesn't have matching value");
+								post("jit.gl.vvisf: ERR: label is valid, but doesn't have matching value");
 							}
 							foundIndex = tmpIndex;
 							break;
@@ -452,13 +483,13 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 						++tmpIndex;
 					}
 					if (foundIndex < 0)	{
-						post("ERR: arg is wrong type, attr %s is a long",s->s_name);
+						post("jit.gl.vvisf: ERR: arg is wrong type, attr %s is a long",s->s_name);
 					}
 				}
 			}
 			break;
 		default:
-			post("ERR: arg is wrong type, attr %s is a bool",s->s_name);
+			post("jit.gl.vvisf: ERR: arg is wrong type, attr %s is a bool",s->s_name);
 			break;
 		}
 		break;
@@ -466,14 +497,16 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 		switch (atom_gettype(argAtoms))	{
 		case A_LONG:
 		case A_DEFLONG:
-			attr->setCurrentVal( ISFFloatVal(jit_atom_getfloat(argAtoms)) );
+			//attr->setCurrentVal( ISFFloatVal(jit_atom_getfloat(argAtoms)) );
+			TI->isfRenderer->setCurrentValForParamNamed( ISFFloatVal(jit_atom_getfloat(argAtoms)), inputName );
 			break;
 		case A_FLOAT:
 		case A_DEFFLOAT:
-			attr->setCurrentVal( ISFFloatVal(jit_atom_getfloat(argAtoms)) );
+			//attr->setCurrentVal( ISFFloatVal(jit_atom_getfloat(argAtoms)) );
+			TI->isfRenderer->setCurrentValForParamNamed( ISFFloatVal(jit_atom_getfloat(argAtoms)), inputName );
 			break;
 		default:
-			post("ERR: arg is wrong type, attr %s is a bool",s->s_name);
+			post("jit.gl.vvisf: ERR: arg is wrong type, attr %s is a bool",s->s_name);
 			break;
 		}
 		break;
@@ -483,7 +516,8 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 				t_atom		*firstAtom = argAtoms;
 				t_atom		*secondAtom = argAtoms + 1;
 				ISFVal		tmpPointVal = ISFPoint2DVal(jit_atom_getfloat(firstAtom), jit_atom_getfloat(secondAtom));
-				attr->setCurrentVal(tmpPointVal);
+				//attr->setCurrentVal(tmpPointVal);
+				TI->isfRenderer->setCurrentValForParamNamed(tmpPointVal, inputName);
 			}
 		}
 		break;
@@ -499,7 +533,8 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 					tmpColorVal = ISFColorVal(jit_atom_getfloat(firstAtom), jit_atom_getfloat(secondAtom), jit_atom_getfloat(thirdAtom), 1.0);
 				else
 					tmpColorVal = ISFColorVal(jit_atom_getfloat(firstAtom), jit_atom_getfloat(secondAtom), jit_atom_getfloat(thirdAtom), jit_atom_getfloat(fourthAtom));
-				attr->setCurrentVal(tmpColorVal);
+				//attr->setCurrentVal(tmpColorVal);
+				TI->isfRenderer->setCurrentValForParamNamed(tmpColorVal, inputName);
 			}
 		}
 		break;
@@ -522,6 +557,21 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 					if (firstMsgSym == ps_jit_gl_texture)	{
 						//	the second msg sym is the name of the incoming jitter texture.  check to see if we're already registered as an observer
 						bool				alreadyRegistered = false;
+						
+						auto				inputNameIt = TI->inputToHostTexNameMap->find(inputName);
+						if (inputNameIt != TI->inputToHostTexNameMap->end()) {
+							string				oldJitTexName = inputNameIt->second;
+							t_symbol			*oldJitTexNameSym = gensym((char*)oldJitTexName.c_str());
+							if (oldJitTexNameSym != NULL) {
+								//	if it's the same texture then we're already registered
+								if (oldJitTexNameSym == secondMsgSym)
+									alreadyRegistered = true;
+								//	else it's not the same texture, we have to unregister the old!
+								else
+									jit_object_detach(oldJitTexNameSym, TI);
+							}
+						}
+						/*
 						try	{
 							string				&oldJitTexName = TI->inputToHostTexNameMap->at(inputName);
 							t_symbol			*oldJitTexNameSym = gensym((char*)oldJitTexName.c_str());
@@ -534,17 +584,27 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 									jit_object_detach(oldJitTexNameSym, TI);
 							}
 						} catch(...)	{}
-					
+						*/
 						//	if we aren't already registered as an observer of the passed texture, we need to do so
 						if (!alreadyRegistered)	{
 							//	attach to the jitter texture we were passed...
 							if (jit_object_attach(secondMsgSym, targetInstance) == NULL)
-								post("ERR: unable to attach the jitter object to the param texture, %s",__func__);
+								post("jit.gl.vvisf: ERR: unable to attach the jitter object to the param texture, %s",__func__);
 							else	{
 								//	store a record of this attachment in our map so we know to unattach later
 								TI->inputToHostTexNameMap->emplace( std::make_pair(inputName, std::string((char*)secondMsgSym->s_name)) );
 								
 								//	if we allocated a jit gl texture for this same input name (for GL textures), free it and delete it from the client texture map so there aren't two possible texture source for the same input name
+								
+								auto				inputNameIt = TI->inputToClientGLTexPtrMap->find(inputName);
+								if (inputNameIt != TI->inputToClientGLTexPtrMap->end()) {
+									t_jit_object		*clientTex = (t_jit_object*)inputNameIt->second;
+									if (clientTex != NULL) {
+										jit_object_free(clientTex);
+									}
+									TI->inputToClientGLTexPtrMap->erase(inputName);
+								}
+								/*
 								try	{
 									t_jit_object		*clientTex = (t_jit_object*)TI->inputToClientGLTexPtrMap->at(inputName);
 									if (clientTex != NULL)	{
@@ -552,15 +612,17 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 									}
 									TI->inputToClientGLTexPtrMap->erase(inputName);
 								} catch (...) {}
+								*/
 							}
 						}
 					
 						//	finally, pass the jitter texture object to the ISFRenderer, which will "wrap" it with a GLBufferRef from the appropriate pool/GL version to render
-						GLBufferRef			wrapperTex = renderer->applyJitGLTexToInputKey(secondMsgSym, inputName);
+						//GLBufferRef			wrapperTex = renderer->applyJitGLTexToInputKey(secondMsgSym, inputName);
+						MyBufferRef			wrapperTex = jit_gl_vvisf_apply_jit_tex_for_input_key(TI, secondMsgSym, inputName);
 						//	if this was the input image, we need to update the target instance's last adapt dims, so we know what res to render at next time we're told to do so
 						if (inputName == string("inputImage") && wrapperTex != nullptr)	{
-							TI->lastAdaptDims[0] = wrapperTex->size.width;
-							TI->lastAdaptDims[1] = wrapperTex->size.height;
+							TI->lastAdaptDims[0] = wrapperTex->size().width;
+							TI->lastAdaptDims[1] = wrapperTex->size().height;
 							//post("inputImage detected from GL tex, adapting to res %d x %d",TI->lastAdaptDims[0],TI->lastAdaptDims[1]);
 						}
 					}
@@ -570,9 +632,17 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 						
 						//	try to get an existing client texture for the input name
 						t_jit_object		*clientTex = NULL;
+						
+						auto				clientIt = TI->inputToClientGLTexPtrMap->find(inputName);
+						if (clientIt != TI->inputToClientGLTexPtrMap->end()) {
+							clientTex = clientIt->second;
+						}
+						/*
 						try	{
 							clientTex = TI->inputToClientGLTexPtrMap->at(inputName);
 						} catch (...)	{}
+						*/
+
 						//	if we don't already have an existing client texture...
 						if (clientTex == NULL)	{
 							//	make a client texture, set it up
@@ -590,6 +660,17 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 								TI->inputToClientGLTexPtrMap->emplace(inputName, clientTex);
 								
 								//	if we're attached to a host gl texture as an observer, un-attach and remove the record of the attachment from the host texture name map
+								
+								auto			tmpIt = TI->inputToHostTexNameMap->find(inputName);
+								if (tmpIt != TI->inputToHostTexNameMap->end()) {
+									string			jitHostTexName = tmpIt->second;
+									t_symbol		*jitHostTexNameSym = gensym((char*)jitHostTexName.c_str());
+									if (jitHostTexNameSym != NULL) {
+										jit_object_detach(jitHostTexNameSym, TI);
+										TI->inputToHostTexNameMap->erase(inputName);
+									}
+								}
+								/*
 								try	{
 									string			&jitHostTexName = TI->inputToHostTexNameMap->at(inputName);
 									t_symbol		*jitHostTexNameSym = gensym((char*)jitHostTexName.c_str());
@@ -598,11 +679,12 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 										TI->inputToHostTexNameMap->erase(inputName);
 									}
 								} catch(...) {}
+								*/
 								
 								//	we just created a gl texture- we have to bind it to this context before we can use it...
 								t_symbol			*context = jit_attr_getsym(TI, ps_drawto_j);
 								if (context == NULL)	{
-									post("ERR: context NULL in %s",__func__);
+									post("jit.gl.vvisf: ERR: context NULL in %s",__func__);
 								}
 								else	{
 									jit_attr_setsym(clientTex, ps_drawto_j, context);
@@ -610,7 +692,7 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 									t_jit_gl_drawinfo			drawInfo;
 									t_symbol			*texName = jit_attr_getsym(clientTex, gensym("name"));
 									if (texName == NULL)	{
-										post("ERR: texName NULL in %s",__func__);
+										post("jit.gl.vvisf: ERR: texName NULL in %s",__func__);
 									}
 									else	{
 										//	this crashes with jit.gl.world, but doesn't crash with jit.gl.videoplane.  i'd like to include it because without it, we get a white flash because that first frame doesn't get rendered.
@@ -641,24 +723,25 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 							
 							//	get the name of our client texture, pass it to the renderer, which will "wrap" it in a GLBufferRef from the appropriate pool/GL version to render
 							t_symbol			*clientTexSym = jit_attr_getsym(clientTex, gensym("name"));
-							GLBufferRef			wrapperTex = (clientTexSym==NULL) ? NULL : renderer->applyJitGLTexToInputKey(clientTexSym, inputName);
+							//GLBufferRef			wrapperTex = (clientTexSym==NULL) ? NULL : renderer->applyJitGLTexToInputKey(clientTexSym, inputName);
+							MyBufferRef			wrapperTex = (clientTexSym==NULL) ? NULL : jit_gl_vvisf_apply_jit_tex_for_input_key(TI, clientTexSym, inputName);
 							//	if this was the input image, we need to update the target instance's last adapt dims, so we know what res to render at next time we're told to do so
 							if (inputName == string("inputImage") && wrapperTex != nullptr)	{
-								TI->lastAdaptDims[0] = wrapperTex->size.width;
-								TI->lastAdaptDims[1] = wrapperTex->size.height;
+								TI->lastAdaptDims[0] = wrapperTex->size().width;
+								TI->lastAdaptDims[1] = wrapperTex->size().height;
 								//post("inputImage detected from matrix texture, adapting to res %d x %d",TI->lastAdaptDims[0],TI->lastAdaptDims[1]);
 							}
 						}
 						else
-							post("ERR: clientTex NULL in %s",__func__);
+							post("jit.gl.vvisf: ERR: clientTex NULL in %s",__func__);
 					}
 					
 				}
 				else
-					post("ERR: arg is wrong type, attr %s is an image and requires a GL texture for input",s->s_name);
+					post("jit.gl.vvisf: ERR: arg is wrong type, attr %s is an image and requires a GL texture for input",s->s_name);
 			}
 			else
-				post("ERR: arg is wrong type, attr %s is an image and requires a GL texture for input",s->s_name);
+				post("jit.gl.vvisf: ERR: arg is wrong type, attr %s is an image and requires a GL texture for input",s->s_name);
 		}
 		break;
 	case ISFValType_Audio:	//	audio-type ISF attribute
@@ -669,9 +752,16 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 	
 	
 	//	restore the original GL context
+#if defined(VVGL_SDK_WIN)
+	if (origDevCtx != NULL && origGLCtx != NULL) {
+		wglMakeCurrent(origDevCtx, origGLCtx);
+	}
+#elif defined(VVGL_SDK_MAC)
 	if (origCglCtx != NULL)	{
 		CGLSetCurrentContext(origCglCtx);
 	}
+#endif
+	
 }
 
 t_jit_err jit_gl_vvisf_jit_matrix(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
@@ -745,50 +835,58 @@ t_jit_err jit_gl_vvisf_jit_gl_texture(t_jit_gl_vvisf *targetInstance, t_symbol *
 	
 	return JIT_ERR_NONE;
 	
-	/*
-	t_atom			*firstAtom = argv;
-	t_symbol		*firstMsgSym = jit_atom_getsym(firstAtom);
 	
-	//	get the renderer from the jitter object, try to pass the texture to it as an input image
-	ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(targetInstance);
-	if (renderer != NULL && renderer->hasInputImageKey())	{
-		//	get the host context, we'll need to restore it later
-		CGLContextObj		origCglCtx = CGLGetCurrentContext();
-		
-		TI->isfRenderer->applyJitGLTexToInputKey(firstMsgSym, string("inputImage"));
-		
-		//	restore the original GL context
-		if (origCglCtx != NULL)	{
-			CGLSetCurrentContext(origCglCtx);
-		}
-		
-		//	render a frame!
-		//jit_attr_setlong(targetInstance, gensym("needsRedraw"), 1);
-		max_jit_gl_vvisf_draw((t_max_jit_gl_vvisf*)TI->maxWrapperStruct, ps_draw_j, 0, NULL);
-	}
+	//t_atom			*firstAtom = argv;
+	//t_symbol		*firstMsgSym = jit_atom_getsym(firstAtom);
+	//
+	////	get the renderer from the jitter object, try to pass the texture to it as an input image
+	//ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(targetInstance);
+	//if (renderer != NULL && renderer->hasInputImageKey())	{
+	//	//	get the host context, we'll need to restore it later
+	//	CGLContextObj		origCglCtx = CGLGetCurrentContext();
+	//	
+	//	TI->isfRenderer->applyJitGLTexToInputKey(firstMsgSym, string("inputImage"));
+	//	
+	//	//	restore the original GL context
+	//	if (origCglCtx != NULL)	{
+	//		CGLSetCurrentContext(origCglCtx);
+	//	}
+	//	
+	//	//	render a frame!
+	//	//jit_attr_setlong(targetInstance, gensym("needsRedraw"), 1);
+	//	max_jit_gl_vvisf_draw((t_max_jit_gl_vvisf*)TI->maxWrapperStruct, ps_draw_j, 0, NULL);
+	//}
+	//
+	//return JIT_ERR_NONE;
 	
-	return JIT_ERR_NONE;
-	*/
 }
 
 void jit_gl_vvisf_notify(t_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob, void *data)	{
 	//post("%s ... %s %s",__func__,msg->s_name,s->s_name);
 	
 	if (msg == ps_willfree_j || msg == ps_free_j)	{
+		
 		//post("%s ... %s %s",__func__,msg->s_name,s->s_name);
 		//	get the jitter object
 		//t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(x);
 		//	get the renderer from the jitter object
 		//ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(jitObj);
-		ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(x);
+		//ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(x);
 		//	get the ISFDoc that is currently being used by the renderer
 		//ISFDocRef			doc = (renderer==nullptr) ? nullptr : renderer->loadedISFDoc();
 		
+
+
 		//	get the host context, we'll need to restore it later
+#if defined(VVGL_SDK_WIN)
+		HGLRC				origGLCtx = wglGetCurrentContext();
+		HDC					origDevCtx = wglGetCurrentDC();
+#elif defined(VVGL_SDK_MAC)
 		CGLContextObj		origCglCtx = CGLGetCurrentContext();
+#endif
 		
 		//	get the name of the jitter texture being freed as a std::string
-		string			jitTextureName = std::string((char*)s->s_name);
+		std::string			jitTextureName = std::string((char*)s->s_name);
 		//	run through the map of input names/jitter texture names
 		auto			iter = x->inputToHostTexNameMap->begin();
 		while (iter != x->inputToHostTexNameMap->end())	{
@@ -797,7 +895,9 @@ void jit_gl_vvisf_notify(t_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob
 				//	detach from the jitter object, we no longer want to be notified as to its changes (is this safe to do now, in a notify callback?)
 				jit_object_detach(s, x);
 				//	tell the ISF renderer to clear out the texture for this attribute 
-				renderer->applyJitGLTexToInputKey(NULL, iter->first);
+				//renderer->applyJitGLTexToInputKey(NULL, iter->first);
+				jit_gl_vvisf_apply_jit_tex_for_input_key(x, NULL, iter->first);
+
 				//	delete the item from the map (this automatically increments the iterator)
 				iter = x->inputToHostTexNameMap->erase(iter);
 			}
@@ -807,9 +907,17 @@ void jit_gl_vvisf_notify(t_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *ob
 		}
 		
 		//	restore the original GL context
+#if defined(VVGL_SDK_WIN)
+		if (origDevCtx != NULL && origGLCtx != NULL) {
+			wglMakeCurrent(origDevCtx, origGLCtx);
+		}
+#elif defined(VVGL_SDK_MAC)
 		if (origCglCtx != NULL)	{
 			CGLSetCurrentContext(origCglCtx);
 		}
+#endif
+		
+		
 	}
 	
 }
@@ -825,20 +933,33 @@ t_jit_err jit_gl_vvisf_dest_closing(t_jit_gl_vvisf *targetInstance)	{
 }
 
 t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
-	//post("%s ... %p",__func__,CGLGetCurrentContext());
+	std::cout << __PRETTY_FUNCTION__ << std::endl;
 	
+	
+#if defined(VVGL_SDK_WIN)
+	HGLRC				origGLCtx = wglGetCurrentContext();
+	HDC					origDevCtx = wglGetCurrentDC();
+	if (origGLCtx == NULL || origDevCtx == NULL) {
+		post("jit.gl.vvisf: ERR: no host GL ctx");
+		return JIT_ERR_INVALID_PTR;
+	}
+	VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(origGLCtx, origDevCtx);
+	//GLContextRef		tmpCtx = CreateGLContextRefUsing(origGLCtx, origDevCtx);
+	//cout << "tmpCtx from host renderer is " << tmpCtx->getRenderer() << endl;
+#elif defined(VVGL_SDK_MAC)
 	//	get the current GL context on this thread- if there isn't one, bail
 	CGLContextObj				hostCtx = CGLGetCurrentContext();
 	if (hostCtx == NULL)	{
-		post("ERR: no host GL ctx");
+		post("jit.gl.vvisf: ERR: no host GL ctx");
 		return JIT_ERR_INVALID_PTR;
 	}
-	
 	//	get the cache item for the current context- the cache item contains buffer pools and shared contexts (GL2 + GL4) used to create the renderer's contexts
 	VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(hostCtx);
+#endif
+	
 	//	if there's no cached context item, something has gone horribly wrong- bail
 	if (cacheItem == nullptr)	{
-		post("ERR: couldnt find cache ctx");
+		post("jit.gl.vvisf: ERR: couldnt find cache ctx");
 		return JIT_ERR_INVALID_PTR;
 	}
 	
@@ -846,45 +967,51 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 	TI->isfRenderer->configureWithCache(cacheItem);
 	
 	//	restore the original GL context
+#if defined(VVGL_SDK_WIN)
+	if (origDevCtx != NULL && origGLCtx != NULL) {
+		wglMakeCurrent(origDevCtx, origGLCtx);
+	}
+#elif defined(VVGL_SDK_MAC)
 	if (hostCtx != NULL)	{
 		CGLSetCurrentContext(hostCtx);
 	}
+#endif
 	
 	//	get the jit.gl.texture object we render into for output
 	if (TI->outputTexObj != NULL)	{
 		t_symbol			*context = jit_attr_getsym(targetInstance, ps_drawto_j);
 		if (context == NULL)	{
-			post("ERR: context NULL in %s",__func__);
+			post("jit.gl.vvisf: ERR: context NULL in %s",__func__);
 		}
 		else	{
 			jit_attr_setsym(TI->outputTexObj, ps_drawto_j, context);
 			
 			// our texture has to be bound in the new context before we can use it
 			// http://cycling74.com/forums/topic.php?id=29197
-			t_jit_gl_drawinfo			drawInfo;
+			//t_jit_gl_drawinfo			drawInfo;
 			t_symbol			*texName = jit_attr_getsym(TI->outputTexObj, gensym("name"));
 			if (texName == NULL)	{
-				post("ERR: texName NULL in %s",__func__);
+				post("jit.gl.vvisf: ERR: texName NULL in %s",__func__);
 			}
 			else	{
 				//	this crashes with jit.gl.world, but doesn't crash with jit.gl.videoplane.  i'd like to include it because without it, we get a white flash because that first frame doesn't get rendered.
-				/*
-				jit_gl_drawinfo_setup(targetInstance, &drawInfo);
-				jit_gl_bindtexture(&drawInfo, texName, 0);
-				jit_gl_unbindtexture(&drawInfo, texName, 0);
-				*/
+				
+				//jit_gl_drawinfo_setup(targetInstance, &drawInfo);
+				//jit_gl_bindtexture(&drawInfo, texName, 0);
+				//jit_gl_unbindtexture(&drawInfo, texName, 0);
+				
 			}
 			
 		}
 	}
 	else
-		post("ERR: outputTexObj null in %s",__func__);
-	
+		post("jit.gl.vvisf: ERR: outputTexObj null in %s",__func__);
 	//	flag the needsRedraw attribute so i know i need to render a new frame
 	//jit_attr_setlong(targetInstance, ps_needsRedraw_j, 1);
 	
 	//	don't forget to return the cache item to the pool!
 	ReturnCacheItemToPool(cacheItem);
+	
 	
 	return JIT_ERR_NONE;
 }
@@ -894,16 +1021,20 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 
 t_jit_err jit_gl_vvisf_drawto(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
 	//post("%s",__func__);
+	/*
 	object_attr_setvalueof(TI->outputTexObj, s, argc, argv);	
 	jit_ob3d_dest_name_set((t_jit_object *)targetInstance, NULL, argc, argv);
+	*/
 	
 	return JIT_ERR_NONE;
 }
 
+/*
 static VVGL::Timestamp			nowStamp = VVGL::Timestamp();
+*/
 
 t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
-	//post("%s ... %s",__func__,[[[NSDate date] description] UTF8String]);
+	//post("%s",__func__);
 	//cout << __PRETTY_FUNCTION__ << ", " << VVGL::Timestamp()-nowStamp << endl;
 	if (!targetInstance)
 		return JIT_ERR_INVALID_PTR;
@@ -934,7 +1065,7 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 			t_jit_gl_drawinfo			drawInfo;
 			t_symbol			*texName = jit_attr_getsym(TI->outputTexObj, gensym("name"));
 			if (texName == NULL)
-				post("ERR: texName NULL in %s",__func__);
+				post("jit.gl.vvisf: ERR: texName NULL in %s",__func__);
 			else	{
 				jit_gl_drawinfo_setup(targetInstance, &drawInfo);
 				jit_gl_bindtexture(&drawInfo, texName, 0);
@@ -946,13 +1077,23 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		//post("class name of jit objects ob is %s",tmpClassName->s_name);
 		
 		//	get the host context, use that to retrieve the cache item which holds the shared contexts, buffer pools, and buffer copiers
+#if defined(VVGL_SDK_WIN)
+		HGLRC				origGLCtx = wglGetCurrentContext();
+		HDC					origDevCtx = wglGetCurrentDC();
+		if (origGLCtx == NULL) {
+			post("jit.gl.vvisf: ERR: no host GL ctx");
+			return JIT_ERR_INVALID_PTR;
+		}
+		VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(origGLCtx, origDevCtx);
+#elif defined(VVGL_SDK_MAC)
 		CGLContextObj		origCglCtx = CGLGetCurrentContext();
 		VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(origCglCtx);
+#endif
 		if (cacheItem != nullptr)	{
 			TI->isfRenderer->configureWithCache(cacheItem);
 			ReturnCacheItemToPool(cacheItem);
 		}
-		
+		/*
 		//	get the buffer pool that corresponds to the currently-loaded ISF file (we need the appropriate- gl2/gl4- pool)
 		GLBufferPoolRef		tmpPool =  TI->isfRenderer->loadedBufferPool();
 		//	if there's no buffer pool then something is wrong with the renderer
@@ -960,11 +1101,19 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 			//post("err: no pool in %s, file presumably not loaded yet",__func__);
 			return JIT_ERR_NONE;
 		}
-		
+		*/
 		//	create a GLBufferRef that "wraps" the jitter texture
 		uint32_t			texName = jit_attr_getlong(TI->outputTexObj, ps_glid_j);
 		//VVGL::Size			tmpSize = VVGL::Size(TI->dim[0], TI->dim[1]);
 		VVGL::Rect			tmpRect = VVGL::Rect(0, 0, renderSize.width, renderSize.height);
+		MyBufferRef			wrapperTex = CreateBufferFromExistingTex(
+			texName,
+			GL_TEXTURE_RECTANGLE_EXT,
+			renderSize,
+			false,
+			tmpRect,
+			TI->isfRenderer);
+		/*
 		GLBufferRef			wrapperTex = CreateFromExistingGLTexture(
 			texName,	//	inTexName The name of the OpenGL texture that will be used to populate the GLBuffer.
 			GLBuffer::Target_Rect,	//	inTexTarget The texture target of the OpenGL texture (GLBuffer::Target)
@@ -980,6 +1129,7 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 			tmpPool	//	inPoolRef The pool that the GLBuffer should be created with.  When the GLBuffer is freed, its underlying GL resources will be returned to this pool (where they will be either freed or recycled).
 		);
 		//post("\twrapperTex is %s",wrapperTex->getDescriptionString().c_str());
+		*/
 		
 		//	tell the renderer to render into the wrapper GLBufferRef we made around the jit.gl.texture object we own
 		TI->isfRenderer->render(wrapperTex, renderSize, TI->renderTimeOverride);
@@ -992,9 +1142,15 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		//jit_attr_setlong(targetInstance, ps_needsRedraw_j, 0);
 		
 		//	restore the original GL context
+#if defined(VVGL_SDK_WIN)
+		if (origDevCtx != NULL && origGLCtx != NULL) {
+			wglMakeCurrent(origDevCtx, origGLCtx);
+		}
+#elif defined(VVGL_SDK_MAC)
 		if (origCglCtx != NULL)	{
 			CGLSetCurrentContext(origCglCtx);
 		}
+#endif
 		
 		//	publish the texture
 		t_max_jit_gl_vvisf		*mws = (t_max_jit_gl_vvisf*)TI->maxWrapperStruct;
@@ -1016,11 +1172,16 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
 	//post("%s",__func__);
 	//t_symbol			*srvname;
-
+	
 	if(targetInstance != NULL)	{
 		
 		//	get the host context, we'll need to restore it later
+#if defined(VVGL_SDK_WIN)
+		HGLRC				origGLCtx = wglGetCurrentContext();
+		HDC					origDevCtx = wglGetCurrentDC();
+#elif defined(VVGL_SDK_MAC)
 		CGLContextObj		origCglCtx = CGLGetCurrentContext();
+#endif
 		
 		if (argc && argv)	{
 			//	update the file symbol
@@ -1045,13 +1206,16 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 		
 		//	load the file (or load a nil file if we weren't passed any args)
 		if (TI->isfRenderer == nullptr)
-			post("ERR: isfRenderer NULL in %s",__func__);
+			post("jit.gl.vvisf: ERR: isfRenderer NULL in %s",__func__);
 		else	{
 			if (TI->file == _jit_sym_nothing)
 				TI->isfRenderer->loadFile();
 			else	{
-				string		tmpStr = string(TI->file->s_name);
+				std::string		tmpStr = std::string(TI->file->s_name);
 				TI->isfRenderer->loadFile(&tmpStr);
+				if (!TI->isfRenderer->isFileLoaded())	{
+					post("jit.gl.vvisf: ERR- shader could not be compiled, sorry! %s",tmpStr.c_str());
+				}
 			}
 			
 			//	fake an input call- this sends information describing the inputs of the loaded file from the appropriate outlet
@@ -1060,9 +1224,15 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 		
 		
 		//	restore the original GL context
+#if defined(VVGL_SDK_WIN)
+		if (origDevCtx != NULL && origGLCtx != NULL) {
+			wglMakeCurrent(origDevCtx, origGLCtx);
+		}
+#elif defined(VVGL_SDK_MAC)
 		if (origCglCtx != NULL)	{
 			CGLSetCurrentContext(origCglCtx);
 		}
+#endif
 		
 		// if we have a server release it, 
 		// make a new one, with our new UUID.
@@ -1074,9 +1244,10 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 		//[pool drain];
 	}
 	else	{
-		post("ERR: target instance NULL in %s",__func__);
+		post("jit.gl.vvisf: ERR: target instance NULL in %s",__func__);
 		return JIT_ERR_INVALID_PTR;
 	}
+	
 	return JIT_ERR_NONE;
 }
 
@@ -1190,6 +1361,7 @@ t_jit_err jit_gl_vvisf_getattr_dim(t_jit_gl_vvisf *targetInstance, void *attr, l
 }
 t_jit_err jit_gl_vvisf_setattr_dim(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
 	//post("%s",__func__);
+	std::cout << __PRETTY_FUNCTION__ << std::endl;
 	long			i;
 	long			v;
 	
@@ -1200,6 +1372,7 @@ t_jit_err jit_gl_vvisf_setattr_dim(t_jit_gl_vvisf *targetInstance, void *attr, l
 			v = jit_atom_getlong(argv+i);
 			if (TI->dim[i] != JIT_MATH_MIN(v,1))	{
 				TI->dim[i] = v;
+				TI->lastAdaptDims[i] = v;
 			}
 		}
 		
@@ -1217,4 +1390,58 @@ ISFRenderer * jit_gl_vvisf_get_renderer(t_jit_gl_vvisf *targetInstance)	{
 		return NULL;
 	return TI->isfRenderer;
 }
+
+
+
+
+MyBufferRef jit_gl_vvisf_apply_jit_tex_for_input_key(t_jit_gl_vvisf *targetInstance, t_symbol *inJitGLTexNameSym, const std::string & inInputName) {
+	if (TI->isfRenderer == nullptr)
+		return nullptr;
+
+	if (inJitGLTexNameSym != NULL) {
+		//	retrieve the actual jitter texture for the passed texture name, query its basic properties
+		void				*jitTexture = jit_object_findregistered(static_cast<t_symbol*>(inJitGLTexNameSym));
+		//if (jitTexture == NULL || jit_object_method(jitTexture, _jit_sym_class_jit_matrix) == NULL)
+		//if (jitTexture == NULL || jit_object_method(jitTexture, _jit_sym_jit_matrix) == NULL)
+		//if (jitTexture == NULL || jit_object_method(jitTexture, ps_jit_gl_texture) == NULL)
+		if (jitTexture == NULL) {
+			post("jit.gl.vvisf: ERR: cant find jitter object registered for %s", static_cast<t_symbol*>(inJitGLTexNameSym)->s_name);
+		}
+		else {
+			//GLuint width = jit_attr_getlong(texture,ps_width);
+			//GLuint height = jit_attr_getlong(texture,ps_height);
+			//GLuint texTarget = jit_attr_getlong(texture, ps_gltarget);
+			//t_jit_gl_context			ctx = jit_gl_get_context();
+			//if (ctx == NULL)
+			//	post("ERR: couldnt retrieve ctx in %s",__func__);
+			//else
+			//	jit_ob3d_set_context(_parentJitterObject);
+			//t_symbol			*tmpClassName = jit_object_classname(jitTexture);
+			//post("texture is %p, class name check is %s",jitTexture,tmpClassName->s_name);
+
+			uint32_t			texName = jit_attr_getlong(jitTexture, ps_glid_j);
+			//VVGL::Size			tmpSize = VVGL::Size(jitObj->dim[0], jitObj->dim[1]);
+			VVGL::Size			tmpSize;
+			tmpSize.width = (double)jit_attr_getlong(jitTexture, ps_width_j);
+			tmpSize.height = (double)jit_attr_getlong(jitTexture, ps_height_j);
+			//post("tex name is %d, dims are %f x %f",texName,tmpSize.width,tmpSize.height);
+			VVGL::Rect			tmpRect = VVGL::Rect(0, 0, tmpSize.width, tmpSize.height);
+			bool				tmpFlipped = false;
+			//	create a 'MyBuffer' for the jitter texture, pass it to the renderer with the given input name
+			MyBufferRef			returnMe = CreateBufferFromExistingTex(
+				texName,
+				jit_attr_getlong(jitTexture, ps_gltarget_j),
+				tmpSize,
+				tmpFlipped,
+				tmpRect,
+				TI->isfRenderer);
+
+			TI->isfRenderer->setBufferForInputKey(returnMe, inInputName);
+
+			return returnMe;
+		}
+	}
+	return nullptr;
+}
+
 
