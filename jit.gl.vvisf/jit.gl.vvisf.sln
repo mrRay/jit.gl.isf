@@ -9,9 +9,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jit.gl.vvisf", "jit.gl.vvis
 		{4BC94AF8-7BAE-48C1-9F55-D0C4B522AC86} = {4BC94AF8-7BAE-48C1-9F55-D0C4B522AC86}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VVGL", "..\..\ISFSandbox_win\examples\Windows\VVGL\VVGL.vcxproj", "{3DF7237A-0C3C-4003-B03C-69F2D100547A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VVGL", "..\VVISF-GL\examples\Windows\VVGL\VVGL.vcxproj", "{3DF7237A-0C3C-4003-B03C-69F2D100547A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VVISF", "..\..\ISFSandbox_win\examples\Windows\VVISF\VVISF.vcxproj", "{4BC94AF8-7BAE-48C1-9F55-D0C4B522AC86}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VVISF", "..\VVISF-GL\examples\Windows\VVISF\VVISF.vcxproj", "{4BC94AF8-7BAE-48C1-9F55-D0C4B522AC86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,3 +1,6 @@
 [submodule "max-sdk"]
 	path = max-sdk
 	url = https://github.com/Cycling74/max-sdk.git
+[submodule "VVISF-GL"]
+	path = VVISF-GL
+	url = https://github.com/mrRay/VVISF-GL.git
