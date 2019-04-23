@@ -6,6 +6,8 @@
 
 
 
+using namespace std;
+
 static recursive_mutex						_VVGLContextCacheArrayLock;
 static vector<VVGLContextCacheItemRef>		_VVGLContextCacheArray;
 

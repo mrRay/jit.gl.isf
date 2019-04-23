@@ -3,10 +3,6 @@
 
 
 
-/*
-#include "VVGL.hpp"
-#include "VVISF.hpp"
-*/
 #include "ISFRenderer.hpp"
 
 #include "jit.common.h"
@@ -14,20 +10,9 @@
 //#include "jit.gl.ob3d.h"
 #include "ext_obex.h"
 
-//#include "VVISF.hpp"
-
 #include <map>
 #include <string>
 #include "MyBuffer.hpp"
-
-
-
-
-/*
-BEGIN_USING_C_LINKAGE
-t_jit_err jit_ob3d_dest_name_set(t_jit_object *targetInstance, void *attr, long argc, t_atom *argv);
-END_USING_C_LINKAGE
-*/
 
 
 
@@ -43,7 +28,6 @@ typedef struct _jit_gl_vvisf	{
 	t_atom_long			adapt;	//	if 1, render resolution is the resolution of the incoming texture.  if 0, render resolution is 'dim' attribute.
 	uint32_t			lastAdaptDims[2];	//	'adapt' means we need to render at the res of the input image.  this is the res of the last-received input image.
 	t_atom_long			dim[2];	//	render size must be explicitly set
-	//t_atom_long			needsRedraw;
 	double				renderTimeOverride;	//	-1 by default.  if not -1, the scene will be rendered at this time value (instead of calculating the appropriate time internally).
 	
 	//	ivars (not to be confused with attributes!)
@@ -86,8 +70,6 @@ t_jit_err jit_gl_vvisf_drawto(t_jit_gl_vvisf *targetInstance, t_symbol *s, int a
 
 //attributes
 t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv);
-//t_jit_err jit_gl_vvisf_getattr_needsRedraw(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av);
-//t_jit_err jit_gl_vvisf_setattr_needsRedraw(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv);
 
 // @out_tex_sym for output...
 t_jit_err jit_gl_vvisf_getattr_out_tex_sym(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av);

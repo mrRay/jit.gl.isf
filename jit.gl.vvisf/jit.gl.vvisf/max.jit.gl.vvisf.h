@@ -52,7 +52,6 @@ void max_jit_gl_vvisf_all_categories(t_max_jit_gl_vvisf *targetInstance);
 void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_symbol *s);
 
 // custom draw
-//void max_jit_gl_vvisf_bang(t_max_jit_gl_vvisf *x);
 void max_jit_gl_vvisf_float(t_max_jit_gl_vvisf *x, double n);
 void max_jit_gl_vvisf_draw(t_max_jit_gl_vvisf *x, t_symbol *s, long argc, t_atom *argv);
 

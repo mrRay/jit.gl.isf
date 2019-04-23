@@ -75,9 +75,6 @@ int C74_EXPORT main(void)
 		A_GIMME,
 		0);
 	
-	//	we need notify messages to get information about jitter textures we've received
-	//addmess((method)max_jit_gl_vvisf_notify, (char*)"notify", A_CANT, 0);
-	
 	// specify a byte offset to keep additional information about our object
 	classex = max_jit_classex_setup(calcoffset(t_max_jit_gl_vvisf, obex));
 	
@@ -255,26 +252,6 @@ void max_jit_gl_vvisf_getparamlist(t_max_jit_gl_vvisf *targetInstance)	{
 	for (const auto & tmpName : tmpNames) {
 		max_jit_gl_vvisf_getparam(targetInstance, gensym(tmpName.c_str()));
 	}
-
-
-	/*
-	//	get the ISF file's INPUTS, dump them out the approrpiate outlet
-	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
-	ISFRenderer			*renderer = (jitObj==NULL) ? NULL : jit_gl_vvisf_get_renderer(jitObj);
-	ISFDocRef			tmpDoc = (renderer==NULL) ? nullptr : renderer->loadedISFDoc();
-	if (tmpDoc != nullptr)	{
-		//	send a "clear" message out the outlet ("getparamlist clear"
-		outlet_anything(targetInstance->inputsout, ps_clear, 0, 0L);
-		//t_atom			tmpAtom;
-		//atom_setsym(&tmpAtom, ps_clear);
-		//outlet_anything(targetInstance->inputsout, gensym("getparamlist"), 1, &tmpAtom);
-		
-		auto				tmpAttrs = tmpDoc->inputs();
-		for (const auto & tmpAttr : tmpAttrs)	{
-			max_jit_gl_vvisf_getparam(targetInstance, gensym( tmpAttr->name().c_str() ));
-		}
-	}
-	*/
 }
 void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
 	//post("%s ... %s",__func__,s->s_name);
@@ -543,16 +520,6 @@ void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_s
 }
 
 
-	/*
-void max_jit_gl_vvisf_bang(t_max_jit_gl_vvisf *targetInstance)	{
-	//post("%s",__func__);
-	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(targetInstance);
-	if (jitob != NULL)
-		jit_attr_setlong(jitob, gensym("needsRedraw"), 1);
-	
-	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);
-}
-	*/
 void max_jit_gl_vvisf_float(t_max_jit_gl_vvisf *targetInstance, double n)	{
 	//post("%s",__func__);
 	//	pass the render time to the jitter object
@@ -570,19 +537,6 @@ void max_jit_gl_vvisf_float(t_max_jit_gl_vvisf *targetInstance, double n)	{
 
 void max_jit_gl_vvisf_draw(t_max_jit_gl_vvisf *x, t_symbol *s, long argc, t_atom *argv)	{
 	//post("%s",__func__);
-	
-	/*
-	//	run through the entries in 'inputToHostTexNameMap', creating GLBufferRefs that wrap the various jitter textures and pushing them to the renderer
-	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(x);
-	ISFRenderer			*renderer = jit_gl_vvisf_get_renderer(jitObj);
-	auto				iter = x->inputToHostTexNameMap->begin();
-	while (iter != x->inputToHostTexNameMap->end())	{
-		string			&jitTextureName = iter->second;
-		t_symbol		*jitTextureNameSym = gensym((char*)jitTextureName.c_str());
-		renderer->applyJitGLTexToInputKey(jitTextureNameSym, iter->first);
-		++iter;
-	}
-	*/
 	
 	t_atom				a;
 	// get the jitter object

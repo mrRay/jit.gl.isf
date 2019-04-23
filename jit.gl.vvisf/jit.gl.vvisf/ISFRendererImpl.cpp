@@ -8,28 +8,9 @@
 #include "MyBufferImpl.hpp"
 
 
-/*
-static t_symbol			*ps_glid_r = NULL;
-static t_symbol			*ps_width_r = NULL;
-static t_symbol			*ps_height_r = NULL;
-static t_symbol			*ps_gltarget_r = NULL;
-static t_symbol			*ps_flip_r = NULL;
-*/
-
 
 
 ISFRendererImpl::ISFRendererImpl()	{
-	/*
-	if (ps_glid_r == NULL)	{
-		ps_glid_r = gensym("glid");
-		ps_width_r = gensym("width");
-		ps_height_r = gensym("height");
-		ps_gltarget_r = gensym("gltarget");
-		ps_flip_r = gensym("flip");
-	}
-	*/
-	//_parentJitterObject = inParentJitterObject;
-
 }
 ISFRendererImpl::~ISFRendererImpl()	{
 	//post("%s",__func__);
@@ -287,92 +268,6 @@ void ISFRendererImpl::render(const MyBufferRef & inTexFromMax, const VVGL::Size 
 }
 
 
-/*
-GLBufferRef ISFRendererImpl::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const string & inInputName)	{
-	//post("%s ... %p, %s",__func__,inJitGLTexNameSym,inInputName.c_str());
-
-	GLBufferRef			returnMe = nullptr;
-	lock_guard<recursive_mutex>		lock(_sceneLock);
-
-	if (_sceneLoaded)	{
-		//	find the IF attribute object that corresponds to this input name
-
-		ISFSceneRef			renderScene = nullptr;
-		if (_sceneUsesGL4)
-			renderScene = _gl4Scene;
-		else
-			renderScene = _gl2Scene;
-		ISFDocRef			renderDoc = (renderScene==nullptr) ? nullptr : renderScene->doc();
-		ISFAttrRef			attr = (renderDoc==nullptr) ? nullptr : renderDoc->input(inInputName);
-		if (attr != nullptr)	{
-			//GLBufferRef			wrapperTex = nullptr;
-			if (inJitGLTexNameSym != NULL)	{
-				void				*jitTexture = jit_object_findregistered(static_cast<t_symbol*>(inJitGLTexNameSym));
-				//if (jitTexture == NULL || jit_object_method(jitTexture, _jit_sym_class_jit_matrix) == NULL)
-				//if (jitTexture == NULL || jit_object_method(jitTexture, _jit_sym_jit_matrix) == NULL)
-				//if (jitTexture == NULL || jit_object_method(jitTexture, ps_jit_gl_texture) == NULL)
-				if (jitTexture == NULL)	{
-					post("ERR: cant find jitter object registered for %s",static_cast<t_symbol*>(inJitGLTexNameSym)->s_name);
-				}
-				else	{
-					//GLuint width = jit_attr_getlong(texture,ps_width);
-					//GLuint height = jit_attr_getlong(texture,ps_height);
-					//GLuint texTarget = jit_attr_getlong(texture, ps_gltarget);
-					//t_jit_gl_context			ctx = jit_gl_get_context();
-					//if (ctx == NULL)
-					//	post("ERR: couldnt retrieve ctx in %s",__func__);
-					//else
-					//	jit_ob3d_set_context(_parentJitterObject);
-					//t_symbol			*tmpClassName = jit_object_classname(jitTexture);
-					//post("texture is %p, class name check is %s",jitTexture,tmpClassName->s_name);
-
-					uint32_t			texName = jit_attr_getlong(jitTexture, ps_glid_r);
-					//VVGL::Size			tmpSize = VVGL::Size(jitObj->dim[0], jitObj->dim[1]);
-					VVGL::Size			tmpSize;
-					tmpSize.width = (double)jit_attr_getlong(jitTexture, ps_width_r);
-					tmpSize.height = (double)jit_attr_getlong(jitTexture, ps_height_r);
-					//post("tex name is %d, dims are %f x %f",texName,tmpSize.width,tmpSize.height);
-					VVGL::Rect			tmpRect = VVGL::Rect(0, 0, tmpSize.width, tmpSize.height);
-					GLBufferPoolRef		tmpPool = _gl2Scene->privatePool();
-					//bool				tmpFlipped = (jit_attr_getlong(jitTexture, ps_flip_r)>0) ? true : false;
-					bool				tmpFlipped = false;
-					//post("tex %d flip is %d",texName,tmpFlipped);
-					returnMe = CreateFromExistingGLTexture(
-						texName,	//	inTexName The name of the OpenGL texture that will be used to populate the GLBuffer.
-						//GLBuffer::Target_Rect,	//	inTexTarget The texture target of the OpenGL texture (GLBuffer::Target)
-						(GLBuffer::Target)jit_attr_getlong(jitTexture, ps_gltarget_r),
-						GLBuffer::IF_RGBA8,	//	inTexIntFmt The internal format of the OpenGL texture.  Not as important to get right, used primarily for creating the texture.
-						GLBuffer::PF_BGRA,	//	inTexPxlFmt The pixel format of the OpenGL texture.  Not as important to get right, used primarily for creating the texture.
-						GLBuffer::PT_UInt_8888_Rev,	//	inTexPxlType The pixel type of the OpenGL texture.  Not as important to get right, used primarily for creating the texture.
-						tmpSize,	//	inTexSize The Size of the OpenGL texture, in pixels.
-						tmpFlipped,	//	inTexFlipped Whether or not the image in the OpenGL texture is flipped.
-						tmpRect,	//	inImgRectInTex The region of the texture (bottom-left origin, in pixels) that contains the image.
-						nullptr,	//	inReleaseCallbackContext An arbitrary pointer stored (weakly) with the GLBuffer- this pointer is passed to the release callback.  If you want to store a pointer from another SDK, this is the appropriate place to do so.
-						nullptr,	//	inReleaseCallback A callback function or lambda that will be executed when the GLBuffer is deallocated.  If the GLBuffer needs to release any other resources when it's freed, this is the appropriate place to do so.
-						tmpPool	//	inPoolRef The pool that the GLBuffer should be created with.  When the GLBuffer is freed, its underlying GL resources will be returned to this pool (where they will be either freed or recycled).
-					);
-					//if (returnMe != nullptr)
-					//	post("\tgl wrapper txture is %s",returnMe->getDescriptionString().c_str());
-					attr->setCurrentImageBuffer(returnMe);
-				}
-			}
-			else	{
-				attr->setCurrentImageBuffer(returnMe);
-			}
-		}
-		else	{
-			if (inJitGLTexNameSym != NULL)	{
-				post("ERR: no attribute found named %s in %s",static_cast<t_symbol*>(inJitGLTexNameSym)->s_name,__func__);
-			}
-		}
-	}
-	else	{
-		post("ERR: no file loaded yet, %s",__func__);
-	}
-
-	return returnMe;
-}
-	*/
 void ISFRendererImpl::setBufferForInputKey(const MyBufferRef & inBuffer, const std::string & inInputName) {
 	//cout << __PRETTY_FUNCTION__ << endl;
 	
@@ -482,26 +377,6 @@ void ISFRendererImpl::setCurrentValForParamNamed(const VVISF::ISFVal & inVal, co
 		return;
 	attr->setCurrentVal(inVal);
 }
-/*
-std::vector<std::string> & ISFRendererImpl::labelArrayForParamNamed(const std::string & inInputName) {
-	ISFDocRef			tmpDoc = loadedISFDoc();
-	if (tmpDoc == nullptr)
-		return vector<std::string>();
-	ISFAttrRef			attr = tmpDoc->input(inInputName);
-	if (attr == nullptr)
-		return vector<std::string>();
-	return attr->labelArray();
-}
-std::vector<int32_t> & ISFRendererImpl::valsArrayForParamNamed(const std::string & inInputName) {
-	ISFDocRef			tmpDoc = loadedISFDoc();
-	if (tmpDoc == nullptr)
-		return vector<int32_t>();
-	ISFAttrRef			attr = tmpDoc->input(inInputName);
-	if (attr == nullptr)
-		return vector<int32_t>();
-	return attr->valArray();
-}
-*/
 
 
 
@@ -522,20 +397,6 @@ ISFDocRef ISFRendererImpl::loadedISFDoc()	{
 	}
 	return nullptr;
 }
-/*
-ISFSceneRef ISFRendererImpl::loadedISFScene()	{
-	lock_guard<recursive_mutex>		lock(_sceneLock);
-	if (_sceneLoaded)	{
-		if (_sceneUsesGL4 && _gl4Scene!=nullptr)	{
-			return _gl4Scene;
-		}
-		else if (!_sceneUsesGL4 && _gl2Scene!=nullptr)	{
-			return _gl2Scene;
-		}
-	}
-	return nullptr;
-}
-*/
 GLBufferPoolRef ISFRendererImpl::loadedBufferPool()	{
 	lock_guard<recursive_mutex>		lock(_sceneLock);
 	if (_sceneLoaded)	{
@@ -560,26 +421,6 @@ GLBufferPoolRef ISFRendererImpl::hostBufferPool()	{
 	}
 	return nullptr;
 }
-/*
-GLTexToTexCopierRef ISFRendererImpl::loadedTextureCopier()	{
-	lock_guard<recursive_mutex>		lock(_sceneLock);
-	if (_sceneLoaded)	{
-		if (_sceneUsesGL4 && _gl4Scene!=nullptr)	{
-			return _gl4Scene->privateCopier();
-		}
-		else if (!_sceneUsesGL4 && _gl2Scene!=nullptr)	{
-			return _gl2Scene->privateCopier();
-		}
-	}
-	return nullptr;
-}
-*/
-/*
-bool ISFRendererImpl::hasInputImageKey()	{
-	lock_guard<recursive_mutex>		lock(_sceneLock);
-	return _hasInputImageKey;
-}
-*/
 
 
 GLBufferPoolRef ISFRendererImpl::getGL2BufferPool()	{

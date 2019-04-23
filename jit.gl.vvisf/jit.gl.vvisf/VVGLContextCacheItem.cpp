@@ -5,6 +5,8 @@
 
 
 
+using namespace std;
+
 //VVGLContextCacheItemRef GetCacheItemForContext(const GLContextRef & inHostCtx);
 
 static recursive_mutex						_VVGLContextCacheArrayLock;

@@ -40,11 +40,6 @@ bool ISFRenderer::isFileLoaded()	{
 
 
 
-/*
-MyBufferRef ISFRenderer::applyJitGLTexToInputKey(void *inJitGLTexNameSym, const std::string & inInputName) {
-	return nullptr;
-}
-*/
 void ISFRenderer::setBufferForInputKey(const MyBufferRef & inBuffer, const std::string & inInputName) {
 	if (_pi == nullptr)
 		return;
@@ -75,18 +70,6 @@ void ISFRenderer::setCurrentValForParamNamed(const VVISF::ISFVal & inVal, const 
 		return;
 	_pi->setCurrentValForParamNamed(inVal, inInputName);
 }
-/*
-std::vector<std::string> & ISFRenderer::labelArrayForParamNamed(const std::string & inInputName) {
-	if (_pi == nullptr)
-		return vector<string>();
-	return _pi->labelArrayForParamNamed(inInputName);
-}
-std::vector<int32_t> & ISFRenderer::valsArrayForParamNamed(const std::string & inInputName) {
-	if (_pi == nullptr)
-		return vector<int32_t>();
-	return _pi->valsArrayForParamNamed(inInputName);
-}
-*/
 
 
 

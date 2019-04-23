@@ -94,6 +94,8 @@
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.mxe64</TargetExt>
     <LibraryPath>$(ProjectDir)..\..\ISFSandbox_win\external\GLEW\win_x64;$(ProjectDir)x64\Debug;$(LibraryPath)</LibraryPath>
+    <PostBuildEventUseInBuild>
+    </PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -102,6 +104,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.mxe64</TargetExt>
+    <LibraryPath>$(ProjectDir)..\..\ISFSandbox_win\external\GLEW\win_x64;$(ProjectDir)x64\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -148,7 +151,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(C74SUPPORT)\max-includes;$(C74SUPPORT)\msp-includes;$(C74SUPPORT)\jit-includes;$(ProjectDir)..\..\ISFSandbox_win\VVGL\include;$(ProjectDir)..\..\ISFSandbox_win\VVISF\include;$(ProjectDir)..\..\ISFSandbox_win\external\OpenGL-Win;$(ProjectDir)..\..\ISFSandbox_win\external\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN_VERSION;WIN32;_DEBUG;_WINDOWS;_USRDLL;WIN_EXT_VERSION;VVGL_SDK_WIN;MAXAPI_USE_MSCRT;GL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN_VERSION;WIN32;_DEBUG;_WINDOWS;_USRDLL;WIN_EXT_VERSION;VVGL_SDK_WIN;MAXAPI_USE_MSCRT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling />
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -186,9 +189,9 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(TargetPath)" "C:\Program Files\Cycling '74\Max 8\resources\packages\VVISF\externals"
-xcopy /y /d "$(ProjectDir)x64\Debug\glew32.dll" "C:\Program Files\Cycling '74\Max 8\resources\packages\VVISF\support"
 xcopy /y /d "$(ProjectDir)x64\Debug\VVGL.dll" "C:\Program Files\Cycling '74\Max 8\resources\packages\VVISF\support"
-xcopy /y /d "$(ProjectDir)x64\Debug\VVISF.dll" "C:\Program Files\Cycling '74\Max 8\resources\packages\VVISF\support"</Command>
+xcopy /y /d "$(ProjectDir)x64\Debug\VVISF.dll" "C:\Program Files\Cycling '74\Max 8\resources\packages\VVISF\support"
+xcopy /y /d "$(SolutionDir)\..\..\ISFSandbox_win\external\GLEW\win_x64\glew32.dll" "C:\Program Files\Cycling '74\Max 8\resources\packages\VVISF\support"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -239,14 +242,14 @@ xcopy /y /d "$(ProjectDir)x64\Debug\VVISF.dll" "C:\Program Files\Cycling '74\Max
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>$(C74SUPPORT)\max-includes;$(C74SUPPORT)\msp-includes;$(C74SUPPORT)\jit-includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN_VERSION;WIN32;NDEBUG;_WINDOWS;_USRDLL;WIN_EXT_VERSION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(C74SUPPORT)\max-includes;$(C74SUPPORT)\msp-includes;$(C74SUPPORT)\jit-includes;$(ProjectDir)..\..\ISFSandbox_win\VVGL\include;$(ProjectDir)..\..\ISFSandbox_win\VVISF\include;$(ProjectDir)..\..\ISFSandbox_win\external\OpenGL-Win;$(ProjectDir)..\..\ISFSandbox_win\external\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN_VERSION;WIN32;NDEBUG;_WINDOWS;_USRDLL;WIN_EXT_VERSION;VVGL_SDK_WIN;MAXAPI_USE_MSCRT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -263,13 +266,14 @@ xcopy /y /d "$(ProjectDir)x64\Debug\VVISF.dll" "C:\Program Files\Cycling '74\Max
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(ProjectName).mxe64</OutputFile>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;VVGL.lib;VVISF.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -283,6 +287,12 @@ xcopy /y /d "$(ProjectDir)x64\Debug\VVISF.dll" "C:\Program Files\Cycling '74\Max
       <ImportLibrary>$(IntDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(TargetPath)" "C:\Program Files\Cycling '74\Max 8\resources\packages\VVISF\externals"
+xcopy /y /d "$(ProjectDir)x64\Release\VVGL.dll" "C:\Program Files\Cycling '74\Max 8\resources\packages\VVISF\support"
+xcopy /y /d "$(ProjectDir)x64\Release\VVISF.dll" "C:\Program Files\Cycling '74\Max 8\resources\packages\VVISF\support"
+xcopy /y /d "$(SolutionDir)\..\..\ISFSandbox_win\external\GLEW\win_x64\glew32.dll" "C:\Program Files\Cycling '74\Max 8\resources\packages\VVISF\support"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="$(C74SUPPORT)\max-includes\common\dllmain_win.c" />
