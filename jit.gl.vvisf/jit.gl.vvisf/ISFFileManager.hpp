@@ -35,6 +35,9 @@ class ISFFileManager
 	protected:
 		std::recursive_mutex		_lock;
 		std::map<std::string,ISFFile>		_fileEntries;
+	
+	protected:
+		void addBuiltInColorBarsISF();
 };
 
 

@@ -230,7 +230,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 		}
 		else	{
 			post("jit.gl.vvisf: ERR: creating internal texture object");
-			jit_object_error((t_object *)targetInstance,(char*)"jit.gl.syphonserver: could not create texture");
+			jit_object_error((t_object *)targetInstance,(char*)"jit.gl.vvisf: could not create texture");
 		}
 		
 		// create and attach ob3d

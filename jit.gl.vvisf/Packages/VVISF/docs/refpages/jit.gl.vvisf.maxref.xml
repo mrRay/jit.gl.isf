@@ -17,9 +17,10 @@
 		<metadata name="author">
 			Vidvox
 		</metadata>
-		<metadata name="tag">
-			TEXT_HERE
-		</metadata>
+		<metadata name="tag">Jitter</metadata>
+		<metadata name="tag">GLSL</metadata>
+		<metadata name="tag">ISF</metadata>
+		<metadata name="tag">OpenGL</metadata>
 	</metadatalist>
 	
 	<!--INLETS-->
@@ -46,7 +47,7 @@
 		</outlet>
 		<outlet id="1" type="OUTLET_TYPE">
 			<digest>
-				Lists describing the loaded ISF's parameters (INPUTS in the ISF spec)
+				Parameter information outlet
 			</digest>
 			<description>
 				TEXT_HERE
@@ -54,7 +55,7 @@
 		</outlet>
 		<outlet id="2" type="OUTLET_TYPE">
 			<digest>
-				Lists describing ISF files installed on the system
+				File information outlet
 			</digest>
 			<description>
 				TEXT_HERE
@@ -62,7 +63,7 @@
 		</outlet>
 		<outlet id="3" type="OUTLET_TYPE">
 			<digest>
-				DumpOut
+				Dump output
 			</digest>
 			<description>
 				TEXT_HERE
@@ -104,10 +105,10 @@
 		<method name="getparamlist">
 			<arglist />
 			<digest>
-				Dumps lists describing the loaded ISF's inputs out the appropriate outlet.  The first message output is "clear", which cna be used as a token between dumps.
+				Dumps lists describing the loaded ISF's inputs out the appropriate outlet.
 			</digest>
 			<description>
-				TEXT_HERE
+				Dumps lists describing the loaded ISF's inputs out the appropriate outlet.  The first message output is "clear", which can be used as a token between dumps.
 			</description>
 		</method>
 		<method name="getparam">

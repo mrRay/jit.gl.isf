@@ -9,7 +9,7 @@
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
-	<string>info.v002.syphon.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>com.vidvox.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>${PRODUCT_VERSION}</string>
 	<key>CFBundlePackageType</key>
@@ -21,7 +21,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>${PRODUCT_VERSION}</string>
 	<key>CFBundleLongVersionString</key>
-	<string>${PRODUCT_NAME} ${PRODUCT_VERSION}, Copyright 2013-2017 Anton Marini &amp; Tom Butterworth</string>
+	<string>${PRODUCT_NAME} ${PRODUCT_VERSION}, Copyright 2019 Vidvox, LLC</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 </dict>

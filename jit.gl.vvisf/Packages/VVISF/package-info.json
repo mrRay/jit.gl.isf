@@ -1,0 +1,35 @@
+{
+	"author" : "Vidvox",
+	"authors" : [ "Ray Cutler", "David Lublin" ],
+	"categories" : [  ],
+	"description" : "Jitter external that renders ISF files to OpenGL textures.",
+	"displayname" : "",
+	"extends" : "",
+	"extensible" : 0,
+	"homepatcher" : null,
+	"max_version_max" : "none",
+	"max_version_min" : "8.0",
+	"name" : "ISF",
+	"os" : 	{
+		"macintosh" : 		{
+			"platform" : [ "x64" ],
+			"min_version" : "10.10.x"
+		}
+,
+		"windows" : 		{
+			"platform" : [ "x64" ],
+			"min_version" : "10"
+		}
+
+	}
+,
+	"readme" : "",
+	"tags" : [ "jitter", "video", "graphics", "opengl", "externals" ],
+	"version" : "1.0.0",
+	"versions" : null,
+	"website" : "https://isf.video/",
+	"filelist" : 	{
+		"externals" : [ "jit.gl.vvisf.mxo", "jit.gl.vvisf.mxe64" ],
+		"help" : [ "jit.gl.vvisf.maxhelp" ]
+	}
+}

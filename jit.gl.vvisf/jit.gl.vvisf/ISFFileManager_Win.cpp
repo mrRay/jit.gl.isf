@@ -36,6 +36,8 @@ void ISFFileManager_Win::populateEntries() {
 	tmpCtx->makeCurrent();
 	CreateGlobalBufferPool(tmpCtx);
 
+	//	add the built-in 'color bars' ISF
+	addBuiltInColorBarsISF();
 
 	//	add the files in the global ISF library
 	//insertFilesFromDirectory(string("/ProgramData/ISF"), true);

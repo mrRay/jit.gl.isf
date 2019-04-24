@@ -48,11 +48,14 @@ void ISFFileManager_Mac::populateEntries(){
 		//	make a global buffer pool.  we're going to destroy it before this method exits, we just need the pool so the ISFDocs we're about to create don't throw exceptions b/c they're unable to load image resources to disk (b/c there's no buffer pool)
 		CreateGlobalBufferPool();
 		
+		//	add the built-in 'color bars' ISF
+		addBuiltInColorBarsISF();
+		
 		//	add the files in the global ISF library
 		insertFilesFromDirectory(string([@"/Library/Graphics/ISF" UTF8String]), true);
 		//	now add the files for the user-centric ISF library.  this will overwrite any duplicate entries from the global lib.
 		insertFilesFromDirectory(string([[RealHomeDirectory() stringByAppendingPathComponent:@"Library/Graphics/ISF"] UTF8String]), true);
-		
+		/*
 		//	now add the default color bars ISF, so there's always at least one ISF loaded
 		string				filename = string("Default ColorBars");
 		NSString			*tmpPath = [[NSBundle bundleForClass:[VVISFSpecialClassName class]] pathForResource:@"Default ColorBars" ofType:@"fs"];
@@ -64,6 +67,8 @@ void ISFFileManager_Mac::populateEntries(){
 			ISFFile				tmpFile = ISFFile(filename, filepath, ISFFileType_Source, description, cats);
 			_fileEntries[filename] = tmpFile;
 		}
+		*/
+		
 		//	DON'T FORGET TO DESTROY THIS GLOBAL BUFFER POOL
 		SetGlobalBufferPool();
 		

@@ -162,7 +162,7 @@ void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
 				post("ERR: couldnt set weak ref in jit obj in %s",__func__);
 		}
 		else 	{
-			error("jit.gl.syphon_server: could not allocate object");
+			error("jit.gl.vvisf: could not allocate object");
 			freeobject((t_object *)newObjPtr);
 			newObjPtr = NULL;
 		}
@@ -195,10 +195,10 @@ void max_jit_gl_vvisf_assist(t_max_jit_gl_vvisf *x, void *b, long m, long a, cha
 			sprintf(s, "Rendered GL textures out");
 			break;
 		case 1:
-			sprintf(s, "param information (\"getparamlist\", \"getparam\" <sym>)");
+			sprintf(s, "Parameter information outlet");
 			break;
 		case 2:
-			sprintf(s, "File information (filesDump)");
+			sprintf(s, "File information outlet");
 			break;
 		case 3:
 			sprintf(s, "Dump output");
