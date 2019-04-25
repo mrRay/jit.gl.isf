@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 0,
-			"revision" : 3,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 441.0, 225.0, 812.0, 690.0 ],
+		"rect" : [ 518.0, 79.0, 822.0, 690.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -217,13 +217,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 812.0, 664.0 ],
+						"rect" : [ 0.0, 26.0, 822.0, 664.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -570,13 +570,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 812.0, 664.0 ],
+						"rect" : [ 0.0, 26.0, 822.0, 664.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -611,7 +611,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "jit_gl_texture", "" ],
-									"patching_rect" : [ 460.38641357421875, 426.5, 70.0, 22.0 ],
+									"patching_rect" : [ 460.38641357421875, 444.5, 70.0, 22.0 ],
 									"text" : "jit.gl.texture"
 								}
 
@@ -623,7 +623,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "jit_matrix", "" ],
-									"patching_rect" : [ 403.0909423828125, 426.5, 53.0, 22.0 ],
+									"patching_rect" : [ 403.0909423828125, 444.5, 53.0, 22.0 ],
 									"text" : "jit.matrix"
 								}
 
@@ -637,7 +637,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 346.5909423828125, 426.5, 50.0, 22.0 ]
+									"patching_rect" : [ 346.5909423828125, 444.5, 50.0, 22.0 ]
 								}
 
 							}
@@ -649,7 +649,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 291.0909423828125, 426.5, 50.0, 22.0 ]
+									"patching_rect" : [ 291.0909423828125, 444.5, 50.0, 22.0 ]
 								}
 
 							}
@@ -660,7 +660,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 334.0909423828125, 465.0, 147.0, 22.0 ],
+									"patching_rect" : [ 334.0909423828125, 483.0, 147.0, 22.0 ],
 									"text" : "param <param_name> $1"
 								}
 
@@ -672,7 +672,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 195.5909423828125, 374.0, 408.5909423828125, 47.0 ],
+									"patching_rect" : [ 195.5909423828125, 392.0, 408.5909423828125, 47.0 ],
 									"text" : "- \"audio\" and \"audioFFT\"-type params will work with jitter matrices or GL textures.  Please refer to the ISF spec for a detailed description of the format of these images, and how their min/max values affect this format."
 								}
 
@@ -683,7 +683,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 195.5909423828125, 352.0, 408.5909423828125, 20.0 ],
+									"patching_rect" : [ 195.5909423828125, 370.0, 408.5909423828125, 20.0 ],
 									"text" : "- \"image\"-type params will work with jitter matrices or GL textures"
 								}
 
@@ -694,7 +694,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 195.5909423828125, 330.0, 408.5909423828125, 20.0 ],
+									"patching_rect" : [ 195.5909423828125, 348.0, 408.5909423828125, 20.0 ],
 									"text" : "- \"color\"-type params will work with four (RGBA) floating-point values"
 								}
 
@@ -706,7 +706,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 195.5909423828125, 295.0, 408.5909423828125, 33.0 ],
+									"patching_rect" : [ 195.5909423828125, 313.0, 408.5909423828125, 33.0 ],
 									"text" : "- \"point2D\"-type params will work with two (X and Y) integer or floating-point values"
 								}
 
@@ -717,7 +717,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 195.5909423828125, 273.0, 408.5909423828125, 20.0 ],
+									"patching_rect" : [ 195.5909423828125, 291.0, 408.5909423828125, 20.0 ],
 									"text" : "- \"float\"-type params will work with integer or floating-point values"
 								}
 
@@ -728,7 +728,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 195.5909423828125, 251.0, 408.5909423828125, 20.0 ],
+									"patching_rect" : [ 195.5909423828125, 269.0, 408.5909423828125, 20.0 ],
 									"text" : "- \"long\"-type params will work with integer, floating-point, or string values"
 								}
 
@@ -739,7 +739,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 195.5909423828125, 229.0, 408.5909423828125, 20.0 ],
+									"patching_rect" : [ 195.5909423828125, 247.0, 408.5909423828125, 20.0 ],
 									"text" : "- \"bool\"-type params will work with integer or floating-point values"
 								}
 
@@ -751,7 +751,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 195.5909423828125, 194.0, 408.5909423828125, 33.0 ],
+									"patching_rect" : [ 195.5909423828125, 212.0, 408.5909423828125, 33.0 ],
 									"text" : "- \"event\"-type params do not require any value (as \"event\"-type inputs are valueless events)"
 								}
 
@@ -765,7 +765,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 180.5909423828125, 105.0, 396.0, 33.0 ],
+									"patching_rect" : [ 180.5909423828125, 123.0, 396.0, 33.0 ],
 									"text" : "Setting an ISF file's parameters"
 								}
 
@@ -777,7 +777,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 180.5909423828125, 145.0, 426.0, 47.0 ],
+									"patching_rect" : [ 180.5909423828125, 163.0, 426.0, 47.0 ],
 									"text" : "Parameter values can be adjusted using the \"param <param name> <value>\" message.  Please note that the type of \"value\" provided will vary from one parameter type to another."
 								}
 
@@ -786,7 +786,7 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-33", 0 ],
-									"midpoints" : [ 300.5909423828125, 457.5, 343.5909423828125, 457.5 ],
+									"midpoints" : [ 300.5909423828125, 475.5, 343.5909423828125, 475.5 ],
 									"source" : [ "obj-35", 0 ]
 								}
 
@@ -794,7 +794,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-33", 0 ],
-									"midpoints" : [ 356.0909423828125, 457.5, 343.5909423828125, 457.5 ],
+									"midpoints" : [ 356.0909423828125, 475.5, 343.5909423828125, 475.5 ],
 									"source" : [ "obj-37", 0 ]
 								}
 
@@ -802,7 +802,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-33", 0 ],
-									"midpoints" : [ 412.5909423828125, 457.5, 343.5909423828125, 457.5 ],
+									"midpoints" : [ 412.5909423828125, 475.5, 343.5909423828125, 475.5 ],
 									"source" : [ "obj-38", 0 ]
 								}
 
@@ -810,7 +810,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-33", 0 ],
-									"midpoints" : [ 469.88641357421875, 457.5, 343.5909423828125, 457.5 ],
+									"midpoints" : [ 469.88641357421875, 475.5, 343.5909423828125, 475.5 ],
 									"source" : [ "obj-39", 0 ]
 								}
 
@@ -844,13 +844,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 812.0, 664.0 ],
+						"rect" : [ 0.0, 26.0, 822.0, 664.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -880,6 +880,447 @@
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
+									"id" : "obj-20",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 275.5909423828125, 576.0, 215.0, 33.0 ],
+									"text" : "Sample pop-up button: lists parameter names + types"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-18",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 307.5909423828125, 452.0, 265.0, 22.0 ],
+									"text" : "getparam <parameter_name> <attribute_name>"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-16",
+									"linecount" : 4,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 184.5909423828125, 390.0, 388.0, 60.0 ],
+									"text" : "As mentioned in the previous tab, parameters have a number of other attributes.  You can get the value of these attributes with the \"getparam\" message, which requires the name of the parameter and the attribute you want to get."
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-15",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 204.5909423828125, 346.76031494140625, 104.0, 22.0 ],
+									"text" : "getparamlist done"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-14",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 204.5909423828125, 282.76031494140625, 147.0, 22.0 ],
+									"text" : "name <parameter_name>"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-13",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 204.5909423828125, 205.76031494140625, 103.0, 22.0 ],
+									"text" : "getparamlist clear"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-12",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 204.5909423828125, 311.76031494140625, 369.0, 33.0 ],
+									"text" : "- The ISF object will then send the message \"getparamlist done\", to indicate that it has finished dumping the parameter names."
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-10",
+									"linecount" : 3,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 204.5909423828125, 234.76031494140625, 368.0, 47.0 ],
+									"text" : "- The ISF object will then send a number of messages describing the names of the parameters (one message for each parameter).  The format of these messages will be \"name <parameter_name>\"."
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-9",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 498.5909423828125, 142.0, 74.0, 22.0 ],
+									"text" : "getparamlist"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-1",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 204.5909423828125, 170.76031494140625, 368.0, 33.0 ],
+									"text" : "- First, the ISF object will send the message \"getparamlist clear\", to indicate that it's about to dump the list of parameter names"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-11",
+									"linecount" : 3,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 184.5909423828125, 93.0, 388.0, 47.0 ],
+									"text" : "Every parameter has a unique name.  You can query the parameters available in the loaded ISF file with the \"getparamlist\" message (this is also done automatically every time you load a new ISF)."
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-32",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 2,
+									"outlettype" : [ "", "" ],
+									"patching_rect" : [ 23.3409423828125, 402.76031494140625, 116.0, 22.0 ],
+									"text" : "route PARAMNAME"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-28",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ -70.159057617187528, 458.0, 75.0, 22.0 ],
+									"text" : "append type"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-27",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ -70.159057617187528, 434.0, 107.0, 22.0 ],
+									"text" : "prepend getparam"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-63",
+									"linecount" : 4,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ -204.492390950520786, 272.76031494140625, 257.166666666666515, 60.0 ],
+									"text" : "this bit populates a UI item list with the names and types of the loaded ISF's parameters.  it gates everything off when the paramlist has finished dumping."
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-65",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ -90.659057617187528, 487.5206298828125, 133.0, 22.0 ],
+									"text" : "sprintf append %s (%s)"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-66",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "" ],
+									"patching_rect" : [ -90.659057617187528, 402.76031494140625, 60.0, 22.0 ],
+									"text" : "t l l l"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-67",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ -108.159057617187528, 577.5206298828125, 101.0, 22.0 ],
+									"text" : "s msgsToISFInlet"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-69",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "int" ],
+									"patching_rect" : [ -204.492390950520786, 515.5206298828125, 29.5, 22.0 ],
+									"text" : "int"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-70",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ -108.159057617187528, 553.5206298828125, 57.0, 22.0 ],
+									"text" : "gate 1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-71",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ -204.492390950520786, 553.5206298828125, 57.0, 22.0 ],
+									"text" : "gate 1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-72",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ -204.492390950520786, 577.5206298828125, 81.0, 22.0 ],
+									"text" : "s inUIItemList"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-73",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 2,
+									"outlettype" : [ "int", "int" ],
+									"patching_rect" : [ -204.492390950520786, 478.5206298828125, 32.0, 22.0 ],
+									"text" : "t 0 0"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-74",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 2,
+									"outlettype" : [ "clear", "int" ],
+									"patching_rect" : [ -166.492390950520786, 478.5206298828125, 51.0, 22.0 ],
+									"text" : "t clear 1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-75",
+									"maxclass" : "newobj",
+									"numinlets" : 3,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "" ],
+									"patching_rect" : [ -204.492390950520786, 402.76031494140625, 95.0, 22.0 ],
+									"text" : "route done clear"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-76",
+									"maxclass" : "newobj",
+									"numinlets" : 4,
+									"numoutlets" : 4,
+									"outlettype" : [ "", "", "", "" ],
+									"patching_rect" : [ -138.992390950520871, 363.76031494140625, 164.0, 22.0 ],
+									"text" : "route getparamlist name type"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-77",
+									"maxclass" : "newobj",
+									"numinlets" : 0,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ -138.992390950520871, 334.76031494140625, 116.0, 22.0 ],
+									"text" : "r msgsFromINPUTS"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-56",
+									"linecount" : 4,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 647.174275716145758, 385.373260498046875, 152.0, 60.0 ],
+									"text" : "this bit controls a gate that passes images from the video to the ISF object's \"inputImage\" input (for FX)"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-53",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "int" ],
+									"patching_rect" : [ 714.174275716145758, 538.633575439453125, 22.0, 22.0 ],
+									"text" : "t 1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-52",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 2,
+									"outlettype" : [ "", "" ],
+									"patching_rect" : [ 714.174275716145758, 508.373260498046875, 99.0, 22.0 ],
+									"text" : "route inputImage"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-46",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 647.174275716145758, 575.717620849609375, 103.0, 22.0 ],
+									"text" : "s inputImageGate"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-45",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "int" ],
+									"patching_rect" : [ 647.174275716145758, 538.633575439453125, 22.0, 22.0 ],
+									"text" : "t 0"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-44",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 2,
+									"outlettype" : [ "", "" ],
+									"patching_rect" : [ 647.174275716145758, 508.373260498046875, 65.0, 22.0 ],
+									"text" : "route clear"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-42",
+									"maxclass" : "newobj",
+									"numinlets" : 3,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "" ],
+									"patching_rect" : [ 647.174275716145758, 479.373260498046875, 153.0, 22.0 ],
+									"text" : "route getparamlist name"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"hidden" : 1,
+									"id" : "obj-41",
+									"maxclass" : "newobj",
+									"numinlets" : 0,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 647.174275716145758, 450.373260498046875, 116.0, 22.0 ],
+									"text" : "r msgsFromINPUTS"
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"hidden" : 1,
 									"id" : "obj-8",
 									"maxclass" : "newobj",
@@ -907,159 +1348,6 @@
 							}
 , 							{
 								"box" : 								{
-									"id" : "obj-99",
-									"linecount" : 3,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 138.5909423828125, 268.3443603515625, 289.0, 47.0 ],
-									"text" : "this bit populates a UI item list and gates the 'inputImage' stream so only filter-type ISFs in this patch can receive the supplementary video stream"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-96",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 202.5909423828125, 412.3443603515625, 81.0, 22.0 ],
-									"text" : "s inUIItemList"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-93",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 312.0909423828125, 472.5, 81.0, 22.0 ],
-									"text" : "s inUIItemList"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-92",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 344.0909423828125, 448.5, 103.0, 22.0 ],
-									"text" : "s inputImageGate"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-77",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 187.5909423828125, 491.0, 103.0, 22.0 ],
-									"text" : "s inputImageGate"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-69",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 1,
-									"outlettype" : [ "int" ],
-									"patching_rect" : [ 187.5909423828125, 467.0, 22.0, 22.0 ],
-									"text" : "t 1"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-63",
-									"maxclass" : "newobj",
-									"numinlets" : 2,
-									"numoutlets" : 2,
-									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 187.5909423828125, 443.0, 99.0, 22.0 ],
-									"text" : "route inputImage"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-49",
-									"maxclass" : "newobj",
-									"numinlets" : 0,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 187.5909423828125, 332.71258544921875, 116.0, 22.0 ],
-									"text" : "r msgsFromINPUTS"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-50",
-									"maxclass" : "newobj",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 202.5909423828125, 389.3443603515625, 133.0, 22.0 ],
-									"text" : "sprintf append %s (%s)"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-51",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 2,
-									"outlettype" : [ "clear", "int" ],
-									"patching_rect" : [ 312.0909423828125, 424.5, 51.0, 22.0 ],
-									"text" : "t clear 0"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 12.0,
-									"id" : "obj-25",
-									"maxclass" : "newobj",
-									"numinlets" : 3,
-									"numoutlets" : 3,
-									"outlettype" : [ "", "", "" ],
-									"patching_rect" : [ 187.5909423828125, 356.71258544921875, 103.0, 22.0 ],
-									"text" : "route param clear"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-55",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 535.5909423828125, 447.26031494140625, 101.0, 22.0 ],
-									"text" : "s msgsToISFInlet"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-43",
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 535.5909423828125, 423.26031494140625, 76.0, 22.0 ],
-									"text" : "getparam $1"
-								}
-
-							}
-, 							{
-								"box" : 								{
 									"hidden" : 1,
 									"id" : "obj-47",
 									"maxclass" : "message",
@@ -1073,23 +1361,12 @@
 							}
 , 							{
 								"box" : 								{
-									"id" : "obj-101",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 475.0909423828125, 295.3443603515625, 193.0, 20.0 ],
-									"text" : "List of UI items (and their types)"
-								}
-
-							}
-, 							{
-								"box" : 								{
 									"id" : "obj-94",
 									"maxclass" : "newobj",
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 478.0909423828125, 335.26031494140625, 79.0, 22.0 ],
+									"patching_rect" : [ 315.5909423828125, 521.26031494140625, 79.0, 22.0 ],
 									"text" : "r inUIItemList"
 								}
 
@@ -1103,7 +1380,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "int", "", "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 478.0909423828125, 379.26031494140625, 134.0, 22.0 ],
+									"patching_rect" : [ 315.5909423828125, 550.26031494140625, 134.0, 22.0 ],
 									"style" : "redness"
 								}
 
@@ -1117,44 +1394,44 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 178.5909423828125, 82.0, 396.0, 33.0 ],
+									"patching_rect" : [ 184.5909423828125, 53.0, 396.0, 33.0 ],
 									"text" : "Getting an ISF file's parameters"
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"id" : "obj-5",
-									"linecount" : 2,
-									"maxclass" : "comment",
+									"angle" : 270.0,
+									"background" : 1,
+									"bgcolor" : [ 0.811764705882353, 0.811764705882353, 0.811764705882353, 1.0 ],
+									"border" : 1,
+									"bordercolor" : [ 0.0, 0.0, 0.0, 1.0 ],
+									"hidden" : 1,
+									"id" : "obj-22",
+									"maxclass" : "panel",
+									"mode" : 0,
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 178.5909423828125, 202.0, 442.0, 33.0 ],
-									"text" : "The \"getparam <param_name>\" message will cause jit.gl.vvisf to output information about the named parameter."
+									"patching_rect" : [ 638.166656494140625, 375.74652099609375, 186.0, 233.25347900390625 ],
+									"proportion" : 0.5
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"id" : "obj-4",
-									"linecount" : 2,
-									"maxclass" : "comment",
+									"angle" : 270.0,
+									"background" : 1,
+									"bgcolor" : [ 0.811764705882353, 0.811764705882353, 0.811764705882353, 1.0 ],
+									"border" : 1,
+									"bordercolor" : [ 0.0, 0.0, 0.0, 1.0 ],
+									"hidden" : 1,
+									"id" : "obj-21",
+									"maxclass" : "panel",
+									"mode" : 0,
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 178.5909423828125, 162.0, 442.0, 33.0 ],
-									"text" : "The \"getparamlist\" message will cause jit.gl.vvisf to output a \"clear\" message, followed by the various parameters."
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-3",
-									"linecount" : 2,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 178.5909423828125, 122.0, 442.0, 33.0 ],
-									"text" : "When you load an ISF file, jit.gl.vvisf automatically publishes a \"clear\" message, followed by the various parameters, from its \"Param Information\" outlet"
+									"patching_rect" : [ -213.6590576171875, 260.74652099609375, 364.0, 348.25347900390625 ],
+									"proportion" : 0.5
 								}
 
 							}
@@ -1169,31 +1446,65 @@
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-50", 0 ],
-									"order" : 0,
-									"source" : [ "obj-25", 0 ]
+									"destination" : [ "obj-28", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-27", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-51", 0 ],
-									"source" : [ "obj-25", 1 ]
+									"destination" : [ "obj-70", 1 ],
+									"hidden" : 1,
+									"source" : [ "obj-28", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-63", 0 ],
-									"order" : 1,
-									"source" : [ "obj-25", 0 ]
+									"destination" : [ "obj-65", 1 ],
+									"hidden" : 1,
+									"source" : [ "obj-32", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-55", 0 ],
-									"source" : [ "obj-43", 0 ]
+									"destination" : [ "obj-42", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-41", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-44", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-42", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-52", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-42", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-45", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-44", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-46", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-45", 0 ]
 								}
 
 							}
@@ -1207,50 +1518,158 @@
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-43", 0 ],
-									"source" : [ "obj-48", 1 ]
+									"destination" : [ "obj-53", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-52", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-25", 0 ],
-									"source" : [ "obj-49", 0 ]
+									"destination" : [ "obj-46", 0 ],
+									"hidden" : 1,
+									"midpoints" : [ 723.674275716145758, 568.373260498046875, 658.174275716145758, 568.373260498046875, 658.174275716145758, 581.373260498046875, 656.674275716145758, 581.373260498046875 ],
+									"source" : [ "obj-53", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-96", 0 ],
-									"source" : [ "obj-50", 0 ]
+									"destination" : [ "obj-71", 1 ],
+									"hidden" : 1,
+									"source" : [ "obj-65", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-92", 0 ],
-									"source" : [ "obj-51", 1 ]
+									"destination" : [ "obj-27", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-66", 1 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-93", 0 ],
-									"source" : [ "obj-51", 0 ]
+									"destination" : [ "obj-32", 1 ],
+									"hidden" : 1,
+									"source" : [ "obj-66", 2 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-65", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-66", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-70", 0 ],
+									"hidden" : 1,
+									"midpoints" : [ -194.992390950520786, 544.5206298828125, -98.659057617187528, 544.5206298828125 ],
+									"order" : 0,
+									"source" : [ "obj-69", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-71", 0 ],
+									"hidden" : 1,
+									"order" : 1,
+									"source" : [ "obj-69", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-67", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-70", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-72", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-71", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-69", 0 ],
-									"source" : [ "obj-63", 0 ]
+									"hidden" : 1,
+									"source" : [ "obj-73", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-77", 0 ],
-									"source" : [ "obj-69", 0 ]
+									"destination" : [ "obj-69", 0 ],
+									"hidden" : 1,
+									"midpoints" : [ -124.992390950520786, 508.5206298828125, -194.992390950520786, 508.5206298828125 ],
+									"source" : [ "obj-74", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-71", 1 ],
+									"hidden" : 1,
+									"source" : [ "obj-74", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-73", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-75", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-74", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-75", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-32", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-76", 2 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-66", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-76", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-75", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-76", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-76", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-77", 0 ]
 								}
 
 							}
@@ -1298,13 +1717,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 812.0, 664.0 ],
+						"rect" : [ 0.0, 26.0, 822.0, 664.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1334,37 +1753,73 @@
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
-									"id" : "obj-42",
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 239.0909423828125, 442.0, 315.0, 22.0 ],
-									"text" : "param_name float \"this is my parameter!\" 0. 1. 0.5 0.7253"
+									"id" : "obj-15",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 205.5909423828125, 478.0, 419.0, 33.0 ],
+									"presentation_linecount" : 2,
+									"text" : "- \"labels\" is the list of labels associated with \"values\" (also specific to Long-type parameters, usually used for pop-up menus)"
 								}
 
 							}
 , 							{
 								"box" : 								{
-									"id" : "obj-40",
-									"maxclass" : "newobj",
+									"id" : "obj-14",
+									"linecount" : 2,
+									"maxclass" : "comment",
 									"numinlets" : 1,
-									"numoutlets" : 7,
-									"outlettype" : [ "", "", "", "int", "int", "int", "int" ],
-									"patching_rect" : [ 315.0909423828125, 480.0, 115.0, 22.0 ],
-									"text" : "unpack s s s 0 0 0 0"
+									"numoutlets" : 0,
+									"patching_rect" : [ 205.5909423828125, 443.0, 419.0, 33.0 ],
+									"presentation_linecount" : 2,
+									"text" : "- \"values\" is the list of acceptable values in lieu of range (specific to Long-type parameters)"
 								}
 
 							}
 , 							{
 								"box" : 								{
 									"id" : "obj-13",
-									"linecount" : 12,
+									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 183.5909423828125, 258.0, 426.0, 167.0 ],
-									"text" : "- NAME is the parameter name\n- TYPE is the parameter type- it will be one of the following strings: \"event\", \"bool\", \"long\", \"float\", \"point2D\", \"color\", \"image\", \"audio\", \"audioFFT\"\n- \"DESCRIPTION\" is a string description of the parameter- if the ISF file doesn't supply a description for this parameter, it's an empty string.\n- \"MIN\" is the min value for this parameter\n- \"MAX\" is the max value for this parameter\n- \"DEFAULT\" is the default value for this parameter\n- \"CURRENT\" is the current value for this parameter\n\nNOTE: if any of these values are not provided, or cannot be represented by a single value in a message, a placeholder value is used (empty string)"
+									"patching_rect" : [ 205.5909423828125, 408.0, 419.0, 33.0 ],
+									"presentation_linecount" : 2,
+									"text" : "- \"value\" is the parameter's current value (cannot be queried for Image-, Audio-, or AudioFFT-type parameters)"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-12",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 205.5909423828125, 386.0, 419.0, 20.0 ],
+									"text" : "- \"max\" is the parameter's max value"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-11",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 205.5909423828125, 364.0, 419.0, 20.0 ],
+									"text" : "- \"min\" is the parameter's min value"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-10",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 205.5909423828125, 342.0, 419.0, 20.0 ],
+									"text" : "- \"default\" is the parameter's default value"
 								}
 
 							}
@@ -1374,8 +1829,67 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 183.5909423828125, 221.0, 448.0, 20.0 ],
-									"text" : "<NAME> <TYPE> <DESCRIPTION> <MIN> <MAX> <DEFAULT> <CURRENT>"
+									"patching_rect" : [ 205.5909423828125, 320.0, 419.0, 20.0 ],
+									"text" : "- \"description\" is the description associated with the parameter"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-8",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 205.5909423828125, 298.0, 419.0, 20.0 ],
+									"text" : "- \"label\" is the human-readable label associated with the parameter."
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-6",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 205.5909423828125, 263.0, 419.0, 33.0 ],
+									"text" : "- \"type\" is the parameter type (\"Event\", \"Bool\", \"Long\", \"Float\", \"Point2D\", \"Color\", \"Image\", \"Audio\", or\"AudioFFT\")"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-19",
+									"linecount" : 4,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 185.5909423828125, 518.0, 439.0, 60.0 ],
+									"text" : "...Not all parameters will have- or even support- all of these attributes (for example, \"Event\"-type parameters don't have min/max/value/etc).  If you query a parameter attribute that doesn't exist or isn't supported, the ISF object will return an empty string as a placeholder."
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-4",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 183.5909423828125, 228.0, 441.0, 33.0 ],
+									"text" : "Parameters also have other attributes, which you query using their name.  Here are the attributes that can be queried:"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-1",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 183.5909423828125, 188.0, 445.0, 33.0 ],
+									"text" : "Every parameter has a unique name- this name is how you refer to the parameter when getting and setting its value."
 								}
 
 							}
@@ -1386,8 +1900,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 183.5909423828125, 171.0, 441.0, 33.0 ],
-									"text" : "jit.gl.vvisf has a \"param information\" outlet which publishes formatted information about the ISF file's parameters.  The format is as follows:"
+									"patching_rect" : [ 183.5909423828125, 150.0, 441.0, 33.0 ],
+									"text" : "jit.gl.vvisf has a \"param information\" outlet, from which all parameter-related information is published."
 								}
 
 							}
@@ -1398,7 +1912,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 183.5909423828125, 131.0, 441.0, 33.0 ],
+									"patching_rect" : [ 183.5909423828125, 110.0, 441.0, 33.0 ],
 									"text" : "ISF files usually have parameters (known as INPUTS in the ISF spec).  By supplying values for these parameters, you can affect how the ISF file renders."
 								}
 
@@ -1412,21 +1926,13 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 183.5909423828125, 91.0, 310.0, 33.0 ],
+									"patching_rect" : [ 183.5909423828125, 70.0, 310.0, 33.0 ],
 									"text" : "ISF parameters"
 								}
 
 							}
  ],
-						"lines" : [ 							{
-								"patchline" : 								{
-									"destination" : [ "obj-40", 0 ],
-									"midpoints" : [ 248.5909423828125, 472.0, 324.5909423828125, 472.0 ],
-									"source" : [ "obj-42", 0 ]
-								}
-
-							}
- ],
+						"lines" : [  ],
 						"bgcolor" : [ 0.996078431372549, 0.996078431372549, 0.996078431372549, 1.0 ]
 					}
 ,
@@ -1455,13 +1961,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 812.0, 664.0 ],
+						"rect" : [ 0.0, 26.0, 822.0, 664.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1496,7 +2002,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 226.5909423828125, 351.0, 353.0, 47.0 ],
+									"patching_rect" : [ 228.5909423828125, 351.0, 353.0, 47.0 ],
 									"text" : "Installing files isn't mandatory- but installed ISF files can be browsed, filtered, and automatically listed, which makes them easier to work with."
 								}
 
@@ -1508,7 +2014,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 293.5909423828125, 199.0, 160.0, 22.0 ],
+									"patching_rect" : [ 295.5909423828125, 199.0, 160.0, 22.0 ],
 									"text" : "read \"/path/to_my/ISF file.fs\""
 								}
 
@@ -1519,7 +2025,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 266.5909423828125, 499.0, 214.0, 20.0 ],
+									"patching_rect" : [ 268.5909423828125, 499.0, 214.0, 20.0 ],
 									"text" : "<Boot Drive>:\\ProgramData\\ISF"
 								}
 
@@ -1530,7 +2036,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 246.5909423828125, 477.0, 150.0, 20.0 ],
+									"patching_rect" : [ 248.5909423828125, 477.0, 150.0, 20.0 ],
 									"text" : "Windows:"
 								}
 
@@ -1542,7 +2048,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 266.5909423828125, 432.0, 214.0, 33.0 ],
+									"patching_rect" : [ 268.5909423828125, 432.0, 214.0, 33.0 ],
 									"text" : "/Library/Graphics/ISF\n~/Library/Graphics/ISF"
 								}
 
@@ -1553,7 +2059,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 246.5909423828125, 410.0, 150.0, 20.0 ],
+									"patching_rect" : [ 248.5909423828125, 410.0, 150.0, 20.0 ],
 									"text" : "MacOS:"
 								}
 
@@ -1567,7 +2073,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 226.5909423828125, 254.0, 310.0, 33.0 ],
+									"patching_rect" : [ 228.5909423828125, 254.0, 310.0, 33.0 ],
 									"text" : "\"Installing\" ISF files"
 								}
 
@@ -1579,7 +2085,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 226.5909423828125, 289.0, 355.0, 60.0 ],
+									"patching_rect" : [ 228.5909423828125, 289.0, 355.0, 60.0 ],
 									"text" : "For convenience, there are several standard locations in which ISF files are commonly installed.  These locations are accessible to all applications on your machine, so everything that supports ISF can work with the same set of ISF files."
 								}
 
@@ -1591,7 +2097,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 233.5909423828125, 118.0, 353.0, 74.0 ],
+									"patching_rect" : [ 235.5909423828125, 118.0, 353.0, 74.0 ],
 									"text" : "ISF files can be loaded from anywhere- you do **NOT** have to \"install\" an ISF file to load it and use it in Max.  Use the \"read <filepath>\" message to load ISF files from anywhere on your filesystem.  If you drag an ISF file into Max, it will automatically create one of these messages for you."
 								}
 
@@ -1605,7 +2111,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 233.5909423828125, 83.0, 310.0, 33.0 ],
+									"patching_rect" : [ 235.5909423828125, 83.0, 310.0, 33.0 ],
 									"text" : "Loading ISF files"
 								}
 
@@ -1625,119 +2131,6 @@
 					}
 ,
 					"text" : "p Load/Installing"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"hidden" : 1,
-					"id" : "obj-64",
-					"maxclass" : "newobj",
-					"numinlets" : 0,
-					"numoutlets" : 0,
-					"patcher" : 					{
-						"fileversion" : 1,
-						"appversion" : 						{
-							"major" : 8,
-							"minor" : 0,
-							"revision" : 3,
-							"architecture" : "x64",
-							"modernui" : 1
-						}
-,
-						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 812.0, 664.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
-						"default_fontsize" : 12.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
-						"gridsize" : [ 15.0, 15.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
-						"showontab" : 1,
-						"boxes" : [ 							{
-								"box" : 								{
-									"id" : "obj-26",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 173.5909423828125, 404.0, 442.0, 20.0 ],
-									"text" : "- The per-parameter \"LABEL\" value is not presently returned by this plugin"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-25",
-									"linecount" : 7,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 173.5909423828125, 302.0, 442.0, 100.0 ],
-									"text" : "- By convention, the ISF spec encourages authors to add pop-up buttons with a static list of items to their ISFs using \"long\"-type parameters.  This is accomplished by allowing \"long\"-type inputs to specify a limited list of acceptable values and strings associated with those values.  at present, neither the list of restricted values nor their corresponding string labels can be accessed via this plugin, because i'm not sure how to convey this information using the standard ISF parameter format above."
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-24",
-									"linecount" : 7,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 173.5909423828125, 200.0, 443.0, 100.0 ],
-									"text" : "- \"point2D\" and \"color\" params aren't fully queryable, because we cannot represent their values using a single value in a max message.  We're unsure how to handle this, so for the time being you're unable to get the min/max/default/current values of parameters of thesetypes.  It is still possible to set the value of these parameter types- just supply two floats (XY coords for point2D), or four floats (RGBA coords for color).  Suggestions on the most appropriate way to handle this are welcome- support@vidvox.net."
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontface" : 1,
-									"fontname" : "Arial",
-									"fontsize" : 24.0,
-									"id" : "obj-22",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 173.5909423828125, 157.0, 442.0, 33.0 ],
-									"text" : "Omissions, oddities, and limitations"
-								}
-
-							}
- ],
-						"lines" : [  ],
-						"bgcolor" : [ 0.996078431372549, 0.996078431372549, 0.996078431372549, 1.0 ]
-					}
-,
-					"patching_rect" : [ 863.5909423828125, 401.0, 71.0, 22.0 ],
-					"saved_object_attributes" : 					{
-						"description" : "",
-						"digest" : "",
-						"globalpatchername" : "",
-						"locked_bgcolor" : [ 0.996078431372549, 0.996078431372549, 0.996078431372549, 1.0 ],
-						"tags" : ""
-					}
-,
-					"text" : "p Oddities"
 				}
 
 			}
@@ -1779,13 +2172,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 3,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 812.0, 664.0 ],
+						"rect" : [ 0.0, 26.0, 822.0, 664.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -2902,34 +3295,34 @@
 									"outputmode" : [ 1 ],
 									"out_name" : [ "u139003754" ],
 									"dim" : [ 1, 1 ],
-									"time_secs" : [ 0.0 ],
-									"engine" : [ "avf" ],
-									"unique" : [ 0 ],
-									"drawto" : [ "" ],
-									"adapt" : [ 1 ],
-									"automatic" : [ 0 ],
-									"usedstrect" : [ 0 ],
-									"autostart" : [ 1 ],
-									"time_ms" : [ 0 ],
-									"interp" : [ 0 ],
-									"looppoints" : [ 0, 0 ],
-									"position" : [ 0.0 ],
+									"moviefile" : [ "" ],
 									"usesrcrect" : [ 0 ],
+									"colormode" : [ "argb" ],
+									"output_texture" : [ 0 ],
+									"automatic" : [ 0 ],
+									"time_secs" : [ 0.0 ],
+									"time" : [ 0 ],
+									"engine" : [ "avf" ],
+									"interp" : [ 0 ],
+									"looppoints_secs" : [ 0.0, 0.0 ],
+									"autostart" : [ 1 ],
+									"drawto" : [ "" ],
+									"time_ms" : [ 0 ],
+									"unique" : [ 0 ],
+									"dstrect" : [ 0, 0, 1, 1 ],
+									"usedstrect" : [ 0 ],
 									"srcrect" : [ 0, 0, 1, 1 ],
 									"loopend" : [ 0 ],
-									"vol" : [ 1.0 ],
-									"dstrect" : [ 0, 0, 1, 1 ],
-									"loopstart" : [ 0 ],
-									"texture_name" : [ "u737003752" ],
-									"moviefile" : [ "" ],
-									"framereport" : [ 0 ],
+									"position" : [ 0.0 ],
 									"looppoints_ms" : [ 0, 0 ],
-									"loopreport" : [ 0 ],
-									"looppoints_secs" : [ 0.0, 0.0 ],
-									"output_texture" : [ 0 ],
-									"time" : [ 0 ],
-									"colormode" : [ "argb" ],
-									"rate" : [ 1.0 ]
+									"loopstart" : [ 0 ],
+									"adapt" : [ 1 ],
+									"looppoints" : [ 0, 0 ],
+									"texture_name" : [ "u737003752" ],
+									"vol" : [ 1.0 ],
+									"framereport" : [ 0 ],
+									"rate" : [ 1.0 ],
+									"loopreport" : [ 0 ]
 								}
 
 							}
@@ -2942,34 +3335,34 @@
 									"outputmode" : [ 1 ],
 									"out_name" : [ "u139003754" ],
 									"dim" : [ 1, 1 ],
-									"time_secs" : [ 0.0 ],
-									"engine" : [ "avf" ],
-									"unique" : [ 0 ],
-									"drawto" : [ "" ],
-									"adapt" : [ 1 ],
-									"automatic" : [ 0 ],
-									"usedstrect" : [ 0 ],
-									"autostart" : [ 1 ],
-									"time_ms" : [ 0 ],
-									"interp" : [ 0 ],
-									"looppoints" : [ 0, 0 ],
-									"position" : [ 0.0 ],
+									"moviefile" : [ "" ],
 									"usesrcrect" : [ 0 ],
+									"colormode" : [ "argb" ],
+									"output_texture" : [ 0 ],
+									"automatic" : [ 0 ],
+									"time_secs" : [ 0.0 ],
+									"time" : [ 0 ],
+									"engine" : [ "avf" ],
+									"interp" : [ 0 ],
+									"looppoints_secs" : [ 0.0, 0.0 ],
+									"autostart" : [ 1 ],
+									"drawto" : [ "" ],
+									"time_ms" : [ 0 ],
+									"unique" : [ 0 ],
+									"dstrect" : [ 0, 0, 1, 1 ],
+									"usedstrect" : [ 0 ],
 									"srcrect" : [ 0, 0, 1, 1 ],
 									"loopend" : [ 0 ],
-									"vol" : [ 1.0 ],
-									"dstrect" : [ 0, 0, 1, 1 ],
-									"loopstart" : [ 0 ],
-									"texture_name" : [ "u737003752" ],
-									"moviefile" : [ "" ],
-									"framereport" : [ 0 ],
+									"position" : [ 0.0 ],
 									"looppoints_ms" : [ 0, 0 ],
-									"loopreport" : [ 0 ],
-									"looppoints_secs" : [ 0.0, 0.0 ],
-									"output_texture" : [ 0 ],
-									"time" : [ 0 ],
-									"colormode" : [ "argb" ],
-									"rate" : [ 1.0 ]
+									"loopstart" : [ 0 ],
+									"adapt" : [ 1 ],
+									"looppoints" : [ 0, 0 ],
+									"texture_name" : [ "u737003752" ],
+									"vol" : [ 1.0 ],
+									"framereport" : [ 0 ],
+									"rate" : [ 1.0 ],
+									"loopreport" : [ 0 ]
 								}
 
 							}
@@ -2982,34 +3375,34 @@
 									"outputmode" : [ 1 ],
 									"out_name" : [ "u139003754" ],
 									"dim" : [ 1, 1 ],
-									"time_secs" : [ 0.0 ],
-									"engine" : [ "avf" ],
-									"unique" : [ 0 ],
-									"drawto" : [ "" ],
-									"adapt" : [ 1 ],
-									"automatic" : [ 0 ],
-									"usedstrect" : [ 0 ],
-									"autostart" : [ 1 ],
-									"time_ms" : [ 0 ],
-									"interp" : [ 0 ],
-									"looppoints" : [ 0, 0 ],
-									"position" : [ 0.0 ],
+									"moviefile" : [ "" ],
 									"usesrcrect" : [ 0 ],
+									"colormode" : [ "argb" ],
+									"output_texture" : [ 0 ],
+									"automatic" : [ 0 ],
+									"time_secs" : [ 0.0 ],
+									"time" : [ 0 ],
+									"engine" : [ "avf" ],
+									"interp" : [ 0 ],
+									"looppoints_secs" : [ 0.0, 0.0 ],
+									"autostart" : [ 1 ],
+									"drawto" : [ "" ],
+									"time_ms" : [ 0 ],
+									"unique" : [ 0 ],
+									"dstrect" : [ 0, 0, 1, 1 ],
+									"usedstrect" : [ 0 ],
 									"srcrect" : [ 0, 0, 1, 1 ],
 									"loopend" : [ 0 ],
-									"vol" : [ 1.0 ],
-									"dstrect" : [ 0, 0, 1, 1 ],
-									"loopstart" : [ 0 ],
-									"texture_name" : [ "u737003752" ],
-									"moviefile" : [ "" ],
-									"framereport" : [ 0 ],
+									"position" : [ 0.0 ],
 									"looppoints_ms" : [ 0, 0 ],
-									"loopreport" : [ 0 ],
-									"looppoints_secs" : [ 0.0, 0.0 ],
-									"output_texture" : [ 0 ],
-									"time" : [ 0 ],
-									"colormode" : [ "argb" ],
-									"rate" : [ 1.0 ]
+									"loopstart" : [ 0 ],
+									"adapt" : [ 1 ],
+									"looppoints" : [ 0, 0 ],
+									"texture_name" : [ "u737003752" ],
+									"vol" : [ 1.0 ],
+									"framereport" : [ 0 ],
+									"rate" : [ 1.0 ],
+									"loopreport" : [ 0 ]
 								}
 
 							}

@@ -12,6 +12,8 @@
 #include "ISFFileManager_Win.hpp"
 #endif
 
+#include <algorithm>
+
 
 
 
@@ -24,7 +26,22 @@ t_symbol			*ps_draw;
 t_symbol			*ps_out_tex_sym;
 t_symbol			*ps_file;
 t_symbol			*ps_clear;
+t_symbol			*ps_done;
 t_symbol			*ps_glid;
+t_symbol			*ps_emptyString;
+t_symbol			*ps_param;
+t_symbol			*ps_name;
+t_symbol			*ps_type;
+t_symbol			*ps_label;
+t_symbol			*ps_description;
+t_symbol			*ps_default;
+t_symbol			*ps_min;
+t_symbol			*ps_max;
+t_symbol			*ps_value;
+t_symbol			*ps_values;
+t_symbol			*ps_labels;
+t_symbol			*ps_getparamlist;
+
 
 #if defined(VVGL_SDK_MAC)
 static ISFFileManager_Mac		*fm = NULL;
@@ -46,8 +63,21 @@ int C74_EXPORT main(void)
 	ps_out_tex_sym = gensym("out_tex_sym");
 	ps_file = gensym("file");
 	ps_clear = gensym("clear");
+	ps_done = gensym("done");
 	ps_glid = gensym("glid");
-	
+	ps_emptyString = gensym("");
+	ps_param = gensym("param");
+	ps_name = gensym("name");
+	ps_type = gensym("type");
+	ps_label = gensym("label");
+	ps_description = gensym("description");
+	ps_default = gensym("default");
+	ps_min = gensym("min");
+	ps_max = gensym("max");
+	ps_value = gensym("value");
+	ps_values = gensym("values");
+	ps_labels = gensym("labels");
+	ps_getparamlist = gensym("getparamlist");
 	
 	if (fm == NULL)	{
 #if defined(VVGL_SDK_MAC)
@@ -100,7 +130,8 @@ int C74_EXPORT main(void)
 	
 	//	the 'inputs' method causes the object to dump a list describing its inputs (name and type) out the INPUTS outlet
 	addmess((method)max_jit_gl_vvisf_getparamlist, (char*)"getparamlist", 0L);
-	addmess((method)max_jit_gl_vvisf_getparam, (char*)"getparam", A_SYM, 0L);
+	//addmess((method)max_jit_gl_vvisf_getparam, (char*)"getparam", A_SYM, 0L);
+	addmess((method)max_jit_gl_vvisf_getparam, (char*)"getparam", A_SYM, A_SYM, 0L);
 	
 	addmess((method)max_jit_gl_vvisf_all_filenames, (char*)"all_filenames", 0L);
 	addmess((method)max_jit_gl_vvisf_source_filenames, (char*)"source_filenames", 0L);
@@ -242,164 +273,300 @@ void max_jit_gl_vvisf_getparamlist(t_max_jit_gl_vvisf *targetInstance)	{
 	ISFRenderer			*renderer = (jitObj == NULL) ? NULL : jit_gl_vvisf_get_renderer(jitObj);
 	if (renderer == NULL)
 		return;
-	std::vector<std::string>	tmpNames = renderer->paramNames();
-	if (tmpNames.size() < 1)
-		return;
-	//	send a "clear" message out the outlet ("getparamlist clear"
-	outlet_anything(targetInstance->inputsout, ps_clear, 0, 0L);
-
-	//	now run through the param names, triggering a "get param" message for each param (this goes through the max infrastructure)
-	for (const auto & tmpName : tmpNames) {
-		max_jit_gl_vvisf_getparam(targetInstance, gensym(tmpName.c_str()));
+	
+	//	send a "getparamlist clear" message out the outlet
+	t_atom				clearList;
+	atom_setsym(&clearList, ps_clear);
+	outlet_anything(targetInstance->inputsout, ps_getparamlist, 1, &clearList);
+	
+	//	send the param names: "name <paramname>"
+	vector<string>			paramNames = renderer->paramNames();
+	for (const string & paramName : paramNames)	{
+		t_atom			tmpList[1];
+		
+		//atom_setsym(tmpList+0, ps_param);
+		//atom_setsym(tmpList+1, ps_name);
+		atom_setsym(tmpList+0, gensym( paramName.c_str() ));
+		
+		outlet_anything(targetInstance->inputsout, ps_name, 1, tmpList);
 	}
+	
+	//	send a "getparamlist done" message out the outlet
+	t_atom				doneList;
+	atom_setsym(&doneList, ps_done);
+	outlet_anything(targetInstance->inputsout, ps_getparamlist, 1, &doneList);
 }
-void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
-	//post("%s ... %s",__func__,s->s_name);
-	if (targetInstance==NULL || s==NULL)
+void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *paramNameSym, t_symbol *paramTypeSym)	{
+	//post("%s ... %s",__func__,paramNameSym->s_name);
+	if (targetInstance==NULL || paramNameSym==NULL || paramTypeSym==NULL)
 		return;
 	
 	//	get the ISF file's INPUTS, dump them out the approrpiate outlet
 	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
 	ISFRenderer			*renderer = (jitObj==NULL) ? NULL : jit_gl_vvisf_get_renderer(jitObj);
 	//ISFDocRef			tmpDoc = (renderer==NULL) ? nullptr : renderer->loadedISFDoc();
-	string				attrName = string((char*)s->s_name);
+	string				attrName = string((char*)paramNameSym->s_name);
 	//ISFAttrRef			tmpAttr = (tmpDoc==nullptr) ? nullptr : tmpDoc->input(attrName);
 	ISFAttrRef			tmpAttr = (renderer == nullptr) ? nullptr : renderer->paramNamed(attrName);
-	ISFVal				tmpVal;
-	if (tmpAttr != nullptr)	{
-		t_atom				tmpList[7];
-		atom_setsym(tmpList+0, gensym( tmpAttr->name().c_str() ));	//	input name
-		atom_setsym(tmpList+2, gensym( tmpAttr->description().c_str() ));	//	input description
-		
-		
-		switch (tmpAttr->type())	{
-		case ISFValType_None:
-			break;
-		case ISFValType_Event:
-			atom_setsym(tmpList+1, gensym("event"));	//	type
-			atom_setsym(tmpList+3, gensym(""));	//	min
-			atom_setsym(tmpList+4, gensym(""));	//	max
-			atom_setsym(tmpList+5, gensym(""));	//	default
-			atom_setsym(tmpList+6, gensym(""));	//	current
-			break;
-		case ISFValType_Bool:
-			atom_setsym(tmpList+1, gensym("bool"));	//	type
-			atom_setsym(tmpList+3, gensym(""));	//	min
-			atom_setsym(tmpList+4, gensym(""));	//	max
-			//	default
-			tmpVal = tmpAttr->defaultVal();
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+5, gensym(""));
-			else
-				atom_setlong(tmpList+5, (tmpVal.getBoolVal())?1:0);
-			//	current
-			tmpVal = tmpAttr->currentVal();
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+6, gensym(""));
-			else
-				atom_setlong(tmpList+6, (tmpVal.getBoolVal())?1:0);
-			break;
-		case ISFValType_Long:
-			atom_setsym(tmpList+1, gensym("long"));	//	type
-			//	min
-			tmpVal = tmpAttr->minVal();
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+3, gensym(""));
-			else
-				atom_setlong(tmpList+3, tmpVal.getLongVal());
-			//	max
-			tmpVal = tmpAttr->maxVal();
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+4, gensym(""));
-			else
-				atom_setlong(tmpList+4, tmpVal.getLongVal());
-			//	default
-			tmpVal = tmpAttr->defaultVal();
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+5, gensym(""));
-			else
-				atom_setlong(tmpList+5, tmpVal.getLongVal());
-			//	current
-			tmpVal = tmpAttr->currentVal();
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+6, gensym(""));
-			else
-				atom_setlong(tmpList+6, tmpVal.getLongVal());
-			break;
-		case ISFValType_Float:
-			atom_setsym(tmpList+1, gensym("float"));	//	type
-			//	min
-			tmpVal = tmpAttr->minVal();
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+3, gensym(""));
-			else
-				atom_setfloat(tmpList+3, tmpVal.getDoubleVal());
-			//	max
-			tmpVal = tmpAttr->maxVal();
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+4, gensym(""));
-			else
-				atom_setfloat(tmpList+4, tmpVal.getDoubleVal());
-			//	default
-			tmpVal = tmpAttr->defaultVal();
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+5, gensym(""));
-			else
-				atom_setfloat(tmpList+5, tmpVal.getDoubleVal());
-			//	current
-			tmpVal = tmpAttr->currentVal();
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+6, gensym(""));
-			else
-				atom_setfloat(tmpList+6, tmpVal.getDoubleVal());
-			break;
-		case ISFValType_Point2D:
-			atom_setsym(tmpList+1, gensym("point2D"));	//	type
-			atom_setsym(tmpList+3, gensym(""));	//	min
-			atom_setsym(tmpList+4, gensym(""));	//	max
-			atom_setsym(tmpList+5, gensym(""));	//	default
-			atom_setsym(tmpList+6, gensym(""));	//	current
-			break;
-		case ISFValType_Color:
-			atom_setsym(tmpList+1, gensym("color"));	//	type
-			atom_setsym(tmpList+3, gensym(""));	//	min
-			atom_setsym(tmpList+4, gensym(""));	//	max
-			atom_setsym(tmpList+5, gensym(""));	//	default
-			atom_setsym(tmpList+6, gensym(""));	//	current
-			break;
-		case ISFValType_Cube:
-			atom_setsym(tmpList+1, gensym("cube"));	//	type
-			atom_setsym(tmpList+3, gensym(""));	//	min
-			atom_setsym(tmpList+4, gensym(""));	//	max
-			atom_setsym(tmpList+5, gensym(""));	//	default
-			atom_setsym(tmpList+6, gensym(""));	//	current
-			break;
-		case ISFValType_Image:
-			atom_setsym(tmpList+1, gensym("image"));	//	type
-			atom_setsym(tmpList+3, gensym(""));	//	min
-			atom_setsym(tmpList+4, gensym(""));	//	max
-			atom_setsym(tmpList+5, gensym(""));	//	default
-			atom_setsym(tmpList+6, gensym(""));	//	current
-			break;
-		case ISFValType_Audio:
-			atom_setsym(tmpList+1, gensym("audio"));	//	type
-			atom_setsym(tmpList+3, gensym(""));	//	min
-			atom_setsym(tmpList+4, gensym(""));	//	max
-			atom_setsym(tmpList+5, gensym(""));	//	default
-			atom_setsym(tmpList+6, gensym(""));	//	current
-			break;
-		case ISFValType_AudioFFT:
-			atom_setsym(tmpList+1, gensym("audioFFT"));	//	type
-			atom_setsym(tmpList+3, gensym(""));	//	min
-			atom_setsym(tmpList+4, gensym(""));	//	max
-			atom_setsym(tmpList+5, gensym(""));	//	default
-			atom_setsym(tmpList+6, gensym(""));	//	current
-			break;
+	
+	if (tmpAttr == nullptr)
+		return;
+	
+	
+	
+	//	some attributes are common to all INPUT types (the values returned don't change type or format or size based on the INPUT's type)
+	if (paramTypeSym == ps_type)	{
+		//	return "type <param name> <param type as string>"
+		t_atom			tmpList[2];
+		//	param's name
+		atom_setsym(tmpList+0, paramNameSym);
+		//	the param's type as a string
+		string			tmpStr = StringFromISFValType(tmpAttr->type());
+		//std::transform(tmpStr.begin(), tmpStr.end(), tmpStr.begin(), ::tolower);
+		atom_setsym(tmpList+1, gensym(tmpStr.c_str()) );
+		//	send the msg, then return
+		outlet_anything(targetInstance->inputsout, ps_type, 2, tmpList);
+		return;
+	}
+	else if (paramTypeSym == ps_label)	{
+		//	return "label <param name> <param label, or empty string>
+		t_atom			tmpList[2];
+		//	param's name
+		atom_setsym(tmpList+0, paramNameSym);
+		//	the param's label as a string
+		atom_setsym(tmpList+1, gensym(tmpAttr->label().c_str()) );
+		//	send the msg, then return
+		outlet_anything(targetInstance->inputsout, ps_label, 2, tmpList);
+		return;
+	}
+	else if (paramTypeSym == ps_description)	{
+		//	return "description <param name> <param description, or empty string>
+		t_atom			tmpList[2];
+		//	param's name
+		atom_setsym(tmpList+0, paramNameSym);
+		//	the param's description as a string
+		atom_setsym(tmpList+1, gensym(tmpAttr->description().c_str()) );
+		//	send the msg, then return
+		outlet_anything(targetInstance->inputsout, ps_description, 2, tmpList);
+		return;
+	}
+	else if (paramTypeSym == ps_values)	{
+		//	return "values <param name> <list of values, or empty string>
+		vector<int32_t>		&valArray = tmpAttr->valArray();
+		int					tmpListLength = max(1UL, valArray.size()) + 1;	//	param name + list length (or at least one empty string)
+		t_atom				*tmpList = static_cast<t_atom*>(malloc(sizeof(atom) * tmpListLength));
+		atom_setsym(tmpList+0, paramNameSym);
+		if (valArray.size() < 1)	{
+			atom_setsym(tmpList+1, ps_emptyString);
 		}
-		
-		outlet_anything(targetInstance->inputsout, gensym("param"), 7, tmpList);
+		else	{
+			t_atom				*wPtr = tmpList+1;
+			for (const int32_t & val : valArray)	{
+				atom_setlong(wPtr, val);
+				++wPtr;
+			}
+		}
+		outlet_anything(targetInstance->inputsout, ps_values, tmpListLength, tmpList);
+		free(tmpList);
+		return;
+	}
+	else if (paramTypeSym == ps_labels)	{
+		//	return "labels <param name> <list of labels, or empty string>
+		vector<string>		&labelArray = tmpAttr->labelArray();
+		int					tmpListLength = max(1UL, labelArray.size()) + 1;	//	param name + list length (or at least one empty string)
+		t_atom				*tmpList = static_cast<t_atom*>(malloc(sizeof(atom) * tmpListLength));
+		atom_setsym(tmpList+0, paramNameSym);
+		if (labelArray.size() < 1)	{
+			atom_setsym(tmpList+1, ps_emptyString);
+		}
+		else	{
+			t_atom				*wPtr = tmpList+1;
+			for (const string & label : labelArray)	{
+				atom_setsym(wPtr, gensym(label.c_str()) );
+				++wPtr;
+			}
+		}
+		outlet_anything(targetInstance->inputsout, ps_labels, tmpListLength, tmpList);
+		free(tmpList);
+		return;
 	}
 	
+	
+	//	...if we're here, the user requested the attribute of a parameter that can potentially change significantly from one attribute type to another
+	
+	
+	switch (tmpAttr->type())	{
+	case ISFValType_None:
+		break;
+	
+	case ISFValType_Event:
+	case ISFValType_Cube:
+	case ISFValType_Image:
+		{
+			if ((paramTypeSym == ps_default) || (paramTypeSym == ps_min) || (paramTypeSym == ps_max) || (paramTypeSym == ps_value))	{
+				//	return "<paramTypeSym> <param name> <empty string>"
+				t_atom			tmpList[2];
+				atom_setsym(tmpList+0, paramNameSym);
+				atom_setsym(tmpList+1, ps_emptyString);
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
+				return;
+			}
+		}
+		break;
+	case ISFValType_Bool:
+		{
+			ISFVal			tmpVal;
+			if (paramTypeSym == ps_default)
+				tmpVal = tmpAttr->defaultVal();
+			else if (paramTypeSym == ps_min)
+				tmpVal = tmpAttr->minVal();
+			else if (paramTypeSym == ps_max)
+				tmpVal = tmpAttr->maxVal();	
+			else if (paramTypeSym == ps_value)
+				tmpVal = tmpAttr->currentVal();
+			//	return "<paramTypeSym> <param name> <value, or empty string>"
+			t_atom			tmpList[2];
+			atom_setsym(tmpList+0, paramNameSym);
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+1, ps_emptyString);
+			else	{
+				atom_setlong(tmpList+1, (tmpVal.getBoolVal()) ? 1 : 0);
+			}
+			outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
+			return;
+		}
+		break;
+	case ISFValType_Long:
+		{
+			ISFVal			tmpVal;
+			if (paramTypeSym == ps_default)
+				tmpVal = tmpAttr->defaultVal();
+			else if (paramTypeSym == ps_min)
+				tmpVal = tmpAttr->minVal();
+			else if (paramTypeSym == ps_max)
+				tmpVal = tmpAttr->maxVal();	
+			else if (paramTypeSym == ps_value)
+				tmpVal = tmpAttr->currentVal();
+			//	return "<paramTypeSym> <param name> <value, or empty string>"
+			t_atom			tmpList[2];
+			atom_setsym(tmpList+0, paramNameSym);
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+1, ps_emptyString);
+			else	{
+				atom_setlong(tmpList+1, tmpVal.getLongVal());
+			}
+			outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
+			return;
+		}
+		break;
+	case ISFValType_Float:
+		{
+			ISFVal			tmpVal;
+			if (paramTypeSym == ps_default)
+				tmpVal = tmpAttr->defaultVal();
+			else if (paramTypeSym == ps_min)
+				tmpVal = tmpAttr->minVal();
+			else if (paramTypeSym == ps_max)
+				tmpVal = tmpAttr->maxVal();	
+			else if (paramTypeSym == ps_value)
+				tmpVal = tmpAttr->currentVal();
+			//	return "<paramTypeSym> <param name> <value, or empty string>"
+			t_atom			tmpList[2];
+			atom_setsym(tmpList+0, paramNameSym);
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+1, ps_emptyString);
+			else	{
+				atom_setfloat(tmpList+1, tmpVal.getDoubleVal());
+			}
+			outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
+			return;
+		}
+		break;
+	case ISFValType_Point2D:
+		{
+			ISFVal			tmpVal;
+			if (paramTypeSym == ps_default)
+				tmpVal = tmpAttr->defaultVal();
+			else if (paramTypeSym == ps_min)
+				tmpVal = tmpAttr->minVal();
+			else if (paramTypeSym == ps_max)
+				tmpVal = tmpAttr->maxVal();	
+			else if (paramTypeSym == ps_value)
+				tmpVal = tmpAttr->currentVal();
+			//	return "<paramTypeSym> <param name> <x value> <y value>
+			t_atom			tmpList[3];
+			atom_setsym(tmpList+0, paramNameSym);
+			if (tmpVal.isNullVal())	{
+				atom_setsym(tmpList+1, ps_emptyString);
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
+			}
+			else	{
+				atom_setfloat(tmpList+1, tmpVal.getPointValByIndex(0));
+				atom_setfloat(tmpList+2, tmpVal.getPointValByIndex(1));
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 3, tmpList);
+			}
+			return;
+		}
+		break;
+	case ISFValType_Color:
+		{
+			ISFVal			tmpVal;
+			if (paramTypeSym == ps_default)
+				tmpVal = tmpAttr->defaultVal();
+			else if (paramTypeSym == ps_min)
+				tmpVal = tmpAttr->minVal();
+			else if (paramTypeSym == ps_max)
+				tmpVal = tmpAttr->maxVal();	
+			else if (paramTypeSym == ps_value)
+				tmpVal = tmpAttr->currentVal();
+			//	return "<paramTypeSym> <param name> <x value> <y value>
+			t_atom			tmpList[5];
+			atom_setsym(tmpList+0, paramNameSym);
+			if (tmpVal.isNullVal())	{
+				atom_setsym(tmpList+1, ps_emptyString);
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
+			}
+			else	{
+				atom_setfloat(tmpList+1, tmpVal.getColorValByChannel(0));
+				atom_setfloat(tmpList+2, tmpVal.getColorValByChannel(1));
+				atom_setfloat(tmpList+3, tmpVal.getColorValByChannel(2));
+				atom_setfloat(tmpList+4, tmpVal.getColorValByChannel(3));
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 5, tmpList);
+			}
+			return;
+		}
+		break;
+	case ISFValType_Audio:
+	case ISFValType_AudioFFT:
+		{
+			ISFVal			tmpVal;
+			if (paramTypeSym == ps_default)
+				tmpVal = tmpAttr->defaultVal();
+			else if (paramTypeSym == ps_min)
+				tmpVal = tmpAttr->minVal();
+			else if (paramTypeSym == ps_max)
+				tmpVal = tmpAttr->maxVal();	
+			else if (paramTypeSym == ps_value)
+				tmpVal = tmpAttr->currentVal();
+			//	return "<paramTypeSym> <param name> <value, or empty string>"
+			t_atom			tmpList[2];
+			atom_setsym(tmpList+0, paramNameSym);
+			if (tmpVal.isNullVal())
+				atom_setsym(tmpList+1, ps_emptyString);
+			else	{
+				atom_setlong(tmpList+1, tmpVal.getLongVal());
+			}
+			outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
+			return;
+		}
+	}
+	
+	//	if we're here...there's nothing to return!
+	//	return "<paramTypeSym> <param name> <empty string>"
+	t_atom			tmpList[2];
+	atom_setsym(tmpList+0, paramNameSym);
+	atom_setsym(tmpList+1, ps_emptyString);
+	outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
 }
 
 
