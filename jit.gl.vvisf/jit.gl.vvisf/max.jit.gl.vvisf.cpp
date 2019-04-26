@@ -34,6 +34,8 @@ t_symbol			*ps_name;
 t_symbol			*ps_type;
 t_symbol			*ps_label;
 t_symbol			*ps_description;
+t_symbol			*ps_credit;
+t_symbol			*ps_vsn;
 t_symbol			*ps_default;
 t_symbol			*ps_min;
 t_symbol			*ps_max;
@@ -41,6 +43,9 @@ t_symbol			*ps_value;
 t_symbol			*ps_values;
 t_symbol			*ps_labels;
 t_symbol			*ps_getparamlist;
+t_symbol			*ps_filenames;
+t_symbol			*ps_categories;
+t_symbol			*ps_category;
 
 
 #if defined(VVGL_SDK_MAC)
@@ -71,6 +76,8 @@ int C74_EXPORT main(void)
 	ps_type = gensym("type");
 	ps_label = gensym("label");
 	ps_description = gensym("description");
+	ps_credit = gensym("credit");
+	ps_vsn = gensym("vsn");
 	ps_default = gensym("default");
 	ps_min = gensym("min");
 	ps_max = gensym("max");
@@ -78,6 +85,9 @@ int C74_EXPORT main(void)
 	ps_values = gensym("values");
 	ps_labels = gensym("labels");
 	ps_getparamlist = gensym("getparamlist");
+	ps_filenames = gensym("filenames");
+	ps_categories = gensym("categories");
+	ps_category = gensym("category");
 	
 	if (fm == NULL)	{
 #if defined(VVGL_SDK_MAC)
@@ -139,6 +149,10 @@ int C74_EXPORT main(void)
 	addmess((method)max_jit_gl_vvisf_transition_filenames, (char*)"transition_filenames", 0L);
 	addmess((method)max_jit_gl_vvisf_all_categories, (char*)"all_categories", 0L);
 	addmess((method)max_jit_gl_vvisf_category_filenames, (char*)"category_filenames", A_SYM, 0L);
+	
+	addmess((method)max_jit_gl_vvisf_description, (char*)"description", 0L);
+	addmess((method)max_jit_gl_vvisf_credit, (char*)"credit", 0L);
+	addmess((method)max_jit_gl_vvisf_vsn, (char*)"vsn", 0L);
 	
 	// add methods for 3d drawing
 	max_ob3d_setup();
@@ -353,7 +367,7 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *par
 	else if (paramTypeSym == ps_values)	{
 		//	return "values <param name> <list of values, or empty string>
 		vector<int32_t>		&valArray = tmpAttr->valArray();
-		int					tmpListLength = max(1UL, valArray.size()) + 1;	//	param name + list length (or at least one empty string)
+		int					tmpListLength = max(long(1), long(valArray.size())) + 1;	//	param name + list length (or at least one empty string)
 		t_atom				*tmpList = static_cast<t_atom*>(malloc(sizeof(atom) * tmpListLength));
 		atom_setsym(tmpList+0, paramNameSym);
 		if (valArray.size() < 1)	{
@@ -373,7 +387,7 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *par
 	else if (paramTypeSym == ps_labels)	{
 		//	return "labels <param name> <list of labels, or empty string>
 		vector<string>		&labelArray = tmpAttr->labelArray();
-		int					tmpListLength = max(1UL, labelArray.size()) + 1;	//	param name + list length (or at least one empty string)
+		int					tmpListLength = max(long(1), long(labelArray.size())) + 1;	//	param name + list length (or at least one empty string)
 		t_atom				*tmpList = static_cast<t_atom*>(malloc(sizeof(atom) * tmpListLength));
 		atom_setsym(tmpList+0, paramNameSym);
 		if (labelArray.size() < 1)	{
@@ -578,16 +592,21 @@ void max_jit_gl_vvisf_all_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	if (fm == NULL)
 		return;
 	
-	outlet_anything(targetInstance->filesout, gensym("filename_clear"), 0, 0L);
-	
+	//	send a "filenames clear" message
+	t_atom			clearAtom;
+	atom_setsym(&clearAtom, ps_clear);
+	outlet_anything(targetInstance->filesout, ps_filenames, 1, &clearAtom);
+	//	send the actual filenames as a series of "name <filename>" messages
 	vector<string>		filenames = fm->fileNames();
 	t_atom				outAtom;
-	
 	for (const auto & filename : filenames)	{
 		atom_setsym(&outAtom, gensym( filename.c_str() ));
-		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
+		outlet_anything(targetInstance->filesout, ps_name, 1, &outAtom);
 	}
-	
+	//	send a "filenames done" message
+	t_atom			doneAtom;
+	atom_setsym(&doneAtom, ps_done);
+	outlet_anything(targetInstance->filesout, ps_filenames, 1, &doneAtom);
 }
 void max_jit_gl_vvisf_source_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
@@ -597,16 +616,21 @@ void max_jit_gl_vvisf_source_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	if (fm == NULL)
 		return;
 	
-	outlet_anything(targetInstance->filesout, gensym("filename_clear"), 0, 0L);
-	
+	//	send a "filenames clear" message
+	t_atom			clearAtom;
+	atom_setsym(&clearAtom, ps_clear);
+	outlet_anything(targetInstance->filesout, ps_filenames, 1, &clearAtom);
+	//	send the actual filenames as a series of "name <filename>" messages
 	vector<string>		filenames = fm->generatorNames();
 	t_atom				outAtom;
-	
 	for (const auto & filename : filenames)	{
 		atom_setsym(&outAtom, gensym( filename.c_str() ));
-		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
+		outlet_anything(targetInstance->filesout, ps_name, 1, &outAtom);
 	}
-	
+	//	send a "filenames done" message
+	t_atom			doneAtom;
+	atom_setsym(&doneAtom, ps_done);
+	outlet_anything(targetInstance->filesout, ps_filenames, 1, &doneAtom);
 }
 void max_jit_gl_vvisf_filter_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
@@ -616,16 +640,21 @@ void max_jit_gl_vvisf_filter_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	if (fm == NULL)
 		return;
 	
-	outlet_anything(targetInstance->filesout, gensym("filename_clear"), 0, 0L);
-	
+	//	send a "filenames clear" message
+	t_atom			clearAtom;
+	atom_setsym(&clearAtom, ps_clear);
+	outlet_anything(targetInstance->filesout, ps_filenames, 1, &clearAtom);
+	//	send the actual filenames as a series of "name <filename>" messages
 	vector<string>		filenames = fm->filterNames();
 	t_atom				outAtom;
-	
 	for (const auto & filename : filenames)	{
 		atom_setsym(&outAtom, gensym( filename.c_str() ));
-		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
+		outlet_anything(targetInstance->filesout, ps_name, 1, &outAtom);
 	}
-	
+	//	send a "filenames done" message
+	t_atom			doneAtom;
+	atom_setsym(&doneAtom, ps_done);
+	outlet_anything(targetInstance->filesout, ps_filenames, 1, &doneAtom);
 }
 void max_jit_gl_vvisf_transition_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
@@ -635,16 +664,21 @@ void max_jit_gl_vvisf_transition_filenames(t_max_jit_gl_vvisf *targetInstance)	{
 	if (fm == NULL)
 		return;
 	
-	outlet_anything(targetInstance->filesout, gensym("filename_clear"), 0, 0L);
-	
+	//	send a "filenames clear" message
+	t_atom			clearAtom;
+	atom_setsym(&clearAtom, ps_clear);
+	outlet_anything(targetInstance->filesout, ps_filenames, 1, &clearAtom);
+	//	send the actual filenames as a series of "name <filename>" messages
 	vector<string>		filenames = fm->transitionNames();
 	t_atom				outAtom;
-	
 	for (const auto & filename : filenames)	{
 		atom_setsym(&outAtom, gensym( filename.c_str() ));
-		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
+		outlet_anything(targetInstance->filesout, ps_name, 1, &outAtom);
 	}
-	
+	//	send a "filenames done" message
+	t_atom			doneAtom;
+	atom_setsym(&doneAtom, ps_done);
+	outlet_anything(targetInstance->filesout, ps_filenames, 1, &doneAtom);
 }
 void max_jit_gl_vvisf_all_categories(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
@@ -654,6 +688,23 @@ void max_jit_gl_vvisf_all_categories(t_max_jit_gl_vvisf *targetInstance)	{
 	if (fm == NULL)
 		return;
 	
+	//	send a "categories clear" message
+	t_atom			clearAtom;
+	atom_setsym(&clearAtom, ps_clear);
+	outlet_anything(targetInstance->filesout, ps_categories, 1, &clearAtom);
+	//	send the actual category names as a series of "category <categoryname>" messages
+	vector<string>		categories = fm->categories();
+	t_atom				outAtom;
+	for (const auto & category : categories)	{
+		atom_setsym(&outAtom, gensym( category.c_str() ));
+		outlet_anything(targetInstance->filesout, ps_category, 1, &outAtom);
+	}
+	//	send a "categories done" message
+	t_atom			doneAtom;
+	atom_setsym(&doneAtom, ps_done);
+	outlet_anything(targetInstance->filesout, ps_categories, 1, &doneAtom);
+	
+	/*
 	outlet_anything(targetInstance->filesout, gensym("category_clear"), 0, 0L);
 	
 	vector<string>		categories = fm->categories();
@@ -664,7 +715,7 @@ void max_jit_gl_vvisf_all_categories(t_max_jit_gl_vvisf *targetInstance)	{
 		atom_setsym(&outAtom, gensym( category.c_str() ));
 		outlet_anything(targetInstance->filesout, gensym("category"), 1, &outAtom);
 	}
-	
+	*/
 }
 void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
 	//post("%s ... %s",__func__,s->s_name);
@@ -674,6 +725,23 @@ void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_s
 	if (fm == NULL)
 		return;
 	
+	//	send a "filenames clear" message
+	t_atom			clearAtom;
+	atom_setsym(&clearAtom, ps_clear);
+	outlet_anything(targetInstance->filesout, ps_filenames, 1, &clearAtom);
+	//	send the actual filenames as a series of "name <filename>" messages
+	vector<string>		filenames = fm->fileNamesForCategory(string(s->s_name));
+	t_atom				outAtom;
+	for (const auto & filename : filenames)	{
+		atom_setsym(&outAtom, gensym( filename.c_str() ));
+		outlet_anything(targetInstance->filesout, ps_name, 1, &outAtom);
+	}
+	//	send a "filenames done" message
+	t_atom			doneAtom;
+	atom_setsym(&doneAtom, ps_done);
+	outlet_anything(targetInstance->filesout, ps_filenames, 1, &doneAtom);
+	
+	/*
 	outlet_anything(targetInstance->filesout, gensym("filename_clear"), 0, 0L);
 	
 	vector<string>		filenames = fm->fileNamesForCategory(string(s->s_name));
@@ -683,7 +751,66 @@ void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_s
 		atom_setsym(&outAtom, gensym( filename.c_str() ));
 		outlet_anything(targetInstance->filesout, gensym("filename"), 1, &outAtom);
 	}
+	*/
+}
+
+
+void max_jit_gl_vvisf_description(t_max_jit_gl_vvisf *targetInstance)	{
+	if (targetInstance==NULL)
+		return;
 	
+	//	get the ISF file's INPUTS, dump them out the approrpiate outlet
+	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
+	ISFRenderer			*renderer = (jitObj == NULL) ? NULL : jit_gl_vvisf_get_renderer(jitObj);
+	if (renderer == NULL)
+		return;
+	ISFDocRef			doc = renderer->loadedISFDoc();
+	if (doc == nullptr)
+		return;
+	
+	//	send a "description <actual description>" message
+	string			tmpStr = doc->description();
+	t_atom			msg;
+	atom_setsym(&msg, gensym(tmpStr.c_str()));
+	outlet_anything(targetInstance->filesout, ps_description, 1, &msg);
+}
+void max_jit_gl_vvisf_credit(t_max_jit_gl_vvisf *targetInstance)	{
+	if (targetInstance==NULL)
+		return;
+	
+	//	get the ISF file's INPUTS, dump them out the approrpiate outlet
+	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
+	ISFRenderer			*renderer = (jitObj == NULL) ? NULL : jit_gl_vvisf_get_renderer(jitObj);
+	if (renderer == NULL)
+		return;
+	ISFDocRef			doc = renderer->loadedISFDoc();
+	if (doc == nullptr)
+		return;
+	
+	//	send a "credit <actual credit>" message
+	string			tmpStr = doc->credit();
+	t_atom			msg;
+	atom_setsym(&msg, gensym(tmpStr.c_str()));
+	outlet_anything(targetInstance->filesout, ps_credit, 1, &msg);
+}
+void max_jit_gl_vvisf_vsn(t_max_jit_gl_vvisf *targetInstance)	{
+	if (targetInstance==NULL)
+		return;
+	
+	//	get the ISF file's INPUTS, dump them out the approrpiate outlet
+	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
+	ISFRenderer			*renderer = (jitObj == NULL) ? NULL : jit_gl_vvisf_get_renderer(jitObj);
+	if (renderer == NULL)
+		return;
+	ISFDocRef			doc = renderer->loadedISFDoc();
+	if (doc == nullptr)
+		return;
+	
+	//	send a "vsn <actual vsn>" message
+	string			tmpStr = doc->vsn();
+	t_atom			msg;
+	atom_setsym(&msg, gensym(tmpStr.c_str()));
+	outlet_anything(targetInstance->filesout, ps_vsn, 1, &msg);
 }
 
 

@@ -65,6 +65,11 @@ VVISF::ISFValType ISFRenderer::valueTypeForParamNamed(const std::string & inPara
 		return ISFValType_None;
 	return _pi->valueTypeForParamNamed(inParamName);
 }
+VVISF::ISFDocRef ISFRenderer::loadedISFDoc()	{
+	if (_pi == nullptr)
+		return nullptr;
+	return _pi->loadedISFDoc();
+}
 void ISFRenderer::setCurrentValForParamNamed(const VVISF::ISFVal & inVal, const std::string & inInputName) {
 	if (_pi == nullptr)
 		return;

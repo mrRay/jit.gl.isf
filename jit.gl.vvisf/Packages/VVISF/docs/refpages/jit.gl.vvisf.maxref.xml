@@ -108,18 +108,19 @@
 				Dumps lists describing the loaded ISF's inputs out the appropriate outlet.
 			</digest>
 			<description>
-				Dumps lists describing the loaded ISF's inputs out the appropriate outlet.  The first message output is "clear", which can be used as a token between dumps.
+				Dumps lists describing the loaded ISF's inputs out the appropriate outlet.  The first message output is "getparamlist clear", followed by a number of messages ("name &lt;parameter name&gt;"), followed by the message "getparamlist done".
 			</description>
 		</method>
 		<method name="getparam">
 			<arglist>
 				<arg name="parameter-name" type="symbol" />
+				<arg name="parameter-attribute" type="symbol" />
 			</arglist>
 			<digest>
-				Gets the properties of "input-name"
+				Returns attribute "parameter-attribute" of parameter "parameter-name".
 			</digest>
 			<description>
-				Returns the properties (min val, max val, default val, current val) of the specified input.  Values are returned in a list which is sent out the "inputs" outlet.
+				Returns the attribute ("type", "label", "description", "default", "min", "max", "value", "values", or "labels") of a given parameter.  Values are returned in a list which is sent out the "inputs" outlet.
 			</description>
 		</method>
 		<method name="param">
@@ -140,7 +141,7 @@
 				List all installed ISF filenames.
 			</digest>
 			<description>
-				Dump a list describing all of the ISF files already installed on this system.
+				Dump a list describing all of the ISF files already installed on this system.  The first message is "filenames clear", followed by one message for each filename ("name &lt;fiename&gt;"), followed by the message "filenames done".
 			</description>
 		</method>
 		<method name="source_filenames">
@@ -149,7 +150,7 @@
 				List all ISF source/generator filenames.
 			</digest>
 			<description>
-				Dump a list describing the ISF files installed on this system that are sources/generators (ie: not filters or transitions).
+				Dump a list describing the ISF files installed on this system that are sources/generators (ie: not filters or transitions).  The first message is "filenames clear", followed by one message for each filename ("name &lt;fiename&gt;"), followed by the message "filenames done".
 			</description>
 		</method>
 		<method name="filter_filenames">
@@ -158,7 +159,7 @@
 				List all ISF filter filenames.
 			</digest>
 			<description>
-				Dump a list describing the ISF files installed on this system that are image filters (they require an image input to function)
+				Dump a list describing the ISF files installed on this system that are image filters (they require an image input to function)  The first message is "filenames clear", followed by one message for each filename ("name &lt;fiename&gt;"), followed by the message "filenames done".
 			</description>
 		</method>
 		<method name="transition_filenames">
@@ -167,7 +168,7 @@
 				List all ISF transition filenames.
 			</digest>
 			<description>
-				Dump a list describing the ISF files installed on this system that are transitions (they composite two images together)
+				Dump a list describing the ISF files installed on this system that are transitions (they composite two images together).  The first message is "filenames clear", followed by one message for each filename ("name &lt;fiename&gt;"), followed by the message "filenames done".
 			</description>
 		</method>
 		<method name="all_categories">
@@ -176,7 +177,7 @@
 				List all categories.
 			</digest>
 			<description>
-				Dump a list describing all of the ISF categories used across all installed ISF files.
+				Dump a list describing all of the ISF categories used across all installed ISF files.  The first message is "categories clear", followed by one message for each category ("category &lt;fiename&gt;"), followed by the message "categories done".
 			</description>
 		</method>
 		<method name="category">
@@ -187,7 +188,7 @@
 				List all ISFs in passed category name.
 			</digest>
 			<description>
-				Dump a list describing all of the ISF filenames that are in the passed category.
+				Dump a list describing all of the ISF filenames that are in the passed category.  The first message is "filenames clear", followed by one message for each filename ("name &lt;fiename&gt;"), followed by the message "filenames done".
 			</description>
 		</method>
 	</methodlist>

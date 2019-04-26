@@ -5,6 +5,7 @@
 #include "MyBuffer.hpp"
 #include <string>
 #include "ISFVal.hpp"
+#include "ISFDoc.hpp"
 
 
 
@@ -39,6 +40,7 @@ public:
 	std::vector<std::string> paramNames();
 	VVISF::ISFAttrRef paramNamed(const std::string & inParamName);
 	VVISF::ISFValType valueTypeForParamNamed(const std::string & inParamName);
+	VVISF::ISFDocRef loadedISFDoc();
 	void setCurrentValForParamNamed(const VVISF::ISFVal & inVal, const std::string & inInputName);
 	
 	void render(const MyBufferRef & inRenderTex, const VVGL::Size & inRenderSize, const double & inRenderTime = -1.0);
