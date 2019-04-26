@@ -191,6 +191,33 @@
 				Dump a list describing all of the ISF filenames that are in the passed category.  The first message is "filenames clear", followed by one message for each filename ("name &lt;fiename&gt;"), followed by the message "filenames done".
 			</description>
 		</method>
+		<method name="description">
+			<arglist />
+			<digest>
+				Output the description of the loaded ISF file.
+			</digest>
+			<description>
+				This returns the root-level description attribute of the ISF file.
+			</description>
+		</method>
+		<method name="credit">
+			<arglist />
+			<digest>
+				Output the "credit" attribute of the loaded ISF file.
+			</digest>
+			<description>
+				This returns the root-level credit attribute of the ISF file.
+			</description>
+		</method>
+		<method name="vsn">
+			<arglist />
+			<digest>
+				Output the "vsn" attribute of the loaded ISF file.
+			</digest>
+			<description>
+				This returns the root-level "vsn" attribute of the ISF file.  This attribute is intended to be used to track the version of an individual ISF file.
+			</description>
+		</method>
 	</methodlist>
 	
 	<!--ATTRIBUTES-->

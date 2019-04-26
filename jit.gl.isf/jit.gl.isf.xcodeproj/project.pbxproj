@@ -76,8 +76,8 @@
 		1A12A53A2231AB2E0099918C /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
 		1A12A53C2231C0FE0099918C /* ISFRenderer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ISFRenderer.cpp; path = jit.gl.isf/ISFRenderer.cpp; sourceTree = "<group>"; };
 		1A12A53D2231C0FE0099918C /* ISFRenderer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ISFRenderer.hpp; path = jit.gl.isf/ISFRenderer.hpp; sourceTree = "<group>"; };
-		1A28706C2230501800BFACA1 /* libVVGL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libVVGL.a; path = ../VVISF-GL/VVGL/bin/libVVGL.a; sourceTree = "<group>"; };
-		1A28706E2230502300BFACA1 /* libVVISF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libVVISF.a; path = ../VVISF-GL/VVISF/bin/libVVISF.a; sourceTree = "<group>"; };
+		1A28706C2230501800BFACA1 /* libVVGL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libVVGL.a; path = "../VVISF-GL/VVGL/bin/libVVGL.a"; sourceTree = "<group>"; };
+		1A28706E2230502300BFACA1 /* libVVISF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libVVISF.a; path = "../VVISF-GL/VVISF/bin/libVVISF.a"; sourceTree = "<group>"; };
 		1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VVGLContextCacheItem.cpp; path = jit.gl.isf/VVGLContextCacheItem.cpp; sourceTree = "<group>"; };
 		1A58CEC02231AA3600B6E9F0 /* VVGLContextCacheItem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VVGLContextCacheItem.hpp; path = jit.gl.isf/VVGLContextCacheItem.hpp; sourceTree = "<group>"; };
 		1A66C7BB223596ED0047F82F /* jit.gl.isf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jit.gl.isf.h; path = jit.gl.isf/jit.gl.isf.h; sourceTree = "<group>"; };
@@ -446,7 +446,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				DSTROOT = "$(SRCROOT)/../../Max 8/Packages/VVISF/externals";
+				DSTROOT = "$(SRCROOT)/../../Max 8/Packages/ISF/externals";
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G4;
@@ -495,7 +495,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DSTROOT = "$(SRCROOT)/../../Max 8/Packages/VVISF/externals";
+				DSTROOT = "$(SRCROOT)/../../Max 8/Packages/ISF/externals";
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_MODEL_TUNING = G4;
 				GCC_VERSION = "";
