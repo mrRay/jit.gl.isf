@@ -29,7 +29,7 @@
 	"versions" : null,
 	"website" : "https://isf.video/",
 	"filelist" : 	{
-		"externals" : [ "jit.gl.vvisf.mxo", "jit.gl.vvisf.mxe64" ],
-		"help" : [ "jit.gl.vvisf.maxhelp" ]
+		"externals" : [ "jit.gl.isf.mxo", "jit.gl.isf.mxe64" ],
+		"help" : [ "jit.gl.isf.maxhelp" ]
 	}
 }

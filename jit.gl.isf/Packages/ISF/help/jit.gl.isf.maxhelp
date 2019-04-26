@@ -407,7 +407,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 129.0, 142.0, 359.0, 60.0 ],
-									"text" : "The \"adapt\" attribute in jit.gl.vvisf functions similarly to other jitter objects- if enabled and jit.gl.vvisf is working with an image filter, it will render at the resolution of the most recently received \"inputImage\""
+									"text" : "The \"adapt\" attribute in jit.gl.isf functions similarly to other jitter objects- if enabled and jit.gl.isf is working with an image filter, it will render at the resolution of the most recently received \"inputImage\""
 								}
 
 							}
@@ -1976,7 +1976,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 183.5909423828125, 150.0, 441.0, 33.0 ],
-									"text" : "jit.gl.vvisf has a \"param information\" outlet, from which all parameter-related information is published."
+									"text" : "jit.gl.isf has a \"param information\" outlet, from which all parameter-related information is published."
 								}
 
 							}
@@ -2472,7 +2472,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 691.0, 229.21270751953125, 191.0, 87.0 ],
-									"text" : "(On launch, this patch sends an \"all_categories\" message to the jit.gl.vvisf object, which lists all installed ISF files from its file information outlet, and populates these UI items)"
+									"text" : "(On launch, this patch sends an \"all_categories\" message to the jit.gl.isf object, which lists all installed ISF files from its file information outlet, and populates these UI items)"
 								}
 
 							}
@@ -2583,7 +2583,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 209.0909423828125, 116.0330810546875, 371.0, 60.0 ],
-									"text" : "On launch, jit.gl.vvisf will automatically scan the installed locations for ISF files, so you can load these files by name, browse them by type (source/filter/transition), or browse them by category (ISFs can have multiple categories)"
+									"text" : "On launch, jit.gl.isf will automatically scan the installed locations for ISF files, so you can load these files by name, browse them by type (source/filter/transition), or browse them by category (ISFs can have multiple categories)"
 								}
 
 							}
@@ -3602,7 +3602,7 @@
 					"numoutlets" : 4,
 					"outlettype" : [ "jit_gl_texture", "", "", "" ],
 					"patching_rect" : [ 38.371124267578125, 437.5, 84.0, 22.0 ],
-					"text" : "jit.gl.vvisf"
+					"text" : "jit.gl.isf"
 				}
 
 			}
@@ -3616,7 +3616,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 29.272735595703125, 28.90911865234375, 255.0, 33.0 ],
-					"text" : "jit.gl.vvisf"
+					"text" : "jit.gl.isf"
 				}
 
 			}
@@ -3948,7 +3948,7 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "jit.gl.vvisf.mxo",
+				"name" : "jit.gl.isf.mxo",
 				"type" : "iLaX"
 			}
  ],

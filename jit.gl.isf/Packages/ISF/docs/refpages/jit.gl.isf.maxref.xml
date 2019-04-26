@@ -2,14 +2,14 @@
 
 <?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
 
-<c74object name="jit.gl.vvisf" module="VVISF" category="VVISF">
+<c74object name="jit.gl.isf" module="ISF" category="ISF">
 	
 	<digest>
 		Render ISF files to GL textures
 	</digest>
 	
 	<description>
-		Use <o>jit.gl.vvisf</o> to render ISF files to GL textures.
+		Use <o>jit.gl.isf</o> to render ISF files to GL textures.
 	</description>
 	
 	<!--METADATA-->

@@ -250,7 +250,7 @@ void main()	{
 			cout << "\tfile loaded under gl 4!" << endl;
 		}
 		catch (...) {
-			//post("jit.gl.vvisf: This shader could not be compiled, sorry! %s",_filepath);
+			//post("jit.gl.isf: This shader could not be compiled, sorry! %s",_filepath);
 			_sceneUsesGL4 = false;
 			_sceneLoaded = false;
 		}

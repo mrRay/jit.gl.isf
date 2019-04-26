@@ -26,7 +26,7 @@ INSTALL_PATH = /
 
 // Special Files
 //GCC_PREFIX_HEADER = $(C74SUPPORT)/max-includes/macho-gl-prefix.pch
-GCC_PREFIX_HEADER = jit.gl.vvisf/macho-gl-prefix.pch
+GCC_PREFIX_HEADER = jit.gl.isf/macho-gl-prefix.pch
 //INFOPLIST_FILE = $(SRCROOT)/../../Jitter-Common/Info.plist
 
 

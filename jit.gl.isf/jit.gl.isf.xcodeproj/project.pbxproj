@@ -16,8 +16,8 @@
 		1A28706F2230502300BFACA1 /* libVVISF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A28706E2230502300BFACA1 /* libVVISF.a */; };
 		1A58CEC12231AA3600B6E9F0 /* VVGLContextCacheItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.cpp */; };
 		1A58CEC22231AA3600B6E9F0 /* VVGLContextCacheItem.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1A58CEC02231AA3600B6E9F0 /* VVGLContextCacheItem.hpp */; };
-		1A66C7BC223596ED0047F82F /* jit.gl.vvisf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A66C7BB223596ED0047F82F /* jit.gl.vvisf.h */; };
-		1A66C7BE223596F40047F82F /* max.jit.gl.vvisf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A66C7BD223596F40047F82F /* max.jit.gl.vvisf.h */; };
+		1A66C7BC223596ED0047F82F /* jit.gl.isf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A66C7BB223596ED0047F82F /* jit.gl.isf.h */; };
+		1A66C7BE223596F40047F82F /* max.jit.gl.isf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A66C7BD223596F40047F82F /* max.jit.gl.isf.h */; };
 		1A8AA66522404CBC008C9576 /* ISFFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A8AA66322404CBC008C9576 /* ISFFile.cpp */; };
 		1A8AA66622404CBC008C9576 /* ISFFile.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1A8AA66422404CBC008C9576 /* ISFFile.hpp */; };
 		1A9265ED22693E0F0008DD0E /* ISFRendererImpl.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1A9265EB22693E0F0008DD0E /* ISFRendererImpl.hpp */; };
@@ -34,8 +34,8 @@
 		1AAB27E0223998CD00F52F74 /* ISFFileManager_Mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB27DE223998CD00F52F74 /* ISFFileManager_Mac.mm */; };
 		1AAB27E1223998CD00F52F74 /* ISFFileManager_Mac.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1AAB27DF223998CD00F52F74 /* ISFFileManager_Mac.hpp */; };
 		1B8F532E11CFB4FE009968B9 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B8F532D11CFB4FE009968B9 /* OpenGL.framework */; };
-		1B8F534911CFB5AE009968B9 /* jit.gl.vvisf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.cpp */; };
-		1B8F541B11CFCF98009968B9 /* max.jit.gl.vvisf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F541A11CFCF98009968B9 /* max.jit.gl.vvisf.cpp */; };
+		1B8F534911CFB5AE009968B9 /* jit.gl.isf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F534811CFB5AE009968B9 /* jit.gl.isf.cpp */; };
+		1B8F541B11CFCF98009968B9 /* max.jit.gl.isf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B8F541A11CFCF98009968B9 /* max.jit.gl.isf.cpp */; };
 		1B8F573111D02E84009968B9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B8F573011D02E84009968B9 /* Cocoa.framework */; };
 		1B8F574411D02EBD009968B9 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B8F574311D02EBD009968B9 /* AGL.framework */; };
 /* End PBXBuildFile section */
@@ -74,37 +74,37 @@
 		1A12A5362231AB200099918C /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		1A12A5382231AB240099918C /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		1A12A53A2231AB2E0099918C /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
-		1A12A53C2231C0FE0099918C /* ISFRenderer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ISFRenderer.cpp; path = jit.gl.vvisf/ISFRenderer.cpp; sourceTree = "<group>"; };
-		1A12A53D2231C0FE0099918C /* ISFRenderer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ISFRenderer.hpp; path = jit.gl.vvisf/ISFRenderer.hpp; sourceTree = "<group>"; };
+		1A12A53C2231C0FE0099918C /* ISFRenderer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ISFRenderer.cpp; path = jit.gl.isf/ISFRenderer.cpp; sourceTree = "<group>"; };
+		1A12A53D2231C0FE0099918C /* ISFRenderer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ISFRenderer.hpp; path = jit.gl.isf/ISFRenderer.hpp; sourceTree = "<group>"; };
 		1A28706C2230501800BFACA1 /* libVVGL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libVVGL.a; path = ../VVISF-GL/VVGL/bin/libVVGL.a; sourceTree = "<group>"; };
 		1A28706E2230502300BFACA1 /* libVVISF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libVVISF.a; path = ../VVISF-GL/VVISF/bin/libVVISF.a; sourceTree = "<group>"; };
-		1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VVGLContextCacheItem.cpp; path = jit.gl.vvisf/VVGLContextCacheItem.cpp; sourceTree = "<group>"; };
-		1A58CEC02231AA3600B6E9F0 /* VVGLContextCacheItem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VVGLContextCacheItem.hpp; path = jit.gl.vvisf/VVGLContextCacheItem.hpp; sourceTree = "<group>"; };
-		1A66C7BB223596ED0047F82F /* jit.gl.vvisf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jit.gl.vvisf.h; path = jit.gl.vvisf/jit.gl.vvisf.h; sourceTree = "<group>"; };
-		1A66C7BD223596F40047F82F /* max.jit.gl.vvisf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = max.jit.gl.vvisf.h; path = jit.gl.vvisf/max.jit.gl.vvisf.h; sourceTree = "<group>"; };
-		1A8AA66322404CBC008C9576 /* ISFFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ISFFile.cpp; path = jit.gl.vvisf/ISFFile.cpp; sourceTree = "<group>"; };
-		1A8AA66422404CBC008C9576 /* ISFFile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ISFFile.hpp; path = jit.gl.vvisf/ISFFile.hpp; sourceTree = "<group>"; };
-		1A9265EB22693E0F0008DD0E /* ISFRendererImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ISFRendererImpl.hpp; path = jit.gl.vvisf/ISFRendererImpl.hpp; sourceTree = "<group>"; };
-		1A9265EC22693E0F0008DD0E /* ISFRendererImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ISFRendererImpl.cpp; path = jit.gl.vvisf/ISFRendererImpl.cpp; sourceTree = "<group>"; };
-		1A9265EF22693E210008DD0E /* MyBufferImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MyBufferImpl.cpp; path = jit.gl.vvisf/MyBufferImpl.cpp; sourceTree = "<group>"; };
-		1A9265F022693E210008DD0E /* MyBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MyBuffer.hpp; path = jit.gl.vvisf/MyBuffer.hpp; sourceTree = "<group>"; };
-		1A9265F122693E210008DD0E /* MyBufferImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MyBufferImpl.hpp; path = jit.gl.vvisf/MyBufferImpl.hpp; sourceTree = "<group>"; };
-		1A9265F222693E210008DD0E /* MyBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MyBuffer.cpp; path = jit.gl.vvisf/MyBuffer.cpp; sourceTree = "<group>"; };
-		1A9265F722693E2C0008DD0E /* VVGLContextCacheItemImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VVGLContextCacheItemImpl.cpp; path = jit.gl.vvisf/VVGLContextCacheItemImpl.cpp; sourceTree = "<group>"; };
-		1A9265F822693E2C0008DD0E /* VVGLContextCacheItemImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VVGLContextCacheItemImpl.hpp; path = jit.gl.vvisf/VVGLContextCacheItemImpl.hpp; sourceTree = "<group>"; };
-		1AA7025C223A6623001B93B0 /* Default ColorBars.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = "Default ColorBars.fs"; path = "jit.gl.vvisf/Default ColorBars.fs"; sourceTree = "<group>"; };
-		1AAB27DA223998C100F52F74 /* ISFFileManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ISFFileManager.cpp; path = jit.gl.vvisf/ISFFileManager.cpp; sourceTree = "<group>"; };
-		1AAB27DB223998C100F52F74 /* ISFFileManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ISFFileManager.hpp; path = jit.gl.vvisf/ISFFileManager.hpp; sourceTree = "<group>"; };
-		1AAB27DE223998CD00F52F74 /* ISFFileManager_Mac.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = ISFFileManager_Mac.mm; path = jit.gl.vvisf/ISFFileManager_Mac.mm; sourceTree = "<group>"; };
-		1AAB27DF223998CD00F52F74 /* ISFFileManager_Mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ISFFileManager_Mac.hpp; path = jit.gl.vvisf/ISFFileManager_Mac.hpp; sourceTree = "<group>"; };
+		1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VVGLContextCacheItem.cpp; path = jit.gl.isf/VVGLContextCacheItem.cpp; sourceTree = "<group>"; };
+		1A58CEC02231AA3600B6E9F0 /* VVGLContextCacheItem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VVGLContextCacheItem.hpp; path = jit.gl.isf/VVGLContextCacheItem.hpp; sourceTree = "<group>"; };
+		1A66C7BB223596ED0047F82F /* jit.gl.isf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jit.gl.isf.h; path = jit.gl.isf/jit.gl.isf.h; sourceTree = "<group>"; };
+		1A66C7BD223596F40047F82F /* max.jit.gl.isf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = max.jit.gl.isf.h; path = jit.gl.isf/max.jit.gl.isf.h; sourceTree = "<group>"; };
+		1A8AA66322404CBC008C9576 /* ISFFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ISFFile.cpp; path = jit.gl.isf/ISFFile.cpp; sourceTree = "<group>"; };
+		1A8AA66422404CBC008C9576 /* ISFFile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ISFFile.hpp; path = jit.gl.isf/ISFFile.hpp; sourceTree = "<group>"; };
+		1A9265EB22693E0F0008DD0E /* ISFRendererImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ISFRendererImpl.hpp; path = jit.gl.isf/ISFRendererImpl.hpp; sourceTree = "<group>"; };
+		1A9265EC22693E0F0008DD0E /* ISFRendererImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ISFRendererImpl.cpp; path = jit.gl.isf/ISFRendererImpl.cpp; sourceTree = "<group>"; };
+		1A9265EF22693E210008DD0E /* MyBufferImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MyBufferImpl.cpp; path = jit.gl.isf/MyBufferImpl.cpp; sourceTree = "<group>"; };
+		1A9265F022693E210008DD0E /* MyBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MyBuffer.hpp; path = jit.gl.isf/MyBuffer.hpp; sourceTree = "<group>"; };
+		1A9265F122693E210008DD0E /* MyBufferImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MyBufferImpl.hpp; path = jit.gl.isf/MyBufferImpl.hpp; sourceTree = "<group>"; };
+		1A9265F222693E210008DD0E /* MyBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MyBuffer.cpp; path = jit.gl.isf/MyBuffer.cpp; sourceTree = "<group>"; };
+		1A9265F722693E2C0008DD0E /* VVGLContextCacheItemImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VVGLContextCacheItemImpl.cpp; path = jit.gl.isf/VVGLContextCacheItemImpl.cpp; sourceTree = "<group>"; };
+		1A9265F822693E2C0008DD0E /* VVGLContextCacheItemImpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VVGLContextCacheItemImpl.hpp; path = jit.gl.isf/VVGLContextCacheItemImpl.hpp; sourceTree = "<group>"; };
+		1AA7025C223A6623001B93B0 /* Default ColorBars.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = "Default ColorBars.fs"; path = "jit.gl.isf/Default ColorBars.fs"; sourceTree = "<group>"; };
+		1AAB27DA223998C100F52F74 /* ISFFileManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ISFFileManager.cpp; path = jit.gl.isf/ISFFileManager.cpp; sourceTree = "<group>"; };
+		1AAB27DB223998C100F52F74 /* ISFFileManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ISFFileManager.hpp; path = jit.gl.isf/ISFFileManager.hpp; sourceTree = "<group>"; };
+		1AAB27DE223998CD00F52F74 /* ISFFileManager_Mac.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = ISFFileManager_Mac.mm; path = jit.gl.isf/ISFFileManager_Mac.mm; sourceTree = "<group>"; };
+		1AAB27DF223998CD00F52F74 /* ISFFileManager_Mac.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ISFFileManager_Mac.hpp; path = jit.gl.isf/ISFFileManager_Mac.hpp; sourceTree = "<group>"; };
 		1B8F532D11CFB4FE009968B9 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jit.gl.vvisf.cpp; path = jit.gl.vvisf/jit.gl.vvisf.cpp; sourceTree = "<group>"; };
-		1B8F541A11CFCF98009968B9 /* max.jit.gl.vvisf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = max.jit.gl.vvisf.cpp; path = jit.gl.vvisf/max.jit.gl.vvisf.cpp; sourceTree = "<group>"; };
+		1B8F534811CFB5AE009968B9 /* jit.gl.isf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jit.gl.isf.cpp; path = jit.gl.isf/jit.gl.isf.cpp; sourceTree = "<group>"; };
+		1B8F541A11CFCF98009968B9 /* max.jit.gl.isf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = max.jit.gl.isf.cpp; path = jit.gl.isf/max.jit.gl.isf.cpp; sourceTree = "<group>"; };
 		1B8F573011D02E84009968B9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		1B8F574311D02EBD009968B9 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = System/Library/Frameworks/AGL.framework; sourceTree = SDKROOT; };
-		1BD15DD517A180740014A7AB /* maxmspsdk.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = maxmspsdk.xcconfig; path = jit.gl.vvisf/maxmspsdk.xcconfig; sourceTree = "<group>"; };
-		8D576316048677EA00EA77CD /* jit.gl.vvisf.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = jit.gl.vvisf.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		8D576317048677EA00EA77CD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = jit.gl.vvisf/Info.plist; sourceTree = "<group>"; };
+		1BD15DD517A180740014A7AB /* maxmspsdk.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = maxmspsdk.xcconfig; path = jit.gl.isf/maxmspsdk.xcconfig; sourceTree = "<group>"; };
+		8D576316048677EA00EA77CD /* jit.gl.isf.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = jit.gl.isf.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D576317048677EA00EA77CD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = jit.gl.isf/Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,10 +162,10 @@
 		08FB77AFFE84173DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				1A66C7BB223596ED0047F82F /* jit.gl.vvisf.h */,
-				1B8F534811CFB5AE009968B9 /* jit.gl.vvisf.cpp */,
-				1A66C7BD223596F40047F82F /* max.jit.gl.vvisf.h */,
-				1B8F541A11CFCF98009968B9 /* max.jit.gl.vvisf.cpp */,
+				1A66C7BB223596ED0047F82F /* jit.gl.isf.h */,
+				1B8F534811CFB5AE009968B9 /* jit.gl.isf.cpp */,
+				1A66C7BD223596F40047F82F /* max.jit.gl.isf.h */,
+				1B8F541A11CFCF98009968B9 /* max.jit.gl.isf.cpp */,
 				1A58CEC02231AA3600B6E9F0 /* VVGLContextCacheItem.hpp */,
 				1A58CEBF2231AA3600B6E9F0 /* VVGLContextCacheItem.cpp */,
 				1A9265F722693E2C0008DD0E /* VVGLContextCacheItemImpl.cpp */,
@@ -192,7 +192,7 @@
 		19C28FB6FE9D52B211CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D576316048677EA00EA77CD /* jit.gl.vvisf.mxo */,
+				8D576316048677EA00EA77CD /* jit.gl.isf.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -222,7 +222,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A66C7BE223596F40047F82F /* max.jit.gl.vvisf.h in Headers */,
+				1A66C7BE223596F40047F82F /* max.jit.gl.isf.h in Headers */,
 				1A9265F422693E220008DD0E /* MyBuffer.hpp in Headers */,
 				1A12A53F2231C0FE0099918C /* ISFRenderer.hpp in Headers */,
 				1A9265FA22693E2C0008DD0E /* VVGLContextCacheItemImpl.hpp in Headers */,
@@ -232,7 +232,7 @@
 				1A9265ED22693E0F0008DD0E /* ISFRendererImpl.hpp in Headers */,
 				1AAB27DD223998C100F52F74 /* ISFFileManager.hpp in Headers */,
 				1A8AA66622404CBC008C9576 /* ISFFile.hpp in Headers */,
-				1A66C7BC223596ED0047F82F /* jit.gl.vvisf.h in Headers */,
+				1A66C7BC223596ED0047F82F /* jit.gl.isf.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,9 +270,9 @@
 /* End PBXLegacyTarget section */
 
 /* Begin PBXNativeTarget section */
-		8D57630D048677EA00EA77CD /* jit.gl.vvisf */ = {
+		8D57630D048677EA00EA77CD /* jit.gl.isf */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1DEB911A08733D790010E9CD /* Build configuration list for PBXNativeTarget "jit.gl.vvisf" */;
+			buildConfigurationList = 1DEB911A08733D790010E9CD /* Build configuration list for PBXNativeTarget "jit.gl.isf" */;
 			buildPhases = (
 				1B8F560B11D01E62009968B9 /* Headers */,
 				8D57630F048677EA00EA77CD /* Resources */,
@@ -287,10 +287,10 @@
 				1A2870732230512300BFACA1 /* PBXTargetDependency */,
 				1A2870712230512000BFACA1 /* PBXTargetDependency */,
 			);
-			name = jit.gl.vvisf;
+			name = jit.gl.isf;
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = jit.gl.syphon;
-			productReference = 8D576316048677EA00EA77CD /* jit.gl.vvisf.mxo */;
+			productReference = 8D576316048677EA00EA77CD /* jit.gl.isf.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -309,7 +309,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1DEB911E08733D790010E9CD /* Build configuration list for PBXProject "jit.gl.vvisf" */;
+			buildConfigurationList = 1DEB911E08733D790010E9CD /* Build configuration list for PBXProject "jit.gl.isf" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -323,7 +323,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D57630D048677EA00EA77CD /* jit.gl.vvisf */,
+				8D57630D048677EA00EA77CD /* jit.gl.isf */,
 				1A28706422304F1D00BFACA1 /* libVVGL */,
 				1A28706822304F9900BFACA1 /* libVVISF */,
 			);
@@ -357,12 +357,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A9265F322693E220008DD0E /* MyBufferImpl.cpp in Sources */,
-				1B8F534911CFB5AE009968B9 /* jit.gl.vvisf.cpp in Sources */,
+				1B8F534911CFB5AE009968B9 /* jit.gl.isf.cpp in Sources */,
 				1A9265F922693E2C0008DD0E /* VVGLContextCacheItemImpl.cpp in Sources */,
 				1A12A53E2231C0FE0099918C /* ISFRenderer.cpp in Sources */,
 				1AAB27E0223998CD00F52F74 /* ISFFileManager_Mac.mm in Sources */,
 				1A8AA66522404CBC008C9576 /* ISFFile.cpp in Sources */,
-				1B8F541B11CFCF98009968B9 /* max.jit.gl.vvisf.cpp in Sources */,
+				1B8F541B11CFCF98009968B9 /* max.jit.gl.isf.cpp in Sources */,
 				1AAB27DC223998C100F52F74 /* ISFFileManager.cpp in Sources */,
 				1A9265F622693E220008DD0E /* MyBuffer.cpp in Sources */,
 				1A58CEC12231AA3600B6E9F0 /* VVGLContextCacheItem.cpp in Sources */,
@@ -480,7 +480,7 @@
 					"-lVVGL",
 					"-lVVISF",
 				);
-				PRODUCT_NAME = jit.gl.vvisf;
+				PRODUCT_NAME = jit.gl.isf;
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -524,7 +524,7 @@
 					"-lVVGL",
 					"-lVVISF",
 				);
-				PRODUCT_NAME = jit.gl.vvisf;
+				PRODUCT_NAME = jit.gl.isf;
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -580,7 +580,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1DEB911A08733D790010E9CD /* Build configuration list for PBXNativeTarget "jit.gl.vvisf" */ = {
+		1DEB911A08733D790010E9CD /* Build configuration list for PBXNativeTarget "jit.gl.isf" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB911B08733D790010E9CD /* Debug */,
@@ -589,7 +589,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1DEB911E08733D790010E9CD /* Build configuration list for PBXProject "jit.gl.vvisf" */ = {
+		1DEB911E08733D790010E9CD /* Build configuration list for PBXProject "jit.gl.isf" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB911F08733D790010E9CD /* Debug */,

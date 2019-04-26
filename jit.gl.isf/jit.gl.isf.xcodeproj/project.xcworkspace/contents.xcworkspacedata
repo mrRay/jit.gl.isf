@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:jit.gl.vvisf.xcodeproj">
+      location = "self:jit.gl.isf.xcodeproj">
    </FileRef>
 </Workspace>

@@ -297,30 +297,30 @@ xcopy /y /d "$(SolutionDir)\..\VVISF-GL\external\GLEW\win_x64\glew32.dll" "C:\Pr
   <ItemGroup>
     <ClCompile Include="$(C74SUPPORT)\max-includes\common\dllmain_win.c" />
     <ClCompile Include="$(C74SUPPORT)\max-includes\common\commonsyms.c" />
-    <ClCompile Include="jit.gl.vvisf\ISFFile.cpp" />
-    <ClCompile Include="jit.gl.vvisf\ISFFileManager.cpp" />
-    <ClCompile Include="jit.gl.vvisf\ISFFileManager_Win.cpp" />
-    <ClCompile Include="jit.gl.vvisf\ISFRenderer.cpp" />
-    <ClCompile Include="jit.gl.vvisf\ISFRendererImpl.cpp" />
-    <ClCompile Include="jit.gl.vvisf\jit.gl.vvisf.cpp" />
-    <ClCompile Include="jit.gl.vvisf\max.jit.gl.vvisf.cpp" />
-    <ClCompile Include="jit.gl.vvisf\MyBuffer.cpp" />
-    <ClCompile Include="jit.gl.vvisf\MyBufferImpl.cpp" />
-    <ClCompile Include="jit.gl.vvisf\VVGLContextCacheItem.cpp" />
-    <ClCompile Include="jit.gl.vvisf\VVGLContextCacheItemImpl.cpp" />
+    <ClCompile Include="jit.gl.isf\ISFFile.cpp" />
+    <ClCompile Include="jit.gl.isf\ISFFileManager.cpp" />
+    <ClCompile Include="jit.gl.isf\ISFFileManager_Win.cpp" />
+    <ClCompile Include="jit.gl.isf\ISFRenderer.cpp" />
+    <ClCompile Include="jit.gl.isf\ISFRendererImpl.cpp" />
+    <ClCompile Include="jit.gl.isf\jit.gl.isf.cpp" />
+    <ClCompile Include="jit.gl.isf\max.jit.gl.isf.cpp" />
+    <ClCompile Include="jit.gl.isf\MyBuffer.cpp" />
+    <ClCompile Include="jit.gl.isf\MyBufferImpl.cpp" />
+    <ClCompile Include="jit.gl.isf\VVGLContextCacheItem.cpp" />
+    <ClCompile Include="jit.gl.isf\VVGLContextCacheItemImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="jit.gl.vvisf\ISFFile.hpp" />
-    <ClInclude Include="jit.gl.vvisf\ISFFileManager.hpp" />
-    <ClInclude Include="jit.gl.vvisf\ISFFileManager_Win.hpp" />
-    <ClInclude Include="jit.gl.vvisf\ISFRenderer.hpp" />
-    <ClInclude Include="jit.gl.vvisf\ISFRendererImpl.hpp" />
-    <ClInclude Include="jit.gl.vvisf\jit.gl.vvisf.h" />
-    <ClInclude Include="jit.gl.vvisf\max.jit.gl.vvisf.h" />
-    <ClInclude Include="jit.gl.vvisf\MyBuffer.hpp" />
-    <ClInclude Include="jit.gl.vvisf\MyBufferImpl.hpp" />
-    <ClInclude Include="jit.gl.vvisf\VVGLContextCacheItem.hpp" />
-    <ClInclude Include="jit.gl.vvisf\VVGLContextCacheItemImpl.hpp" />
+    <ClInclude Include="jit.gl.isf\ISFFile.hpp" />
+    <ClInclude Include="jit.gl.isf\ISFFileManager.hpp" />
+    <ClInclude Include="jit.gl.isf\ISFFileManager_Win.hpp" />
+    <ClInclude Include="jit.gl.isf\ISFRenderer.hpp" />
+    <ClInclude Include="jit.gl.isf\ISFRendererImpl.hpp" />
+    <ClInclude Include="jit.gl.isf\jit.gl.isf.h" />
+    <ClInclude Include="jit.gl.isf\max.jit.gl.isf.h" />
+    <ClInclude Include="jit.gl.isf\MyBuffer.hpp" />
+    <ClInclude Include="jit.gl.isf\MyBufferImpl.hpp" />
+    <ClInclude Include="jit.gl.isf\VVGLContextCacheItem.hpp" />
+    <ClInclude Include="jit.gl.isf\VVGLContextCacheItemImpl.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,6 @@
-#include "max.jit.gl.vvisf.h"
+#include "max.jit.gl.isf.h"
 
-#include "jit.gl.vvisf.h"
+#include "jit.gl.isf.h"
 
 #include "ISFRenderer.hpp"
 #include "ISFAttr.hpp"
@@ -207,7 +207,7 @@ void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
 				post("ERR: couldnt set weak ref in jit obj in %s",__func__);
 		}
 		else 	{
-			error("jit.gl.vvisf: could not allocate object");
+			error("jit.gl.isf: could not allocate object");
 			freeobject((t_object *)newObjPtr);
 			newObjPtr = NULL;
 		}
