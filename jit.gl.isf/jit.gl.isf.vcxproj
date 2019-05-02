@@ -288,10 +288,10 @@ xcopy /y /d "$(SolutionDir)\..\VVISF-GL\external\GLEW\win_x64\glew32.dll" "C:\Pr
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(TargetPath)" "C:\Program Files\Cycling '74\Max 8\resources\packages\ISF\externals"
-xcopy /y /d "$(ProjectDir)x64\Release\VVGL.dll" "C:\Program Files\Cycling '74\Max 8\resources\packages\ISF\support"
-xcopy /y /d "$(ProjectDir)x64\Release\VVISF.dll" "C:\Program Files\Cycling '74\Max 8\resources\packages\ISF\support"
-xcopy /y /d "$(SolutionDir)\..\VVISF-GL\external\GLEW\win_x64\glew32.dll" "C:\Program Files\Cycling '74\Max 8\resources\packages\ISF\support"</Command>
+      <Command>xcopy /y /d "$(TargetPath)" "$(ProjectDir)\Packages\ISF\externals"
+xcopy /y /d "$(ProjectDir)x64\Release\VVGL.dll" "$(ProjectDir)\Packages\ISF\support"
+xcopy /y /d "$(ProjectDir)x64\Release\VVISF.dll" "$(ProjectDir)\Packages\ISF\support"
+xcopy /y /d "$(SolutionDir)\..\VVISF-GL\external\GLEW\win_x64\glew32.dll" "$(ProjectDir)\Packages\ISF\support"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

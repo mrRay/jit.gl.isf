@@ -220,7 +220,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 			jit_attr_setsym(TI->outputTexObj, _jit_sym_name, jit_symbol_unique());
 			jit_attr_setsym(TI->outputTexObj, gensym("defaultimage"), gensym("white"));
 			jit_attr_setlong(TI->outputTexObj, gensym("rectangle"), 1);
-			jit_attr_setlong(TI->outputTexObj, ps_flip_j, 0);
+			//jit_attr_setlong(TI->outputTexObj, ps_flip_j, 0);
 			
 			TI->dim[0] = 640;
 			TI->dim[1] = 480;
@@ -605,6 +605,12 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 							//post("\tsending argc of %d, first argv is %s",argc-2,jit_atom_getsym(argv+2)->s_name);
 							//post("\ttexture class name check is %s",jit_object_classname(clientTex)->s_name);
 							
+							//void			*jitMatObj = jit_object_findregistered(secondMsgSym);
+							//if (jitMatObj != NULL)	{
+							//	t_atom_long		tmpLongAttr = jit_attr_getlong(jitMatObj, ps_flip_j);
+							//	jit_attr_setlong(clientTex, ps_flip_j, tmpLongAttr);
+							//}
+							
 							t_jit_gl_drawinfo			drawInfo;
 							t_symbol			*texName = jit_attr_getsym(clientTex, gensym("name"));
 							jit_gl_drawinfo_setup(targetInstance, &drawInfo);
@@ -920,7 +926,7 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 	TI->renderTimeOverride = -1.0;
 	
 	//	update the 'flip' flag on the output texture
-	//jit_attr_setlong(TI->outputTexObj, ps_flip_j, (wrapperTex->flipped)?1:0);
+	jit_attr_setlong(TI->outputTexObj, ps_flip_j, (wrapperTex->flipped())?1:0);
 	
 	//	restore the original GL context
 #if defined(VVGL_SDK_WIN)
@@ -995,7 +1001,8 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, 
 				std::string		tmpStr = std::string(TI->file->s_name);
 				TI->isfRenderer->loadFile(&tmpStr);
 				if (!TI->isfRenderer->isFileLoaded())	{
-					post("jit.gl.isf: ERR- shader could not be compiled, sorry! %s",tmpStr.c_str());
+					//post("jit.gl.isf: ERR- shader could not be compiled, sorry! %s",tmpStr.c_str());
+					jit_object_error((t_object *)targetInstance,(char*)"jit.gl.isf: ERR: shader would not compile! (%s)",tmpStr.c_str());
 				}
 			}
 			
@@ -1159,7 +1166,7 @@ MyBufferRef jit_gl_vvisf_apply_jit_tex_for_input_key(t_jit_gl_vvisf *targetInsta
 			tmpSize.height = (double)jit_attr_getlong(jitTexture, ps_height_j);
 			//post("tex name is %d, dims are %f x %f",texName,tmpSize.width,tmpSize.height);
 			VVGL::Rect			tmpRect = VVGL::Rect(0, 0, tmpSize.width, tmpSize.height);
-			bool				tmpFlipped = false;
+			bool				tmpFlipped = (jit_attr_getlong(jitTexture, ps_flip_j) > 0) ? false : true;
 			//	create a 'MyBuffer' for the jitter texture, pass it to the renderer with the given input name
 			MyBufferRef			returnMe = CreateBufferFromExistingTex(
 				texName,

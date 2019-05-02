@@ -204,6 +204,8 @@ void main()	{
 	gl_FragColor = outputPixelColor;
 }
 )";
+		//	...end of c++ string literal 'colorBarsRaw'
+		
 		string			isfString(colorBarsRaw);
 		isfString.append(" ");
 		hardCodedColorBarsDoc = CreateISFDocRefWith(isfString);
@@ -227,7 +229,7 @@ void main()	{
 		_sceneUsesGL4 = false;
 		_sceneLoaded = true;
 		loadedDoc = _gl2Scene->doc();
-		cout << "\tfile loaded under gl 2!" << endl;
+		//cout << "\tfile loaded under gl 2!" << endl;
 	}
 	catch (...) {
 		try {
@@ -247,7 +249,7 @@ void main()	{
 			_sceneUsesGL4 = true;
 			_sceneLoaded = true;
 			loadedDoc = _gl4Scene->doc();
-			cout << "\tfile loaded under gl 4!" << endl;
+			//cout << "\tfile loaded under gl 4!" << endl;
 		}
 		catch (...) {
 			//post("jit.gl.isf: This shader could not be compiled, sorry! %s",_filepath);

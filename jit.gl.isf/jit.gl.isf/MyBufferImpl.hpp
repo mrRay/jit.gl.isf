@@ -17,6 +17,7 @@ public:
 	~MyBufferImpl();
 
 	VVGL::Size size();
+	bool flipped();
 	VVGL::GLBufferRef buffer();
 };
 

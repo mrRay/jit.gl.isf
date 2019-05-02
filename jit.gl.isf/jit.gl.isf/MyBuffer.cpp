@@ -23,6 +23,11 @@ VVGL::Size MyBuffer::size() {
 		return VVGL::Size(0, 0);
 	return _pi->size();
 }
+bool MyBuffer::flipped()	{
+	if (_pi == nullptr)
+		return false;
+	return _pi->flipped();
+}
 
 
 

@@ -462,6 +462,7 @@
 					"$(PROJECT_DIR)/../VVISF-GL/VVGL/include",
 					"$(PROJECT_DIR)/../VVISF-GL/VVISF/include",
 				);
+				INFOPLIST_FILE = jit.gl.isf/Info.plist;
 				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../VVISF-GL/VVGL/bin",
@@ -481,6 +482,7 @@
 					"-lVVISF",
 				);
 				PRODUCT_NAME = jit.gl.isf;
+				PRODUCT_VERSION = 0.6.0;
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -506,6 +508,7 @@
 					"$(PROJECT_DIR)/../VVISF-GL/VVGL/include",
 					"$(PROJECT_DIR)/../VVISF-GL/VVISF/include",
 				);
+				INFOPLIST_FILE = jit.gl.isf/Info.plist;
 				INSTALL_PATH = /;
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/../VVISF-GL/VVGL/bin",
@@ -525,6 +528,7 @@
 					"-lVVISF",
 				);
 				PRODUCT_NAME = jit.gl.isf;
+				PRODUCT_VERSION = 0.6.0;
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;

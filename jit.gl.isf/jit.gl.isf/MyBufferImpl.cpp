@@ -15,7 +15,14 @@ MyBufferImpl::~MyBufferImpl() {
 
 
 VVGL::Size MyBufferImpl::size() {
+	if (_buffer == nullptr)
+		return VVGL::Size(0,0);
 	return _buffer->size;
+}
+bool MyBufferImpl::flipped()	{
+	if (_buffer == nullptr)
+		return false;
+	return _buffer->flipped;
 }
 VVGL::GLBufferRef MyBufferImpl::buffer() {
 	return _buffer;

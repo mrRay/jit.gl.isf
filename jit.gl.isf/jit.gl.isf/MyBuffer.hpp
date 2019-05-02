@@ -33,6 +33,7 @@ public:
 	~MyBuffer();
 
 	VVGL::Size size();
+	bool flipped();
 };
 
 
