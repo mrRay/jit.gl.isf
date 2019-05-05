@@ -28,7 +28,7 @@ t_symbol			*ps_file;
 t_symbol			*ps_clear;
 t_symbol			*ps_done;
 t_symbol			*ps_glid;
-t_symbol			*ps_emptyString;
+//t_symbol			*ps_emptyString;
 t_symbol			*ps_param;
 t_symbol			*ps_name;
 t_symbol			*ps_type;
@@ -70,7 +70,7 @@ int C74_EXPORT main(void)
 	ps_clear = gensym("clear");
 	ps_done = gensym("done");
 	ps_glid = gensym("glid");
-	ps_emptyString = gensym("");
+	//ps_emptyString = gensym("");
 	ps_param = gensym("param");
 	ps_name = gensym("name");
 	ps_type = gensym("type");
@@ -336,7 +336,7 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *par
 		atom_setsym(tmpList+0, paramNameSym);
 		//	the param's type as a string
 		string			tmpStr = StringFromISFValType(tmpAttr->type());
-		//std::transform(tmpStr.begin(), tmpStr.end(), tmpStr.begin(), ::tolower);
+		std::transform(tmpStr.begin(), tmpStr.end(), tmpStr.begin(), ::tolower);
 		atom_setsym(tmpList+1, gensym(tmpStr.c_str()) );
 		//	send the msg, then return
 		outlet_anything(targetInstance->inputsout, ps_type, 2, tmpList);
@@ -367,11 +367,12 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *par
 	else if (paramTypeSym == ps_values)	{
 		//	return "values <param name> <list of values, or empty string>
 		vector<int32_t>		&valArray = tmpAttr->valArray();
-		int					tmpListLength = max(long(1), long(valArray.size())) + 1;	//	param name + list length (or at least one empty string)
+		//int					tmpListLength = max(long(1), long(valArray.size())) + 1;	//	param name + list length (or at least one empty string)
+		int					tmpListLength = long(valArray.size()) + 1;	//	param name + list length
 		t_atom				*tmpList = static_cast<t_atom*>(malloc(sizeof(atom) * tmpListLength));
 		atom_setsym(tmpList+0, paramNameSym);
 		if (valArray.size() < 1)	{
-			atom_setsym(tmpList+1, ps_emptyString);
+			//atom_setsym(tmpList+1, ps_emptyString);
 		}
 		else	{
 			t_atom				*wPtr = tmpList+1;
@@ -387,11 +388,12 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *par
 	else if (paramTypeSym == ps_labels)	{
 		//	return "labels <param name> <list of labels, or empty string>
 		vector<string>		&labelArray = tmpAttr->labelArray();
-		int					tmpListLength = max(long(1), long(labelArray.size())) + 1;	//	param name + list length (or at least one empty string)
+		//int					tmpListLength = max(long(1), long(labelArray.size())) + 1;	//	param name + list length (or at least one empty string)
+		int					tmpListLength = long(labelArray.size()) + 1;	//	param name + list length
 		t_atom				*tmpList = static_cast<t_atom*>(malloc(sizeof(atom) * tmpListLength));
 		atom_setsym(tmpList+0, paramNameSym);
 		if (labelArray.size() < 1)	{
-			atom_setsym(tmpList+1, ps_emptyString);
+			//atom_setsym(tmpList+1, ps_emptyString);
 		}
 		else	{
 			t_atom				*wPtr = tmpList+1;
@@ -421,8 +423,8 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *par
 				//	return "<paramTypeSym> <param name> <empty string>"
 				t_atom			tmpList[2];
 				atom_setsym(tmpList+0, paramNameSym);
-				atom_setsym(tmpList+1, ps_emptyString);
-				outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
+				//atom_setsym(tmpList+1, ps_emptyString);
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 1, tmpList);
 				return;
 			}
 		}
@@ -441,12 +443,14 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *par
 			//	return "<paramTypeSym> <param name> <value, or empty string>"
 			t_atom			tmpList[2];
 			atom_setsym(tmpList+0, paramNameSym);
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+1, ps_emptyString);
+			if (tmpVal.isNullVal())	{
+				//atom_setsym(tmpList+1, ps_emptyString);
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 1, tmpList);
+			}
 			else	{
 				atom_setlong(tmpList+1, (tmpVal.getBoolVal()) ? 1 : 0);
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
 			}
-			outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
 			return;
 		}
 		break;
@@ -464,12 +468,14 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *par
 			//	return "<paramTypeSym> <param name> <value, or empty string>"
 			t_atom			tmpList[2];
 			atom_setsym(tmpList+0, paramNameSym);
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+1, ps_emptyString);
+			if (tmpVal.isNullVal())	{
+				//atom_setsym(tmpList+1, ps_emptyString);
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 1, tmpList);
+			}
 			else	{
 				atom_setlong(tmpList+1, tmpVal.getLongVal());
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
 			}
-			outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
 			return;
 		}
 		break;
@@ -487,12 +493,14 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *par
 			//	return "<paramTypeSym> <param name> <value, or empty string>"
 			t_atom			tmpList[2];
 			atom_setsym(tmpList+0, paramNameSym);
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+1, ps_emptyString);
+			if (tmpVal.isNullVal())	{
+				//atom_setsym(tmpList+1, ps_emptyString);
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 1, tmpList);
+			}
 			else	{
 				atom_setfloat(tmpList+1, tmpVal.getDoubleVal());
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
 			}
-			outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
 			return;
 		}
 		break;
@@ -511,8 +519,8 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *par
 			t_atom			tmpList[3];
 			atom_setsym(tmpList+0, paramNameSym);
 			if (tmpVal.isNullVal())	{
-				atom_setsym(tmpList+1, ps_emptyString);
-				outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
+				//atom_setsym(tmpList+1, ps_emptyString);
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 1, tmpList);
 			}
 			else	{
 				atom_setfloat(tmpList+1, tmpVal.getPointValByIndex(0));
@@ -537,8 +545,8 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *par
 			t_atom			tmpList[5];
 			atom_setsym(tmpList+0, paramNameSym);
 			if (tmpVal.isNullVal())	{
-				atom_setsym(tmpList+1, ps_emptyString);
-				outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
+				//atom_setsym(tmpList+1, ps_emptyString);
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 1, tmpList);
 			}
 			else	{
 				atom_setfloat(tmpList+1, tmpVal.getColorValByChannel(0));
@@ -565,12 +573,14 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *par
 			//	return "<paramTypeSym> <param name> <value, or empty string>"
 			t_atom			tmpList[2];
 			atom_setsym(tmpList+0, paramNameSym);
-			if (tmpVal.isNullVal())
-				atom_setsym(tmpList+1, ps_emptyString);
+			if (tmpVal.isNullVal())	{
+				//atom_setsym(tmpList+1, ps_emptyString);
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 1, tmpList);
+			}
 			else	{
 				atom_setlong(tmpList+1, tmpVal.getLongVal());
+				outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
 			}
-			outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
 			return;
 		}
 	}
@@ -579,8 +589,8 @@ void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *par
 	//	return "<paramTypeSym> <param name> <empty string>"
 	t_atom			tmpList[2];
 	atom_setsym(tmpList+0, paramNameSym);
-	atom_setsym(tmpList+1, ps_emptyString);
-	outlet_anything(targetInstance->inputsout, paramTypeSym, 2, tmpList);
+	//atom_setsym(tmpList+1, ps_emptyString);
+	outlet_anything(targetInstance->inputsout, paramTypeSym, 1, tmpList);
 }
 
 
