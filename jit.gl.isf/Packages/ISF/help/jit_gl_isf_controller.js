@@ -71,6 +71,7 @@ function anything()	{
 			lastRect = bpatchers[bpatchers.length-1].rect;
 		//	make a new bpatcher, position it, tell it to load the appropriate file
 		inputBPatcher = this.patcher.newdefault(0,0,"bpatcher");
+		inputBPatcher.bgmode(1);
 		if (lastRect == null)	{
 			var			bounds = this.patcher.box.rect;
 			inputBPatcher.rect = new Array(0, 0, bounds[2]-bounds[0], 40);
@@ -78,7 +79,7 @@ function anything()	{
 		else	{
 			var			newRect = new Array();
 			newRect[0] = lastRect[0];
-			newRect[1] = lastRect[3] + 2;
+			newRect[1] = lastRect[3];
 			newRect[2] = lastRect[2];
 			newRect[3] = newRect[1] + 40;
 			inputBPatcher.rect = newRect;

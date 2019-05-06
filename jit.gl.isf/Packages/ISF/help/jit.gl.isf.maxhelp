@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 1883.0, 241.0, 820.0, 688.0 ],
+		"rect" : [ 553.0, 79.0, 820.0, 688.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -350,7 +350,7 @@
 							}
 , 							{
 								"box" : 								{
-									"bgmode" : 0,
+									"bgmode" : 1,
 									"border" : 1,
 									"clickthrough" : 0,
 									"enablehscroll" : 0,
@@ -589,7 +589,7 @@
 						"bgcolor" : [ 0.996078431372549, 0.996078431372549, 0.996078431372549, 1.0 ]
 					}
 ,
-					"patching_rect" : [ 961.5909423828125, 282.90911865234375, 45.0, 22.0 ],
+					"patching_rect" : [ 961.5909423828125, 258.90911865234375, 45.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -2244,7 +2244,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 786.174275716145758, 401.893890380859375, 152.0, 60.0 ],
+									"patching_rect" : [ 634.174275716145758, 293.893890380859375, 152.0, 60.0 ],
 									"text" : "this bit controls a gate that passes images from the video to the ISF object's \"inputImage\" input (for FX)"
 								}
 
@@ -2257,7 +2257,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
-									"patching_rect" : [ 853.174275716145758, 555.154205322265625, 22.0, 22.0 ],
+									"patching_rect" : [ 701.174275716145758, 447.154205322265625, 22.0, 22.0 ],
 									"text" : "t 1"
 								}
 
@@ -2270,7 +2270,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 853.174275716145758, 524.893890380859375, 99.0, 22.0 ],
+									"patching_rect" : [ 701.174275716145758, 416.893890380859375, 99.0, 22.0 ],
 									"text" : "route inputImage"
 								}
 
@@ -2282,7 +2282,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 786.174275716145758, 592.238250732421875, 103.0, 22.0 ],
+									"patching_rect" : [ 634.174275716145758, 484.238250732421875, 103.0, 22.0 ],
 									"text" : "s inputImageGate"
 								}
 
@@ -2295,7 +2295,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
-									"patching_rect" : [ 786.174275716145758, 555.154205322265625, 22.0, 22.0 ],
+									"patching_rect" : [ 634.174275716145758, 447.154205322265625, 22.0, 22.0 ],
 									"text" : "t 0"
 								}
 
@@ -2308,7 +2308,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 786.174275716145758, 524.893890380859375, 65.0, 22.0 ],
+									"patching_rect" : [ 634.174275716145758, 416.893890380859375, 65.0, 22.0 ],
 									"text" : "route clear"
 								}
 
@@ -2321,7 +2321,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "" ],
-									"patching_rect" : [ 786.174275716145758, 495.893890380859375, 153.0, 22.0 ],
+									"patching_rect" : [ 634.174275716145758, 387.893890380859375, 153.0, 22.0 ],
 									"text" : "route getparamlist name"
 								}
 
@@ -2334,7 +2334,7 @@
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 786.174275716145758, 466.893890380859375, 116.0, 22.0 ],
+									"patching_rect" : [ 634.174275716145758, 358.893890380859375, 116.0, 22.0 ],
 									"text" : "r msgsFromINPUTS"
 								}
 
@@ -2383,7 +2383,7 @@
 									"mode" : 0,
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 777.166656494140625, 392.26715087890625, 186.0, 233.25347900390625 ],
+									"patching_rect" : [ 625.166656494140625, 284.26715087890625, 186.0, 233.25347900390625 ],
 									"proportion" : 0.5
 								}
 
@@ -2449,7 +2449,7 @@
 								"patchline" : 								{
 									"destination" : [ "obj-46", 0 ],
 									"hidden" : 1,
-									"midpoints" : [ 862.674275716145758, 584.893890380859375, 797.174275716145758, 584.893890380859375, 797.174275716145758, 597.893890380859375, 795.674275716145758, 597.893890380859375 ],
+									"midpoints" : [ 710.674275716145758, 476.893890380859375, 645.174275716145758, 476.893890380859375, 645.174275716145758, 489.893890380859375, 643.674275716145758, 489.893890380859375 ],
 									"source" : [ "obj-53", 0 ]
 								}
 
@@ -2960,7 +2960,7 @@
 						"bgcolor" : [ 0.996078431372549, 0.996078431372549, 0.996078431372549, 1.0 ]
 					}
 ,
-					"patching_rect" : [ 961.5909423828125, 257.0, 104.0, 22.0 ],
+					"patching_rect" : [ 961.5909423828125, 285.0, 104.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -3316,7 +3316,7 @@
 , 							{
 								"box" : 								{
 									"id" : "obj-89",
-									"items" : [ "3d Rotate", ",", "AAAMotionTestISF", ",", "ASCII Art", ",", "Amatorka", ",", "Apply Alpha", ",", "Auto Color Tone", ",", "Auto Colors Histogram", ",", "Auto Levels", ",", "Bad TV", ",", "Bloom", ",", "Boxinator", ",", "Bright", ",", "Bump Distortion", ",", "CGA ColorSpace", ",", "CMYK Halftone", ",", "CMYK Halftone-Lookaround", ",", "Channel Slide", ",", "Chroma Desaturation Mask", ",", "Chroma Mask", ",", "Chroma Zoom", ",", "Circle Splash Distortion", ",", "Circle Warp", ",", "Circle Wrap Distortion", ",", "Circular Feedback Mask", ",", "Circular Screen", ",", "City Lights", ",", "Collage", ",", "Color Blowout", ",", "Color Controls", ",", "Color Invert", ",", "Color Levels", ",", "Color Monochrome", ",", "Color Posterize", ",", "Color Relookup", ",", "Color Replacement", ",", "Convergence", ",", "Corner Color Tint", ",", "Cubic Warp", ",", "Deinterlace", ",", "Diagonal Blur", ",", "Diagonalize", ",", "Dilate", ",", "Dilate-Fast", ",", "Dirty Lens", ",", "Displace", ",", "Dither-Bayer", ",", "Dot Screen", ",", "Double Vision", ",", "Dual Side Scroller And Flip", ",", "Duotone", ",", "Echo Trace", ",", "Edge Blowout", ",", "Edge Blur", ",", "Edge Distort", ",", "Edge Trace", ",", "Edges", ",", "Emboss", ",", "Erode", ",", "Erode-Fast", ",", "Exposure Adjust", ",", "FakeMotionBlur", ",", "False Color", ",", "Fast Blur", ",", "FastMosh", ",", "Flip H", ",", "Flip V", ",", "Flipbook", ",", "Frosted Glass", ",", "Gamma Correction", ",", "Ghosting", ",", "Glitch Shifter", ",", "Gloom", ",", "Glow", ",", "Glow-Fast", ",", "God Rays", ",", "HSVtoRGB", ",", "Hatch Blur", ",", "HorizVertHold", ",", "Hyperspace", ",", "Interlace", ",", "Interlace Mirror", ",", "Kaleidoscope", ",", "Kaleidoscope Tile", ",", "Key Frame Artifacts", ",", "Layer Mask", ",", "Layer Position", ",", "Lens Flare", ",", "Line Screen", ",", "Luminance Posterize", ",", "Maximum Component", ",", "Median", ",", "Meta Image", ",", "Micro Buffer", ",", "Micro Buffer RGB", ",", "Minimum Component", ",", "Mirror", ",", "Mirror Edge", ",", "MissEtikate", ",", "Monochrome", ",", "Motion Heat Map", ",", "Motion Mask", ",", "Multi Hue Shift", ",", "Multi Pass Gaussian Blur", ",", "Multi-Pixellate", ",", "MultiFrame 2x2", ",", "MultiFrame 3x3", ",", "Neon", ",", "Night Vision", ",", "Noise Adapt", ",", "Noise Displace", ",", "Noise Pixellate", ",", "Optical Flow Distort", ",", "Optical Flow Generator", ",", "Pixel Shifter", ",", "Pixellate", ",", "Poly Glitch", ",", "Posterize", ",", "Power Warp", ",", "Quad Mask", ",", "Quad Tile", ",", "RGB EQ", ",", "RGB Halftone", ",", "RGB Halftone-lookaround", ",", "RGB Invert", ",", "RGB Strobe", ",", "RGB Trails 3.0", ",", "RGBA Swap", ",", "RGBtoHSV", ",", "Radial Replicate", ",", "Random Freeze", ",", "Random Squares Mask", ",", "Replicate", ",", "Replicate Random", ",", "Resize Glitch", ",", "Ripples", ",", "Rotate", ",", "Sepia Tone", ",", "Set Alpha", ",", "Shake", ",", "Shape Mask", ",", "Shape Morph Feedback Mask", ",", "Shape Morph Wrap", ",", "Sharpen Luminance", ",", "Sharpen RGB", ",", "Shockwave", ",", "Shockwave Pulse", ",", "Show Alpha", ",", "Side Scroller And Flip", ",", "Sine Warp Tile", ",", "Sketch", ",", "Sliding Strips", ",", "Slit Scan", ",", "Smoke Screen", ",", "Soft Blur", ",", "Soft Flip", ",", "Solarize", ",", "Sphere Map", ",", "Strobe", ",", "Thermal Camera", ",", "Time Glitch RGB", ",", "Toon", ",", "Trail Mask", ",", "Trapezoid Distortion", ",", "Triangle Warp", ",", "Triangles", ",", "Trio Tone", ",", "Triple Rotate", ",", "Twirl", ",", "Unsharp Mask", ",", "VHS Glitch", ",", "VVMotionBlur 3.0", ",", "Vertex Manipulator", ",", "Vertical Tearing", ",", "Vibrance", ",", "Waveform Displace", ",", "White Point Adjust", ",", "XYZoom", ",", "Zoom", ",", "Zooming Feedback", ",", "[NV15]_Space_Curvature_llj3Rz-asFX", ",", "calvin", ",", "notebook_drawings_XtVGD1", ",", "oil_paint_brush_MtKcDG", ",", "v002 Bleach Bypass", ",", "v002 Crosshatch", ",", "v002 Dilate", ",", "v002 Erode", ",", "v002 Light Leak", ",", "v002 Technicolor", ",", "v002 Vignette", ",", "v002-CRT-Displacement", ",", "v002-CRT-Mask" ],
+									"items" : "<empty>",
 									"maxclass" : "umenu",
 									"numinlets" : 1,
 									"numoutlets" : 3,
@@ -4219,34 +4219,34 @@
 									"outputmode" : [ 1 ],
 									"out_name" : [ "u139003754" ],
 									"dim" : [ 1, 1 ],
-									"autostart" : [ 1 ],
-									"adapt" : [ 1 ],
-									"automatic" : [ 0 ],
-									"time_secs" : [ 0.0 ],
-									"moviefile" : [ "" ],
-									"time_ms" : [ 0 ],
-									"colormode" : [ "argb" ],
-									"looppoints_secs" : [ 0.0, 0.0 ],
-									"time" : [ 0 ],
-									"looppoints_ms" : [ 0, 0 ],
-									"texture_name" : [ "u737003752" ],
-									"rate" : [ 1.0 ],
-									"unique" : [ 0 ],
-									"engine" : [ "avf" ],
-									"usedstrect" : [ 0 ],
-									"loopend" : [ 0 ],
-									"usesrcrect" : [ 0 ],
-									"loopreport" : [ 0 ],
-									"interp" : [ 0 ],
-									"output_texture" : [ 0 ],
-									"looppoints" : [ 0, 0 ],
-									"position" : [ 0.0 ],
 									"loopstart" : [ 0 ],
-									"dstrect" : [ 0, 0, 1, 1 ],
+									"time" : [ 0 ],
 									"drawto" : [ "" ],
+									"looppoints" : [ 0, 0 ],
+									"engine" : [ "avf" ],
+									"rate" : [ 1.0 ],
+									"output_texture" : [ 0 ],
+									"loopend" : [ 0 ],
+									"unique" : [ 0 ],
+									"usedstrect" : [ 0 ],
+									"looppoints_secs" : [ 0.0, 0.0 ],
+									"automatic" : [ 0 ],
+									"colormode" : [ "argb" ],
+									"interp" : [ 0 ],
+									"texture_name" : [ "u737003752" ],
+									"position" : [ 0.0 ],
+									"looppoints_ms" : [ 0, 0 ],
+									"autostart" : [ 1 ],
 									"framereport" : [ 0 ],
 									"vol" : [ 1.0 ],
-									"srcrect" : [ 0, 0, 1, 1 ]
+									"time_ms" : [ 0 ],
+									"adapt" : [ 1 ],
+									"time_secs" : [ 0.0 ],
+									"srcrect" : [ 0, 0, 1, 1 ],
+									"moviefile" : [ "" ],
+									"loopreport" : [ 0 ],
+									"usesrcrect" : [ 0 ],
+									"dstrect" : [ 0, 0, 1, 1 ]
 								}
 
 							}
@@ -4259,34 +4259,34 @@
 									"outputmode" : [ 1 ],
 									"out_name" : [ "u139003754" ],
 									"dim" : [ 1, 1 ],
-									"autostart" : [ 1 ],
-									"adapt" : [ 1 ],
-									"automatic" : [ 0 ],
-									"time_secs" : [ 0.0 ],
-									"moviefile" : [ "" ],
-									"time_ms" : [ 0 ],
-									"colormode" : [ "argb" ],
-									"looppoints_secs" : [ 0.0, 0.0 ],
-									"time" : [ 0 ],
-									"looppoints_ms" : [ 0, 0 ],
-									"texture_name" : [ "u737003752" ],
-									"rate" : [ 1.0 ],
-									"unique" : [ 0 ],
-									"engine" : [ "avf" ],
-									"usedstrect" : [ 0 ],
-									"loopend" : [ 0 ],
-									"usesrcrect" : [ 0 ],
-									"loopreport" : [ 0 ],
-									"interp" : [ 0 ],
-									"output_texture" : [ 0 ],
-									"looppoints" : [ 0, 0 ],
-									"position" : [ 0.0 ],
 									"loopstart" : [ 0 ],
-									"dstrect" : [ 0, 0, 1, 1 ],
+									"time" : [ 0 ],
 									"drawto" : [ "" ],
+									"looppoints" : [ 0, 0 ],
+									"engine" : [ "avf" ],
+									"rate" : [ 1.0 ],
+									"output_texture" : [ 0 ],
+									"loopend" : [ 0 ],
+									"unique" : [ 0 ],
+									"usedstrect" : [ 0 ],
+									"looppoints_secs" : [ 0.0, 0.0 ],
+									"automatic" : [ 0 ],
+									"colormode" : [ "argb" ],
+									"interp" : [ 0 ],
+									"texture_name" : [ "u737003752" ],
+									"position" : [ 0.0 ],
+									"looppoints_ms" : [ 0, 0 ],
+									"autostart" : [ 1 ],
 									"framereport" : [ 0 ],
 									"vol" : [ 1.0 ],
-									"srcrect" : [ 0, 0, 1, 1 ]
+									"time_ms" : [ 0 ],
+									"adapt" : [ 1 ],
+									"time_secs" : [ 0.0 ],
+									"srcrect" : [ 0, 0, 1, 1 ],
+									"moviefile" : [ "" ],
+									"loopreport" : [ 0 ],
+									"usesrcrect" : [ 0 ],
+									"dstrect" : [ 0, 0, 1, 1 ]
 								}
 
 							}
@@ -4299,34 +4299,34 @@
 									"outputmode" : [ 1 ],
 									"out_name" : [ "u139003754" ],
 									"dim" : [ 1, 1 ],
-									"autostart" : [ 1 ],
-									"adapt" : [ 1 ],
-									"automatic" : [ 0 ],
-									"time_secs" : [ 0.0 ],
-									"moviefile" : [ "" ],
-									"time_ms" : [ 0 ],
-									"colormode" : [ "argb" ],
-									"looppoints_secs" : [ 0.0, 0.0 ],
-									"time" : [ 0 ],
-									"looppoints_ms" : [ 0, 0 ],
-									"texture_name" : [ "u737003752" ],
-									"rate" : [ 1.0 ],
-									"unique" : [ 0 ],
-									"engine" : [ "avf" ],
-									"usedstrect" : [ 0 ],
-									"loopend" : [ 0 ],
-									"usesrcrect" : [ 0 ],
-									"loopreport" : [ 0 ],
-									"interp" : [ 0 ],
-									"output_texture" : [ 0 ],
-									"looppoints" : [ 0, 0 ],
-									"position" : [ 0.0 ],
 									"loopstart" : [ 0 ],
-									"dstrect" : [ 0, 0, 1, 1 ],
+									"time" : [ 0 ],
 									"drawto" : [ "" ],
+									"looppoints" : [ 0, 0 ],
+									"engine" : [ "avf" ],
+									"rate" : [ 1.0 ],
+									"output_texture" : [ 0 ],
+									"loopend" : [ 0 ],
+									"unique" : [ 0 ],
+									"usedstrect" : [ 0 ],
+									"looppoints_secs" : [ 0.0, 0.0 ],
+									"automatic" : [ 0 ],
+									"colormode" : [ "argb" ],
+									"interp" : [ 0 ],
+									"texture_name" : [ "u737003752" ],
+									"position" : [ 0.0 ],
+									"looppoints_ms" : [ 0, 0 ],
+									"autostart" : [ 1 ],
 									"framereport" : [ 0 ],
 									"vol" : [ 1.0 ],
-									"srcrect" : [ 0, 0, 1, 1 ]
+									"time_ms" : [ 0 ],
+									"adapt" : [ 1 ],
+									"time_secs" : [ 0.0 ],
+									"srcrect" : [ 0, 0, 1, 1 ],
+									"moviefile" : [ "" ],
+									"loopreport" : [ 0 ],
+									"usesrcrect" : [ 0 ],
+									"dstrect" : [ 0, 0, 1, 1 ]
 								}
 
 							}

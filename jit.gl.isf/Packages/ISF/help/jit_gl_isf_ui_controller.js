@@ -57,7 +57,7 @@ function type(inType)	{
 	//	put all the UI items in the "hint text" named "DESCRIPTION"
 	//var			bounds = this.patcher.getnamed("DESCRIPTION").rect;
 	var			bpRect = this.patcher.box.rect;
-	var			bounds = new Array(20, 21, bpRect[2]-bpRect[0]-2, bpRect[3]-bpRect[1]);
+	var			bounds = new Array(20, 20, bpRect[2]-bpRect[0]-2, bpRect[3]-bpRect[1]);
 	
 	if (myType == "event")	{
 		//	[0]- the momentary button!
@@ -295,7 +295,7 @@ function min()	{
 	}
 	else if (myType == "float")	{
 		myMin = args[0];
-		items[0].min = myMin;
+		//items[0].min = myMin;
 	}
 	else if (myType == "point2d")	{
 		myMin = new Array();
@@ -335,7 +335,8 @@ function max()	{
 	}
 	else if (myType == "float")	{
 		myMax = args[0];
-		items[0].setminmax(myMin, myMax);
+		//items[0].setminmax(myMin, myMax);
+		items[0].message("setminmax", myMin, myMax);
 		
 		items[1].min(myMin);
 		items[1].max(myMax);
@@ -373,20 +374,28 @@ function default()	{
 		//	intentionally blank
 	}
 	else if (myType == "bool")	{
-		items[0].int(args[0]);
+		items[0].message("set", args[0]);
+		//items[0].int(args[0]);
 	}
 	else if (myType == "long")	{
-		items[0].set(args[0]);
-		items[1].set(args[0]);
+		items[0].message("set", args[0]);
+		items[1].message("set", args[0]);
+		//items[0].set(args[0]);
+		//items[1].set(args[0]);
 	}
 	else if (myType == "float")	{
-		items[0].float(args[0]);
+		//items[0].float(args[0]);
+		//items[0].float(0.0);
+		items[0].message("set", args[0]);
+		items[1].message("set", args[0]);
 	}
 	else if (myType == "point2d")	{
 	}
 	else if (myType == "color")	{
-		items[0].set(new Array(args[0], args[1], args[2]));
+		items[0].message("set",args[0],args[1],args[2]);
 		items[0].saturation(1.0);
+		//items[0].set(new Array(args[0], args[1], args[2]));
+		//items[0].saturation(1.0);
 	}
 	else if (myType == "image")	{
 	}
