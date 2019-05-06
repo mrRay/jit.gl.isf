@@ -150,8 +150,14 @@ function type(inType)	{
 		//	[4]- "param" set msg
 		
 		//	make a slider
-		var			slider = this.patcher.newdefault(0,0,"slider");
+		var			slider = this.patcher.newdefault(0,0,"multislider");
 		items.push(slider);
+		slider.contdata(1);
+		slider.orientation(0);
+		slider.settype(1);
+		slider.signed(1);
+		slider.setstyle(1);
+		
 		//slider.rect = new Array(bounds[0], bounds[1], bounds[2], bounds[1] + 20);
 		slider.rect = new Array(bounds[0]+80+2, bounds[1], bounds[2], bounds[1] + 20);
 		
@@ -159,7 +165,7 @@ function type(inType)	{
 		var			flonum = this.patcher.newdefault(0,0,"flonum");
 		items.push(flonum);
 		//flonum.rect = new Array(slider.rect[0], slider.rect[3], slider.rect[0]+80, slider.rect[3]+20);
-		flonum.rect = new Array(bounds[0], bounds[1], bounds[0]+80, bounds[1] + 20);
+		flonum.rect = new Array(bounds[0], bounds[1], bounds[0]+70, bounds[1] + 20);
 		
 		//	slider-to-flonum "set" msg
 		var			STFMsg = this.patcher.newdefault(160,90,"message");
