@@ -482,7 +482,7 @@
 					"-lVVISF",
 				);
 				PRODUCT_NAME = jit.gl.isf;
-				PRODUCT_VERSION = 0.7.0;
+				PRODUCT_VERSION = 0.8.0;
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -528,7 +528,7 @@
 					"-lVVISF",
 				);
 				PRODUCT_NAME = jit.gl.isf;
-				PRODUCT_VERSION = 0.7.0;
+				PRODUCT_VERSION = 0.8.0;
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
