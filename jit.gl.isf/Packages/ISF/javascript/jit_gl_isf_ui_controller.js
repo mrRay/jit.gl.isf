@@ -66,7 +66,7 @@ function type(inType)	{
 		//	make the momentary button
 		var			button = this.patcher.newdefault(0,0,"button");
 		items.push(button);
-		button.rect = new Array(bounds[0], bounds[1], bounds[0]+20, bounds[1]+20);
+		button.rect = new Array(bounds[0], bounds[1]+5, bounds[0]+20, bounds[1]+25);
 		
 		//	make the "param" set msg to jit.gl.isf object/outlet
 		var			msgToOut = this.patcher.newdefault(160,90,"message");
@@ -87,7 +87,7 @@ function type(inType)	{
 		//	make the toggle button
 		var			button = this.patcher.newdefault(0,0,"toggle");
 		items.push(button);
-		button.rect = new Array(bounds[0], bounds[1], bounds[0]+20, bounds[1]+20);
+		button.rect = new Array(bounds[0], bounds[1]+5, bounds[0]+20, bounds[1]+25);
 		
 		//	make the "param" set msg to jit.gl.isf object/outlet
 		var			msgToOut = this.patcher.newdefault(160,90,"message");
@@ -110,7 +110,7 @@ function type(inType)	{
 		//	make the number object- leave it visible by default!
 		var			number = this.patcher.newdefault(0,0,"number");
 		items.push(number);
-		number.rect = new Array(bounds[0], bounds[1], bounds[0]+60, bounds[1]+20);
+		number.rect = new Array(bounds[0], bounds[1]+5, bounds[0]+60, bounds[1]+25);
 		
 		//	make the string umenu, hide it by default
 		var			stringMenu = this.patcher.newdefault(0,0,"umenu");
@@ -159,13 +159,13 @@ function type(inType)	{
 		slider.setstyle(1);
 		
 		//slider.rect = new Array(bounds[0], bounds[1], bounds[2], bounds[1] + 20);
-		slider.rect = new Array(bounds[0]+80+2, bounds[1], bounds[2], bounds[1] + 20);
+		slider.rect = new Array(bounds[0]+80+2, bounds[1]+5, bounds[2]-2, bounds[1] + 25);
 		
 		//	make a flonum
 		var			flonum = this.patcher.newdefault(0,0,"flonum");
 		items.push(flonum);
 		//flonum.rect = new Array(slider.rect[0], slider.rect[3], slider.rect[0]+80, slider.rect[3]+20);
-		flonum.rect = new Array(bounds[0], bounds[1], bounds[0]+70, bounds[1] + 20);
+		flonum.rect = new Array(bounds[0], bounds[1]+5, bounds[0]+70, bounds[1] + 25);
 		
 		//	slider-to-flonum "set" msg
 		var			STFMsg = this.patcher.newdefault(160,90,"message");
@@ -205,7 +205,8 @@ function type(inType)	{
 		items.push(pictslider);
 		pictslider.rightvalue(1024.0);
 		pictslider.topvalue(1024.0);
-		pictslider.rect = bounds;
+		//pictslider.rect = bounds;
+		pictslider.rect = new Array(bounds[0], bounds[1]+5, bounds[2]-2, bounds[3]-5);
 		//	make the pack object
 		var			pack = this.patcher.newdefault(160,90,"pack", "0.0", "0.0");
 		items.push(pack);
@@ -253,7 +254,8 @@ function type(inType)	{
 		//	make a swatch
 		var			swatch = this.patcher.newdefault(0,0,"swatch");
 		items.push(swatch);
-		swatch.rect = bounds;
+		//swatch.rect = bounds;
+		swatch.rect = new Array(bounds[0], bounds[1]+5, bounds[2]-2, bounds[3]-5);
 		//	make the "param" set msg to jit.gl.isf object/outlet
 		var			msgToOut = this.patcher.newdefault(160, 150, "message");
 		items.push(msgToOut);

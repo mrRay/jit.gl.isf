@@ -8,9 +8,6 @@ function anything()	{
 	
 	var			myPatcher;
 	myPatcher = this.patcher;
-	//while (myPatcher.parentpatcher != null)	{
-	//	myPatcher = myPatcher.parentPatcher;
-	//}
 	while (myPatcher.parentpatcher != null)	{
 		myPatcher = myPatcher.parentpatcher;
 	}
@@ -19,6 +16,20 @@ function anything()	{
 	var			hostPathArray = hostPath.split("/");
 	//	remove the filename from the array of filepath components
 	hostPathArray.pop();
+	
+	//	if the js object has an additional argument and it's "VolumeFormat" then the path output 
+	//	will be formatted "/Volumes/drive/folder" instead of "drive:/folder"
+	if (jsarguments.length > 1 && jsarguments[1]=="VolumesFormat")	{
+		//	if this is running on a mac, the drive name shouldn't be "drive:/folder", instead it should be "/Volumes/drive/folder"
+		if (this.max.os == "macintosh")	{
+			var		tmpStr = hostPathArray[0];
+			if (tmpStr[tmpStr.length-1] == ":")	{
+				tmpStr = tmpStr.substring(0,tmpStr.length-1);
+				hostPathArray[0] = tmpStr;
+				hostPathArray.splice(0, 0, "Volumes");
+			}
+		}
+	}
 	
 	var			inPath = args[0];
 	var			inPathArray = inPath.split("/");

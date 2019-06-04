@@ -472,6 +472,8 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 	case ISFValType_Cube:	//	cube-type ISF attribute: unhandled
 		break;
 	case ISFValType_Image:	//	image-type ISF attribute
+	case ISFValType_Audio:	//	audio-type ISF attribute
+	case ISFValType_AudioFFT:	//	audio-FFT-type ISF attribute
 		{
 			t_atom		*firstAtom = argAtoms;
 			t_atom		*secondAtom = firstAtom + 1;
@@ -642,10 +644,6 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 			else
 				post("jit.gl.isf: ERR: arg is wrong type, attr %s is an image and requires a GL texture for input",s->s_name);
 		}
-		break;
-	case ISFValType_Audio:	//	audio-type ISF attribute
-		break;
-	case ISFValType_AudioFFT:	//	audio-FFT-type ISF attribute
 		break;
 	}
 	

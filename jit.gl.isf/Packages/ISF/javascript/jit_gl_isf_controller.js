@@ -62,8 +62,8 @@ function anything()	{
 		//	update the local inputName var for future ops
 		inputName = a[1];
 		
-		//	if the inputName is "inputImage", skip it- we don't want to make a UI item for it.
-		if (inputName == "inputImage")
+		//	if the inputName is "inputImage", "startImage", or "endImage" skip it- we don't want to make a UI item for it.
+		if (inputName == "inputImage" || inputName=="startImage" || inputName=="endImage")
 			return;
 		
 		var			lastRect = null;
@@ -74,14 +74,14 @@ function anything()	{
 		inputBPatcher.bgmode(1);
 		if (lastRect == null)	{
 			var			bounds = this.patcher.box.rect;
-			inputBPatcher.rect = new Array(0, 0, bounds[2]-bounds[0], 40);
+			inputBPatcher.rect = new Array(0, 0, bounds[2]-bounds[0], 50);
 		}
 		else	{
 			var			newRect = new Array();
 			newRect[0] = lastRect[0];
 			newRect[1] = lastRect[3];
 			newRect[2] = lastRect[2];
-			newRect[3] = newRect[1] + 40;
+			newRect[3] = newRect[1] + 50;
 			inputBPatcher.rect = newRect;
 		}
 		inputBPatcher.replace("ISF_UI_item.maxpat");
@@ -158,6 +158,12 @@ function anything()	{
 			outlet(0, "getparam", inputName, "default");
 		}
 		else if (inputType == "image")	{
+		}
+		else if (inputType == "audio" || inputType == "audiofft")	{
+			this.patcher.remove(inputBPatcher);
+			bpatchers.pop();
+			inputBPatcher = null;
+			return;
 		}
 		outlet(0, "getparam", inputName, "label");
 		outlet(0, "getparam", inputName, "description");
