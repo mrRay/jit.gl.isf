@@ -19,7 +19,8 @@ VVGLContextCacheItemImpl::VVGLContextCacheItemImpl(const CGLContextObj & inCtx) 
 	//cout << __PRETTY_FUNCTION__ << endl;
 	
 	_crossCompatibleContexts = true;
-	GLContextRef			hostCtx = CreateGLContextRefUsing(inCtx, inCtx);
+	CGLPixelFormatObj		hostPxlFmt  = CGLGetPixelFormat(inCtx);
+	GLContextRef			hostCtx = CreateGLContextRefUsing(inCtx, inCtx, hostPxlFmt);
 	setHostGLVersion(hostCtx->version);
 
 	if (hostCtx == nullptr)	{
@@ -27,6 +28,7 @@ VVGLContextCacheItemImpl::VVGLContextCacheItemImpl(const CGLContextObj & inCtx) 
 	}
 	else	{
 		if (hostCtx->version == GLVersion_2)	{
+			cout  << "hostCtx is GL2" << endl;
 			gl2Context = hostCtx->newContextSharingMe();
 			gl2Pool = (gl2Context==nullptr) ? nullptr : make_shared<GLBufferPool>(gl2Context);
 			GLContextRef		copierContext = (gl2Pool==nullptr) ? nullptr : gl2Context->newContextSharingMe();
@@ -46,6 +48,7 @@ VVGLContextCacheItemImpl::VVGLContextCacheItemImpl(const CGLContextObj & inCtx) 
 			}
 		}
 		else if (hostCtx->version == GLVersion_4)	{
+			cout << "hostCtx is GL4" << endl;
 			gl4Context = hostCtx->newContextSharingMe();
 			gl4Pool = (gl4Context==nullptr) ? nullptr : make_shared<GLBufferPool>(gl4Context);
 			GLContextRef		copierContext = (gl4Pool==nullptr) ? nullptr : gl4Context->newContextSharingMe();
@@ -65,6 +68,7 @@ VVGLContextCacheItemImpl::VVGLContextCacheItemImpl(const CGLContextObj & inCtx) 
 			}
 		}
 		else	{
+			cout << "ERR: hostCtx is unrecognized GL vsn, " << hostCtx->version << endl;
 		}
 	}
 }
@@ -82,6 +86,8 @@ VVGLContextCacheItemImpl::VVGLContextCacheItemImpl(const HGLRC & inHostCtx, cons
 	else {
 		if (hostCtx->version == GLVersion_2)	{
 			gl2Context = hostCtx->newContextSharingMe();
+			if (gl2Context != nullptr)
+				cout << "gl2 contexts renderer is " << gl2Context->getRenderer() << endl;
 			gl2Pool = (gl2Context==nullptr) ? nullptr : make_shared<GLBufferPool>(gl2Context);
 			GLContextRef		copierContext = (gl2Pool==nullptr) ? nullptr : gl2Context->newContextSharingMe();
 			if (copierContext != nullptr)	{
@@ -101,6 +107,8 @@ VVGLContextCacheItemImpl::VVGLContextCacheItemImpl(const HGLRC & inHostCtx, cons
 		}
 		else if (hostCtx->version == GLVersion_4)	{
 			gl4Context = hostCtx->newContextSharingMe();
+			if (gl4Context != nullptr)
+				cout << "gl4 contexts renderer is " << gl4Context->getRenderer() << endl;
 			gl4Pool = (gl4Context==nullptr) ? nullptr : make_shared<GLBufferPool>(gl4Context);
 			GLContextRef		copierContext = (gl4Pool==nullptr) ? nullptr : gl4Context->newContextSharingMe();
 			if (copierContext != nullptr)	{
