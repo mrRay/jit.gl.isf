@@ -62,3 +62,9 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+
+#Windows
+*.vcxproj.user
+jit.gl.isf/.vs/*
+jit.gl.isf/sysbuild/*
+jit.gl.isf/x64/*
