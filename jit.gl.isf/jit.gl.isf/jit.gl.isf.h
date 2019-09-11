@@ -45,6 +45,8 @@ typedef struct _jit_gl_vvisf	{
 	t_jit_object		*outputTexObj;
 	
 	void				*maxWrapperStruct;	//	weak ptr to t_max_jit_gl_vvisf struct that "wraps" my jitter object
+	
+	t_bool				pending_file_read;
 } t_jit_gl_vvisf;
 
 //	init/constructor/free
@@ -85,11 +87,12 @@ ISFRenderer * jit_gl_vvisf_get_renderer(t_jit_gl_vvisf *targetInstance);
 
 //	misc
 MyBufferRef jit_gl_vvisf_apply_jit_tex_for_input_key(t_jit_gl_vvisf *targetInstance, t_symbol *inJitGLTexNameSym, const std::string & inInputName);
+t_bool jit_gl_vvisf_do_set_file(t_jit_gl_vvisf* targetInstance);
 
 // for our internal texture
 extern t_symbol			*ps_jit_gl_texture;
 extern t_symbol			*ps_jit_matrix;
 
-
+void* max_jit_gl_vvisf_getisffilemanager();
 
 #endif /* jit_gl_vvisf_h */

@@ -56,7 +56,9 @@ static ISFFileManager_Win		*fm = NULL;
 
 using namespace std;
 
-
+void* max_jit_gl_vvisf_getisffilemanager() {
+	return fm;
+}
 
 
 
@@ -266,14 +268,7 @@ void max_jit_gl_vvisf_read(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
 	
 	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(targetInstance);
 	if (jitob != NULL)	{
-		//bool				foundTheFile = false;
-		//	we don't know if the passed symbol is a filename or a path- assume a filename at first
-		std::string				inStr((char*)s->s_name);
-		ISFFile				fileEntry = fm->fileEntryForName(inStr);
-		if (fileEntry.isValid())
-			jit_attr_setsym( jitob, ps_file, gensym(fileEntry.path().c_str()) );
-		else
-			jit_attr_setsym(jitob, ps_file, s);
+		jit_attr_setsym(jitob, ps_file, s);
 	}
 	
 	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);

@@ -10,6 +10,11 @@
 #include "VVISF_Base.hpp"
 #include "MyBuffer.hpp"
 
+#if defined(VVGL_SDK_MAC)
+#include "ISFFileManager_Mac.hpp"
+#elif defined(VVGL_SDK_WIN)
+#include "ISFFileManager_Win.hpp"
+#endif
 
 
 
@@ -197,7 +202,8 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 	if ((targetInstance = (t_jit_gl_vvisf *)jit_object_alloc(_jit_gl_vvisf_class)))	{
 		
 		TI->isfRenderer = new ISFRenderer(/*targetInstance*/);
-		
+		TI->pending_file_read = 0;
+
 		TI->adapt = 1;
 		TI->creationName = dest_name;
 		
@@ -856,7 +862,13 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 	if (!targetInstance)
 		return JIT_ERR_INVALID_PTR;
 	
-	
+	if (TI->pending_file_read) {
+		if (!jit_gl_vvisf_do_set_file(TI)) {
+			jit_object_error((t_object*)targetInstance, (char*)"jit.gl.isf: ERR: shader would not compile! (%s)", TI->file->s_name);
+		}
+		TI->pending_file_read = 0;
+	}
+
 	//post("\trendering a frame...");
 	
 	//	calculate the size at which we should be rendering
@@ -954,79 +966,109 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 
 // attributes
 
-t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv)	{
+t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf* targetInstance, void* attr, long argc, t_atom* argv) {
 	//post("%s",__func__);
 	//t_symbol			*srvname;
-	
-	if(targetInstance != NULL)	{
-		
-		//	get the host context, we'll need to restore it later
-#if defined(VVGL_SDK_WIN)
-		HGLRC				origGLCtx = wglGetCurrentContext();
-		HDC					origDevCtx = wglGetCurrentDC();
-#elif defined(VVGL_SDK_MAC)
-		CGLContextObj		origCglCtx = CGLGetCurrentContext();
+
+	if (targetInstance != NULL) {
+		if (argc && argv) {
+			t_symbol *fsym = jit_atom_getsym(argv);
+			char conformpath[MAX_PATH_CHARS];
+			//bool				foundTheFile = false;
+			//	we don't know if the passed symbol is a filename or a path- assume a filename at first
+			std::string				inStr((char*)fsym->s_name);
+#if defined(VVGL_SDK_MAC)
+			ISFFileManager_Mac* fm = (ISFFileManager_Mac *)max_jit_gl_vvisf_getisffilemanager();
+#elif defined(VVGL_SDK_WIN)
+			ISFFileManager_Win* fm = (ISFFileManager_Win *)max_jit_gl_vvisf_getisffilemanager();
 #endif
-		
-		if (argc && argv)	{
-			//	update the file symbol
-			TI->file = jit_atom_getsym(argv);
+			ISFFile				fileEntry = fm->fileEntryForName(inStr);
+
+			if (fileEntry.isValid()) {
+				path_nameconform(fileEntry.path().c_str(), conformpath, PATH_STYLE_SLASH, PATH_TYPE_ABSOLUTE);
+				TI->file = gensym(conformpath);
+			}
+			else {
+				TI->file = fsym;
+			}
 		}
-		else	{
+		else {
 			//	update the file symbol
 			TI->file = _jit_sym_nothing;
 		}
-		
-		
-		//	run through the input name to texture map, unregistering for notification on all of the textures in it
-		auto			iter = TI->inputToHostTexNameMap->begin();
-		while (iter != TI->inputToHostTexNameMap->end())	{
-			t_symbol		*textureSym = gensym((char*)iter->second.c_str());
-			if (textureSym != NULL)	{
-				jit_object_detach(textureSym, TI);
+		if (!jit_gl_vvisf_do_set_file(TI)) {
+			TI->pending_file_read = 1;
+		}
+	}
+	else {
+		post("jit.gl.isf: ERR: target instance NULL in %s", __func__);
+		return JIT_ERR_INVALID_PTR;
+	}
+
+	return JIT_ERR_NONE;
+}
+t_bool jit_gl_vvisf_do_set_file(t_jit_gl_vvisf* targetInstance) {
+	t_bool success = true;
+	char conformpath[MAX_PATH_CHARS];
+#ifdef MAC_VERSION
+	path_nameconform(TI->file->s_name, conformpath, PATH_STYLE_SLASH, PATH_TYPE_BOOT);
+#else
+	path_nameconform(TI->file->s_name, conformpath, PATH_STYLE_NATIVE_WIN, PATH_TYPE_ABSOLUTE);
+#endif
+
+	//	get the host context, we'll need to restore it later
+#if defined(VVGL_SDK_WIN)
+	HGLRC				origGLCtx = wglGetCurrentContext();
+	HDC					origDevCtx = wglGetCurrentDC();
+#elif defined(VVGL_SDK_MAC)
+	CGLContextObj		origCglCtx = CGLGetCurrentContext();
+#endif
+
+	//	run through the input name to texture map, unregistering for notification on all of the textures in it
+	auto			iter = TI->inputToHostTexNameMap->begin();
+	while (iter != TI->inputToHostTexNameMap->end())	{
+		t_symbol		*textureSym = gensym((char*)iter->second.c_str());
+		if (textureSym != NULL)	{
+			jit_object_detach(textureSym, TI);
+		}
+		iter = TI->inputToHostTexNameMap->erase(iter);
+	}
+
+	//	load the file (or load a nil file if we weren't passed any args)
+	if (TI->isfRenderer == nullptr) {
+		post("jit.gl.isf: ERR: isfRenderer NULL in %s", __func__);
+		success = false;
+	}
+	else	{
+		if (TI->file == _jit_sym_nothing)
+			TI->isfRenderer->loadFile();
+		else	{
+			std::string		tmpStr = std::string(conformpath);
+			TI->isfRenderer->loadFile(&tmpStr);
+			if (!TI->isfRenderer->isFileLoaded())	{
+				//post("jit.gl.isf: ERR- shader could not be compiled, sorry! %s",tmpStr.c_str());
+				//jit_object_error((t_object *)targetInstance,(char*)"jit.gl.isf: ERR: shader would not compile! (%s)",tmpStr.c_str());
+				success = false;
 			}
-			iter = TI->inputToHostTexNameMap->erase(iter);
 		}
 		
-		
-		//	load the file (or load a nil file if we weren't passed any args)
-		if (TI->isfRenderer == nullptr)
-			post("jit.gl.isf: ERR: isfRenderer NULL in %s",__func__);
-		else	{
-			if (TI->file == _jit_sym_nothing)
-				TI->isfRenderer->loadFile();
-			else	{
-				std::string		tmpStr = std::string(TI->file->s_name);
-				TI->isfRenderer->loadFile(&tmpStr);
-				if (!TI->isfRenderer->isFileLoaded())	{
-					//post("jit.gl.isf: ERR- shader could not be compiled, sorry! %s",tmpStr.c_str());
-					jit_object_error((t_object *)targetInstance,(char*)"jit.gl.isf: ERR: shader would not compile! (%s)",tmpStr.c_str());
-				}
-			}
-			
+		if (success) {
 			//	fake an input call- this sends information describing the inputs of the loaded file from the appropriate outlet
 			max_jit_gl_vvisf_getparamlist((t_max_jit_gl_vvisf*)TI->maxWrapperStruct);
 		}
-		
-		
+
 		//	restore the original GL context
 #if defined(VVGL_SDK_WIN)
 		if (origDevCtx != NULL && origGLCtx != NULL) {
 			wglMakeCurrent(origDevCtx, origGLCtx);
 		}
 #elif defined(VVGL_SDK_MAC)
-		if (origCglCtx != NULL)	{
+		if (origCglCtx != NULL) {
 			CGLSetCurrentContext(origCglCtx);
 		}
 #endif
-		
 	}
-	else	{
-		post("jit.gl.isf: ERR: target instance NULL in %s",__func__);
-		return JIT_ERR_INVALID_PTR;
-	}
-	
-	return JIT_ERR_NONE;
+	return success;
 }
 
 											  
