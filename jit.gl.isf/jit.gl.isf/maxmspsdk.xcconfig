@@ -11,8 +11,8 @@
 
 // Name & Version
 PRODUCT_NAME = $(PROJECT_NAME)
-PRODUCT_VERSION = 7.0.1
-ARCHS = i386 x86_64
+PRODUCT_VERSION = 8.0.0
+ARCHS = x86_64
 
 
 // Paths
@@ -30,9 +30,6 @@ GCC_PREFIX_HEADER = jit.gl.isf/macho-gl-prefix.pch
 //INFOPLIST_FILE = $(SRCROOT)/../../Jitter-Common/Info.plist
 
 
-// Architecture and Deployment
-ARCHS = i386 x86_64
-
 // The following section sets the Mac SDK version to be used.
 // For most projects this has little to no impact because there are no direct dependencies on OS function calls.
 // In those projects with OS function calls, it should be okay to use the most recent SDK version because the
@@ -41,7 +38,7 @@ ARCHS = i386 x86_64
 //
 // SDKROOT = macosx10.6
 
-MACOSX_DEPLOYMENT_TARGET = 10.7
+MACOSX_DEPLOYMENT_TARGET = 10.11
 
 
 // Compiler Version -- leave them all commented out to get the default version provided by Xcode
