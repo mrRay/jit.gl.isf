@@ -972,6 +972,8 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf* targetInstance, void* attr, 
 
 	if (targetInstance != NULL) {
 		if (argc && argv) {
+			static t_symbol *ps_VDVX_COLORBARS = NULL;
+			if(!ps_VDVX_COLORBARS) ps_VDVX_COLORBARS = gensym("VDVX:COLORBARS");
 			t_symbol *fsym = jit_atom_getsym(argv);
 			char conformpath[MAX_PATH_CHARS];
 			//bool				foundTheFile = false;
@@ -985,8 +987,13 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf* targetInstance, void* attr, 
 			ISFFile				fileEntry = fm->fileEntryForName(inStr);
 
 			if (fileEntry.isValid()) {
-				path_nameconform(fileEntry.path().c_str(), conformpath, PATH_STYLE_SLASH, PATH_TYPE_ABSOLUTE);
-				TI->file = gensym(conformpath);
+				if(fileEntry._path == std::string("VDVX:COLORBARS")) {
+					TI->file = ps_VDVX_COLORBARS;
+				}
+				else {
+					path_nameconform(fileEntry.path().c_str(), conformpath, PATH_STYLE_SLASH, PATH_TYPE_ABSOLUTE);
+					TI->file = gensym(conformpath);
+				}
 			}
 			else {
 				TI->file = fsym;
@@ -1010,11 +1017,16 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf* targetInstance, void* attr, 
 t_bool jit_gl_vvisf_do_set_file(t_jit_gl_vvisf* targetInstance) {
 	t_bool success = true;
 	char conformpath[MAX_PATH_CHARS];
+	if(std::string(TI->file->s_name) != std::string("VDVX:COLORBARS")) {
 #ifdef MAC_VERSION
-	path_nameconform(TI->file->s_name, conformpath, PATH_STYLE_SLASH, PATH_TYPE_BOOT);
+		path_nameconform(TI->file->s_name, conformpath, PATH_STYLE_SLASH, PATH_TYPE_BOOT);
 #else
-	path_nameconform(TI->file->s_name, conformpath, PATH_STYLE_NATIVE_WIN, PATH_TYPE_ABSOLUTE);
+		path_nameconform(TI->file->s_name, conformpath, PATH_STYLE_NATIVE_WIN, PATH_TYPE_ABSOLUTE);
 #endif
+	}
+	else {
+		strcpy(conformpath, TI->file->s_name);
+	}
 
 	//	get the host context, we'll need to restore it later
 #if defined(VVGL_SDK_WIN)
