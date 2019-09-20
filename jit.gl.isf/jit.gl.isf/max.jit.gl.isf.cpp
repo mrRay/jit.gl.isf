@@ -101,63 +101,55 @@ int C74_EXPORT main(void)
 	}
 	
 	
-	void			*classex;
-	void			*jitclass;
+	t_class			*maxclass;
+	t_class			*jitclass;
 	
 	// initialize our Jitter class
 	jit_gl_vvisf_init();	
 	
 	// create our Max class
-	setup(
-		(t_messlist **)&max_jit_gl_vvisf_class, 
-		(method)max_jit_gl_vvisf_new,
-		(method)max_jit_gl_vvisf_free, 
-		(short)sizeof(t_max_jit_gl_vvisf),
-		0L,
-		A_GIMME,
-		0);
-	
+	maxclass = class_new("jit.gl.isf", (method)max_jit_gl_vvisf_new, (method)max_jit_gl_vvisf_free, sizeof(t_max_jit_gl_vvisf), NULL, A_GIMME, 0);
 	// specify a byte offset to keep additional information about our object
-	classex = max_jit_classex_setup(calcoffset(t_max_jit_gl_vvisf, obex));
-	
+	max_jit_class_obex_setup(maxclass, calcoffset(t_max_jit_gl_vvisf, obex));
 	// look up our Jitter class in the class registry
-	jitclass = jit_class_findbyname(gensym("jit_gl_vvisf"));	
-		
+	jitclass = (t_class*)jit_class_findbyname(gensym("jit_gl_vvisf"));
 	// wrap our Jitter class with the standard methods for Jitter objects
-	max_jit_classex_standard_wrap(classex, jitclass, 0);	
+	max_jit_class_wrap_standard(maxclass, jitclass, 0);
 	
+	// add methods for 3d drawing
+	max_jit_class_ob3d_wrap(maxclass);
+
 	// custom draw handler so we can output our texture.
 	// override default ob3d bang/draw methods
 	//addbang((method)max_jit_gl_vvisf_bang);
-	addfloat((method)max_jit_gl_vvisf_float);
-	max_addmethod_defer_low((method)max_jit_gl_vvisf_draw, (char*)"draw");
+	class_addmethod(maxclass, (method)max_jit_gl_vvisf_float, "float", A_FLOAT, 0);
+	
+	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_draw, (char*)"draw");
 	
 	//	use our custom assist method so we can correctly label the relevant outputs
-	addmess((method)max_jit_gl_vvisf_assist, (char*)"assist", A_CANT, 0);
+	class_addmethod(maxclass, (method)max_jit_gl_vvisf_assist, (char*)"assist", A_CANT, 0);
 	
 	//addmess( (method)max_jit_gl_vvisf_anything, (char*)"anything", A_GIMME, 0L );
 	
 	//	the 'read' method basically just sets the file attribute
-	addmess((method)max_jit_gl_vvisf_read, (char*)"read", A_SYM, 0L);
+	max_jit_class_addmethod_usurp_low(maxclass, (method)max_jit_gl_vvisf_read, (char*)"read");
 	
-	//	the 'inputs' method causes the object to dump a list describing its inputs (name and type) out the INPUTS outlet
-	addmess((method)max_jit_gl_vvisf_getparamlist, (char*)"getparamlist", 0L);
-	//addmess((method)max_jit_gl_vvisf_getparam, (char*)"getparam", A_SYM, 0L);
-	addmess((method)max_jit_gl_vvisf_getparam, (char*)"getparam", A_SYM, A_SYM, 0L);
+	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_getparamlist, (char*)"getparamlist");
+	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_getparam, (char*)"getparam");
 	
-	addmess((method)max_jit_gl_vvisf_all_filenames, (char*)"all_filenames", 0L);
-	addmess((method)max_jit_gl_vvisf_source_filenames, (char*)"source_filenames", 0L);
-	addmess((method)max_jit_gl_vvisf_filter_filenames, (char*)"filter_filenames", 0L);
-	addmess((method)max_jit_gl_vvisf_transition_filenames, (char*)"transition_filenames", 0L);
-	addmess((method)max_jit_gl_vvisf_all_categories, (char*)"all_categories", 0L);
-	addmess((method)max_jit_gl_vvisf_category_filenames, (char*)"category_filenames", A_SYM, 0L);
+	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_all_filenames, (char*)"all_filenames");
+	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_source_filenames, (char*)"source_filenames");
+	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_filter_filenames, (char*)"filter_filenames");
+	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_transition_filenames, (char*)"transition_filenames");
+	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_all_categories, (char*)"all_categories");
+	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_category_filenames, (char*)"category_filenames");
 	
-	addmess((method)max_jit_gl_vvisf_description, (char*)"description", 0L);
-	addmess((method)max_jit_gl_vvisf_credit, (char*)"credit", 0L);
-	addmess((method)max_jit_gl_vvisf_vsn, (char*)"vsn", 0L);
+	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_description, (char*)"description");
+	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_credit, (char*)"credit");
+	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_vsn, (char*)"vsn");
 	
-	// add methods for 3d drawing
-	max_ob3d_setup();
+	class_register(CLASS_BOX, maxclass);
+	max_jit_gl_vvisf_class = maxclass;
 	
 }
 
@@ -168,7 +160,7 @@ void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
 	long			attrstart;
 	t_symbol		*dest_name_sym = _jit_sym_nothing;
 	
-	if ((newObjPtr = (t_max_jit_gl_vvisf *) max_jit_obex_new(max_jit_gl_vvisf_class, gensym("jit_gl_vvisf"))))	{
+	if ((newObjPtr = (t_max_jit_gl_vvisf *) max_jit_object_alloc(max_jit_gl_vvisf_class, gensym("jit_gl_vvisf"))))	{
 		// get first normal arg, the destination name
 		attrstart = max_jit_attr_args_offset(argc,argv);
 		if (attrstart&&argv) 	{
@@ -227,7 +219,7 @@ void max_jit_gl_vvisf_free(t_max_jit_gl_vvisf *x)	{
 	}
 	
 	// free resources associated with our obex entry
-	max_jit_obex_free(x);
+	max_jit_object_free(x);
 }
 
 
@@ -260,15 +252,15 @@ void max_jit_gl_vvisf_anything(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, 
 	post("%s, argc is %d",__func__,argc);
 }
 */
-void max_jit_gl_vvisf_read(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
+void max_jit_gl_vvisf_read(t_max_jit_gl_vvisf *targetInstance, t_symbol *sym, long argc, t_atom *argv)	{
 	//post("%s ... %s",__func__,s->s_name);
 	
-	if (s == NULL)
+	if (!argc || !argv)
 		return;
 	
 	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(targetInstance);
 	if (jitob != NULL)	{
-		jit_attr_setsym(jitob, ps_file, s);
+		jit_attr_setsym(jitob, ps_file, atom_getsym(argv));
 	}
 	
 	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);
@@ -305,10 +297,14 @@ void max_jit_gl_vvisf_getparamlist(t_max_jit_gl_vvisf *targetInstance)	{
 	atom_setsym(&doneList, ps_done);
 	outlet_anything(targetInstance->inputsout, ps_getparamlist, 1, &doneList);
 }
-void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *paramNameSym, t_symbol *paramTypeSym)	{
+void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *sym, long argc, t_atom *argv)	{
+	
 	//post("%s ... %s",__func__,paramNameSym->s_name);
-	if (targetInstance==NULL || paramNameSym==NULL || paramTypeSym==NULL)
+	if (targetInstance==NULL || argc<2 || argv==NULL)
 		return;
+	
+	t_symbol *paramNameSym = atom_getsym(argv);
+	t_symbol *paramTypeSym = atom_getsym(argv+1);
 	
 	//	get the ISF file's INPUTS, dump them out the approrpiate outlet
 	t_jit_gl_vvisf		*jitObj = (t_jit_gl_vvisf *)max_jit_obex_jitob_get(targetInstance);
@@ -722,20 +718,21 @@ void max_jit_gl_vvisf_all_categories(t_max_jit_gl_vvisf *targetInstance)	{
 	}
 	*/
 }
-void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_symbol *s)	{
+void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_symbol *sym, long argc, t_atom *argv)	{
 	//post("%s ... %s",__func__,s->s_name);
 	
-	if (targetInstance==NULL || s==NULL)
+	if (targetInstance==NULL || !argc || argv==NULL)
 		return;
 	if (fm == NULL)
 		return;
 	
+	t_symbol *category = atom_getsym(argv);
 	//	send a "filenames clear" message
 	t_atom			clearAtom;
 	atom_setsym(&clearAtom, ps_clear);
 	outlet_anything(targetInstance->filesout, ps_filenames, 1, &clearAtom);
 	//	send the actual filenames as a series of "name <filename>" messages
-	vector<string>		filenames = fm->fileNamesForCategory(string(s->s_name));
+	vector<string>		filenames = fm->fileNamesForCategory(string(category->s_name));
 	t_atom				outAtom;
 	for (const auto & filename : filenames)	{
 		atom_setsym(&outAtom, gensym( filename.c_str() ));

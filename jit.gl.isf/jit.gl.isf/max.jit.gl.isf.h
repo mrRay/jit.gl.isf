@@ -40,17 +40,16 @@ void max_jit_gl_vvisf_assist(t_max_jit_gl_vvisf *x, void *b, long m, long a, cha
 
 //	misc methods
 //void max_jit_gl_vvisf_anything(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv);
-void max_jit_gl_vvisf_read(t_max_jit_gl_vvisf *targetInstance, t_symbol *s);
+void max_jit_gl_vvisf_read(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, long argc, t_atom *argv);
 void max_jit_gl_vvisf_getparamlist(t_max_jit_gl_vvisf *targetInstance);
-//void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *s);
-void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, t_symbol *t);
+void max_jit_gl_vvisf_getparam(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, long argc, t_atom *argv);
 
 void max_jit_gl_vvisf_all_filenames(t_max_jit_gl_vvisf *targetInstance);
 void max_jit_gl_vvisf_source_filenames(t_max_jit_gl_vvisf *targetInstance);
 void max_jit_gl_vvisf_filter_filenames(t_max_jit_gl_vvisf *targetInstance);
 void max_jit_gl_vvisf_transition_filenames(t_max_jit_gl_vvisf *targetInstance);
 void max_jit_gl_vvisf_all_categories(t_max_jit_gl_vvisf *targetInstance);
-void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_symbol *s);
+void max_jit_gl_vvisf_category_filenames(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, long argc, t_atom *argv);
 
 void max_jit_gl_vvisf_description(t_max_jit_gl_vvisf *targetInstance);
 void max_jit_gl_vvisf_credit(t_max_jit_gl_vvisf *targetInstance);
