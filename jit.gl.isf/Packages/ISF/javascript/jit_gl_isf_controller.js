@@ -71,7 +71,9 @@ function anything()	{
 			lastRect = bpatchers[bpatchers.length-1].rect;
 		//	make a new bpatcher, position it, tell it to load the appropriate file
 		inputBPatcher = this.patcher.newdefault(0,0,"bpatcher");
+		inputBPatcher.varname = "controller"+bpatchers.length;
 		inputBPatcher.bgmode(1);
+
 		if (lastRect == null)	{
 			var			bounds = this.patcher.box.rect;
 			inputBPatcher.rect = new Array(0, 0, bounds[2]-bounds[0], 50);
@@ -85,6 +87,7 @@ function anything()	{
 			inputBPatcher.rect = newRect;
 		}
 		inputBPatcher.replace("ISF_UI_item.maxpat");
+		this.patcher.message("script", "sendbox", inputBPatcher.varname, "embed", 1);
 		//inputBPatcher.border(2);
 		bpatchers.push(inputBPatcher);
 		//	connect my outlet (outlet of my js object) to the bpatcher's inlet temporarily (we need to send data to the patch inside the bpatcher, and if we do that in js we wind up sending msgs to the bpatcher itself)

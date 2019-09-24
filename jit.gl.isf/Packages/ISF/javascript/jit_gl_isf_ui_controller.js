@@ -270,6 +270,15 @@ function type(inType)	{
 	}
 	else if (myType == "image")	{
 	}
+
+	if(items.length) {
+		items[0].message("parameter_enable", 1);
+		items[0].message("_parameter_longname", myName);
+		items[0].message("_parameter_shortname", myName);
+		var pattr = this.patcher.newdefault(0, 0,"pattr", myName+"_pattr", items[0].varname);
+		pattr.hidden = true;
+		items.push(pattr);
+	}
 }
 
 
