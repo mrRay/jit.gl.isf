@@ -1,6 +1,7 @@
 #include "max.jit.gl.isf.h"
 
 #include "jit.gl.isf.h"
+#include "jit.gl.common.h"
 
 #include "ISFRenderer.hpp"
 #include "ISFAttr.hpp"
@@ -16,6 +17,16 @@
 
 
 
+t_max_err max_jit_gl_vvisf_notify(t_max_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
+void max_jit_gl_vvisf_open(t_max_jit_gl_vvisf *x);
+void max_jit_gl_vvisf_dblclick(t_max_jit_gl_vvisf *x);
+void max_jit_gl_vvisf_edclose(t_max_jit_gl_vvisf *x, char **ht, long size);
+short max_jit_gl_vvisf_edsave(t_max_jit_gl_vvisf *x, char **ht, long size, char *fn, short vol);
+void max_jit_gl_vvisf_eddidsave(t_max_jit_gl_vvisf *x, char *filename, short path);
+void max_jit_gl_vvisf_getsyntax(t_max_jit_gl_vvisf *x, t_symbol **syntax);
+void max_jit_gl_vvisf_watch_begin(t_max_jit_gl_vvisf *x);
+void max_jit_gl_vvisf_watch_end(t_max_jit_gl_vvisf *x);
+void max_jit_gl_vvisf_filechanged(t_max_jit_gl_vvisf *x, char *filename, short path);
 
 
 t_class				*max_jit_gl_vvisf_class;
@@ -46,6 +57,7 @@ t_symbol			*ps_getparamlist;
 t_symbol			*ps_filenames;
 t_symbol			*ps_categories;
 t_symbol			*ps_category;
+t_symbol			*ps_attr_modified;
 
 
 #if defined(VVGL_SDK_MAC)
@@ -90,6 +102,7 @@ int C74_EXPORT main(void)
 	ps_filenames = gensym("filenames");
 	ps_categories = gensym("categories");
 	ps_category = gensym("category");
+	ps_attr_modified = gensym("attr_modified");
 	
 	if (fm == NULL)	{
 #if defined(VVGL_SDK_MAC)
@@ -115,9 +128,6 @@ int C74_EXPORT main(void)
 	jitclass = (t_class*)jit_class_findbyname(gensym("jit_gl_vvisf"));
 	// wrap our Jitter class with the standard methods for Jitter objects
 	max_jit_class_wrap_standard(maxclass, jitclass, 0);
-	
-	// add methods for 3d drawing
-	max_jit_class_ob3d_wrap(maxclass);
 
 	// custom draw handler so we can output our texture.
 	// override default ob3d bang/draw methods
@@ -128,8 +138,15 @@ int C74_EXPORT main(void)
 	
 	//	use our custom assist method so we can correctly label the relevant outputs
 	class_addmethod(maxclass, (method)max_jit_gl_vvisf_assist, (char*)"assist", A_CANT, 0);
-	
-	//addmess( (method)max_jit_gl_vvisf_anything, (char*)"anything", A_GIMME, 0L );
+
+	class_addmethod(maxclass, (method)max_jit_gl_vvisf_dblclick, "dblclick", A_CANT, 0);
+	class_addmethod(maxclass, (method)max_jit_gl_vvisf_edclose, "edclose", A_CANT, 0);
+	class_addmethod(maxclass, (method)max_jit_gl_vvisf_edsave, "edsave", A_CANT, 0);
+	class_addmethod(maxclass, (method)max_jit_gl_vvisf_eddidsave, "eddidsave", A_CANT, 0);
+	class_addmethod(maxclass, (method)max_jit_gl_vvisf_getsyntax, "getsyntax", A_CANT, 0);
+	class_addmethod(maxclass, (method)max_jit_gl_vvisf_open, "open", 0);
+	class_addmethod(maxclass, (method)max_jit_gl_vvisf_filechanged, "filechanged", A_CANT, 0);
+
 	
 	//	the 'read' method basically just sets the file attribute
 	max_jit_class_addmethod_usurp_low(maxclass, (method)max_jit_gl_vvisf_read, (char*)"read");
@@ -147,6 +164,12 @@ int C74_EXPORT main(void)
 	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_description, (char*)"description");
 	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_credit, (char*)"credit");
 	max_jit_class_addmethod_defer_low(maxclass, (method)max_jit_gl_vvisf_vsn, (char*)"vsn");
+	
+	// add methods for 3d drawing
+	max_jit_class_ob3d_wrap(maxclass);
+	
+	// override default ob3d notify handler
+	class_addmethod(maxclass, (method)max_jit_gl_vvisf_notify,	"notify", A_CANT,0);
 	
 	class_register(CLASS_BOX, maxclass);
 	max_jit_gl_vvisf_class = maxclass;
@@ -175,13 +198,9 @@ void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
 			// set internal jitter object instance
 			max_jit_obex_jitob_set(newObjPtr, jit_ob);
 			
-			// process attribute arguments 
-			max_jit_attr_args(newObjPtr, argc, argv);
-			
 			// add a general purpose outlet (rightmost)
 			newObjPtr->dumpout = outlet_new(newObjPtr, NULL);
 			max_jit_obex_dumpout_set(newObjPtr, newObjPtr->dumpout);
-			
 		
 			//	this outlet spits out lists decribing the various ISF files installed in globally-available locations
 			newObjPtr->filesout = outlet_new(newObjPtr, NULL);
@@ -189,16 +208,26 @@ void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
 			//	this outlet spits out lists describing the various inputs
 			newObjPtr->inputsout = outlet_new(newObjPtr, NULL);
 			
-			
 			// this outlet is used to send textures
 			newObjPtr->texout = outlet_new(newObjPtr, "jit_gl_texture");
 			
+			newObjPtr->j_edit = NULL;
+			newObjPtr->source = NULL;
+			newObjPtr->source_length = 0;
+			newObjPtr->watcher = NULL;
+			
+			// attach max object to jitter object to receive notifications
+			max_jit_ob3d_attach(newObjPtr, (t_jit_object*)jit_ob, NULL);
+
 			//	give the jitter object a weak ref to the t_max_jit_gl_vvisf struct that wraps it
 			t_jit_gl_vvisf		*jitob = (t_jit_gl_vvisf*)max_jit_obex_jitob_get(newObjPtr);
 			if (jitob != NULL)
 				jitob->maxWrapperStruct = newObjPtr;
 			else
 				post("ERR: couldnt set weak ref in jit obj in %s",__func__);
+			
+			// finally process attribute arguments after object setup is complete
+			max_jit_attr_args(newObjPtr, argc, argv);
 		}
 		else 	{
 			error("jit.gl.isf: could not allocate object");
@@ -210,6 +239,14 @@ void * max_jit_gl_vvisf_new(t_symbol *s, long argc, t_atom *argv)	{
 }
 
 void max_jit_gl_vvisf_free(t_max_jit_gl_vvisf *x)	{
+	max_jit_gl_vvisf_watch_end(x);
+	if(x->source) {
+		sysmem_lockhandle(x->source,0);
+		sysmem_freehandle(x->source);
+	}
+	if (x->j_edit)
+		freeobject((t_object *)x->j_edit);
+
 	//post("%s",__func__);
 	max_jit_ob3d_detach(x);
 
@@ -847,5 +884,138 @@ void max_jit_gl_vvisf_draw(t_max_jit_gl_vvisf *x, t_symbol *s, long argc, t_atom
 	outlet_anything(x->texout, ps_jit_gl_texture, 1, &a);
 }
 
+t_max_err max_jit_gl_vvisf_notify(t_max_jit_gl_vvisf *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
+{
+	if(msg == ps_attr_modified) {
+		t_symbol *name = (t_symbol *)object_method((t_object *)data, _jit_sym_getname);
+		if(name == ps_file) {
+			max_jit_gl_vvisf_watch_begin(x);
+		}
+	}
+	return MAX_ERR_NONE;
+}
 
+void max_jit_gl_vvisf_edclose(t_max_jit_gl_vvisf *x, char **ht, long size)
+{
+	void *job = max_jit_obex_jitob_get(x);
+	if(jit_attr_getsym(job, ps_file) != _jit_sym_nothing)
+		jit_attr_setsym(job, ps_file, jit_attr_getsym(job, ps_file));
+	x->j_edit = 0;
+	if(x->source)
+		sysmem_lockhandle(x->source,1);
+}
 
+short max_jit_gl_vvisf_edsave(t_max_jit_gl_vvisf *x, char **ht, long size, char *fn, short vol)
+{
+	return 0;	// did not save, let jed do it
+}
+
+void max_jit_gl_vvisf_eddidsave(t_max_jit_gl_vvisf *x, char *filename, short path)
+{
+	char pathname[MAX_PATH_CHARS];
+	path_topathname(path, filename, pathname);
+	jit_attr_setsym(max_jit_obex_jitob_get(x), ps_file, gensym(pathname));
+}
+
+void max_jit_gl_vvisf_getsyntax(t_max_jit_gl_vvisf *x, t_symbol **syntax)
+{
+	*syntax = gensym(".js");
+}
+
+void max_jit_gl_vvisf_open(t_max_jit_gl_vvisf *x)
+{
+	defer_medium(x,(method)max_jit_gl_vvisf_dblclick,0,0,0);
+}
+
+void max_jit_gl_vvisf_watch_begin(t_max_jit_gl_vvisf *x)
+{
+	void *job = max_jit_obex_jitob_get(x);
+	t_symbol *fullpath = jit_attr_getsym(job, ps_file);
+	short path = 0;
+	char pathname[MAX_PATH_CHARS];
+	char filename[MAX_FILENAME_CHARS];
+	t_max_err err;
+	
+	if(!fullpath)
+		return;
+	
+	strcpy(pathname, fullpath->s_name);
+	err = path_frompathname(pathname, &path, filename);
+	if (!err && filename[0] != 0) {
+		max_jit_gl_vvisf_watch_end(x);
+		x->watcher = filewatcher_new((t_object*)x, path, filename);
+		filewatcher_start(x->watcher);
+	}
+}
+
+void max_jit_gl_vvisf_watch_end(t_max_jit_gl_vvisf *x)
+{
+	object_free(x->watcher);
+	x->watcher = NULL;
+}
+
+void max_jit_gl_vvisf_filechanged(t_max_jit_gl_vvisf *x, char *filename, short path)
+{
+	jit_attr_setsym(max_jit_obex_jitob_get(x), ps_file, jit_attr_getsym(max_jit_obex_jitob_get(x), ps_file));
+}
+
+void max_jit_gl_vvisf_dblclick(t_max_jit_gl_vvisf *x)
+{
+	t_symbol *fullpath;
+	short curvol;
+	void *job = max_jit_obex_jitob_get(x);
+	t_filehandle fh;
+	t_max_err err;
+	char pathname[MAX_PATH_CHARS];
+	char filename[MAX_FILENAME_CHARS];
+	
+	if (!x->j_edit) {
+		x->j_edit = (t_object *) object_new(CLASS_NOBOX, gensym("jed"), x, 0);
+	}
+	else {
+		object_attr_setchar(x->j_edit, gensym("visible"), 1);
+		return;
+	}
+	
+	fullpath = jit_attr_getsym(job, ps_file);
+	if(!fullpath) {
+		object_method(x->j_edit, gensym("settext"), "", gensym("utf-8"));
+		return;
+	}
+	
+	strcpy(pathname, fullpath->s_name);
+	if(path_frompathname(pathname, &curvol, filename)) {
+		object_method(x->j_edit, gensym("settext"), "", gensym("utf-8"));
+		return;
+	}
+
+	object_method(x->j_edit, gensym("filename"), filename, curvol);
+	
+	if(x->source) {
+		sysmem_lockhandle(x->source,0);
+		sysmem_freehandle(x->source);
+	}
+	x->source = NULL;
+	x->source = sysmem_newhandle(16);
+	
+	// open the file with read-only permissions
+	err = path_opensysfile(filename,curvol,&fh, PATH_READ_PERM);
+	
+	if (!err) {
+		sysfile_readtextfile(fh,x->source,0,TEXT_LB_UNIX);
+		sysfile_close(fh);
+		x->source_length = sysmem_handlesize(x->source);
+		sysmem_nullterminatehandle(x->source);
+	}
+	else {
+		object_method(x->j_edit, gensym("settext"), "", gensym("utf-8"));
+		return;
+	}
+	
+	if(x->source) {
+		sysmem_lockhandle(x->source,0);
+		object_method(x->j_edit, gensym("settext"), *x->source, NULL); // ddz bug -- passing utf8 here does not read in macroman files
+	}
+	
+	object_method(x->j_edit, gensym("openwindow"));
+}

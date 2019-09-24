@@ -28,6 +28,10 @@ typedef struct _max_jit_gl_vvisf	{
 	void			*inputsout;
 	void			*filesout;
 	void			*dumpout;
+	t_object		*j_edit;
+	void			*watcher;
+	t_handle		source;
+	long			source_length;
 	
 } t_max_jit_gl_vvisf;
 
