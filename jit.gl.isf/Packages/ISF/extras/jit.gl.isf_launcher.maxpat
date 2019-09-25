@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 0,
-			"revision" : 5,
+			"minor" : 1,
+			"revision" : 0,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 376.0, 223.0, 820.0, 662.0 ],
+		"rect" : [ 34.0, 79.0, 839.0, 398.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -45,8 +45,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 793.166648864746094, 344.5, 183.0, 22.0 ],
-					"text" : "../patchers/jit.gl.isf_audio.maxpat"
+					"patching_rect" : [ 793.166648864746094, 344.5, 124.0, 22.0 ],
+					"text" : "jit.gl.isf_audio.maxpat"
 				}
 
 			}
@@ -60,7 +60,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 409.166656494140625, 342.5, 24.0, 24.0 ]
+					"patching_rect" : [ 407.166656494140625, 174.5, 24.0, 24.0 ]
 				}
 
 			}
@@ -70,7 +70,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 438.757591247558594, 344.5, 352.4090576171875, 20.0 ],
+					"patching_rect" : [ 436.757591247558594, 176.5, 352.4090576171875, 20.0 ],
 					"text" : "Click to open an example of an ISF that uses audio streams"
 				}
 
@@ -91,31 +91,13 @@
 , 			{
 				"box" : 				{
 					"hidden" : 1,
-					"id" : "obj-18",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 793.166648864746094, 390.40911865234375, 99.0, 22.0 ],
-					"saved_object_attributes" : 					{
-						"filename" : "reltoabspath.js",
-						"parameter_enable" : 0
-					}
-,
-					"text" : "js reltoabspath.js"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"hidden" : 1,
 					"id" : "obj-16",
 					"maxclass" : "message",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 793.166648864746094, 313.40911865234375, 203.0, 22.0 ],
-					"text" : "../patchers/jit.gl.isf_transition.maxpat"
+					"patching_rect" : [ 793.166648864746094, 313.40911865234375, 143.0, 22.0 ],
+					"text" : "jit.gl.isf_transition.maxpat"
 				}
 
 			}
@@ -127,8 +109,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 793.166648864746094, 282.40911865234375, 176.0, 22.0 ],
-					"text" : "../patchers/jit.gl.isf_filter.maxpat"
+					"patching_rect" : [ 793.166648864746094, 282.40911865234375, 117.0, 22.0 ],
+					"text" : "jit.gl.isf_filter.maxpat"
 				}
 
 			}
@@ -140,8 +122,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 793.166648864746094, 251.40911865234375, 205.0, 22.0 ],
-					"text" : "../patchers/jit.gl.isf_generator.maxpat"
+					"patching_rect" : [ 793.166648864746094, 251.40911865234375, 145.0, 22.0 ],
+					"text" : "jit.gl.isf_generator.maxpat"
 				}
 
 			}
@@ -155,7 +137,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 409.166656494140625, 311.40911865234375, 24.0, 24.0 ]
+					"patching_rect" : [ 407.166656494140625, 143.40911865234375, 24.0, 24.0 ]
 				}
 
 			}
@@ -165,7 +147,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 438.757591247558594, 313.40911865234375, 352.4090576171875, 20.0 ],
+					"patching_rect" : [ 436.757591247558594, 145.40911865234375, 352.4090576171875, 20.0 ],
 					"text" : "Click to open an example of a transition-type ISF"
 				}
 
@@ -180,7 +162,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 409.166656494140625, 280.40911865234375, 24.0, 24.0 ]
+					"patching_rect" : [ 407.166656494140625, 112.40911865234375, 24.0, 24.0 ]
 				}
 
 			}
@@ -190,7 +172,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 438.757591247558594, 282.40911865234375, 352.4090576171875, 20.0 ],
+					"patching_rect" : [ 436.757591247558594, 114.40911865234375, 352.4090576171875, 20.0 ],
 					"text" : "Click to open an example of a filter-type ISF"
 				}
 
@@ -205,7 +187,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 409.166656494140625, 249.40911865234375, 24.0, 24.0 ]
+					"patching_rect" : [ 407.166656494140625, 81.40911865234375, 24.0, 24.0 ]
 				}
 
 			}
@@ -215,7 +197,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 438.757591247558594, 251.40911865234375, 352.4090576171875, 20.0 ],
+					"patching_rect" : [ 436.757591247558594, 83.40911865234375, 352.4090576171875, 20.0 ],
 					"text" : "Click to open an example of a generator-type ISF"
 				}
 
@@ -230,7 +212,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 409.166656494140625, 218.40911865234375, 24.0, 24.0 ]
+					"patching_rect" : [ 407.166656494140625, 50.40911865234375, 24.0, 24.0 ]
 				}
 
 			}
@@ -240,7 +222,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 438.757591247558594, 220.40911865234375, 352.4090576171875, 20.0 ],
+					"patching_rect" : [ 436.757591247558594, 52.40911865234375, 352.4090576171875, 20.0 ],
 					"text" : "Click to open the jit.gl.isf \"Help\" patch"
 				}
 
@@ -254,8 +236,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 851.5909423828125, 672.90673828125, 241.0, 62.0 ],
-					"text" : ";\r\nmax launchbrowser \"mailto:support@vidvox.net?subject=ISF in Max question\""
+					"patching_rect" : [ 890.5909423828125, 414.40911865234375, 241.0, 62.0 ],
+					"text" : ";\rmax launchbrowser \"mailto:support@vidvox.net?subject=ISF in Max question\""
 				}
 
 			}
@@ -268,7 +250,7 @@
 					"numoutlets" : 4,
 					"outlettype" : [ "bang", "bang", "", "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 405.166656494140625, 529.90673828125, 238.0, 20.0 ]
+					"patching_rect" : [ 409.871192932128906, 256.5623779296875, 238.0, 20.0 ]
 				}
 
 			}
@@ -278,7 +260,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 405.166656494140625, 529.90673828125, 238.0, 20.0 ],
+					"patching_rect" : [ 409.871192932128906, 256.5623779296875, 238.0, 20.0 ],
 					"text" : "Question?  Problem?  support@vidvox.net",
 					"textcolor" : [ 0.0, 0.258823529411765, 0.996078431372549, 1.0 ]
 				}
@@ -291,7 +273,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 402.462120056152344, 642.8443603515625, 415.628822326660156, 17.0 ],
+					"patching_rect" : [ 407.166656494140625, 369.5, 415.628822326660156, 17.0 ],
 					"text" : "ISF is open source under the MIT License, copyright VIDVOX, LLC 2019",
 					"textjustification" : 2
 				}
@@ -306,7 +288,7 @@
 					"numoutlets" : 4,
 					"outlettype" : [ "bang", "bang", "", "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 405.166656494140625, 617.90673828125, 238.0, 20.0 ]
+					"patching_rect" : [ 409.871192932128906, 344.5623779296875, 238.0, 20.0 ]
 				}
 
 			}
@@ -319,7 +301,7 @@
 					"numoutlets" : 4,
 					"outlettype" : [ "bang", "bang", "", "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 405.166656494140625, 595.90673828125, 238.0, 20.0 ]
+					"patching_rect" : [ 409.871192932128906, 322.5623779296875, 238.0, 20.0 ]
 				}
 
 			}
@@ -332,7 +314,7 @@
 					"numoutlets" : 4,
 					"outlettype" : [ "bang", "bang", "", "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 405.166656494140625, 573.90673828125, 238.0, 20.0 ]
+					"patching_rect" : [ 409.871192932128906, 300.5623779296875, 238.0, 20.0 ]
 				}
 
 			}
@@ -345,7 +327,7 @@
 					"numoutlets" : 4,
 					"outlettype" : [ "bang", "bang", "", "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 405.166656494140625, 551.90673828125, 238.0, 20.0 ]
+					"patching_rect" : [ 409.871192932128906, 278.5623779296875, 238.0, 20.0 ]
 				}
 
 			}
@@ -358,8 +340,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 851.5909423828125, 875.90673828125, 182.0, 49.0 ],
-					"text" : ";\r\nmax launchbrowser https://github.com/mrRay/jit.gl.isf"
+					"patching_rect" : [ 890.5909423828125, 617.40911865234375, 182.0, 49.0 ],
+					"text" : ";\rmax launchbrowser https://github.com/mrRay/jit.gl.isf"
 				}
 
 			}
@@ -372,8 +354,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 851.5909423828125, 822.90673828125, 228.0, 49.0 ],
-					"text" : ";\r\nmax launchbrowser https://www.interactiveshaderformat.com/"
+					"patching_rect" : [ 890.5909423828125, 564.40911865234375, 228.0, 49.0 ],
+					"text" : ";\rmax launchbrowser https://www.interactiveshaderformat.com/"
 				}
 
 			}
@@ -386,8 +368,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 851.5909423828125, 781.8134765625, 228.0, 35.0 ],
-					"text" : ";\r\nmax launchbrowser https://docs.isf.video/"
+					"patching_rect" : [ 890.5909423828125, 523.31585693359375, 228.0, 35.0 ],
+					"text" : ";\rmax launchbrowser https://docs.isf.video/"
 				}
 
 			}
@@ -400,8 +382,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 851.5909423828125, 740.90673828125, 199.0, 35.0 ],
-					"text" : ";\r\nmax launchbrowser https://isf.video/"
+					"patching_rect" : [ 890.5909423828125, 482.40911865234375, 199.0, 35.0 ],
+					"text" : ";\rmax launchbrowser https://isf.video/"
 				}
 
 			}
@@ -411,7 +393,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 405.166656494140625, 617.90673828125, 238.0, 20.0 ],
+					"patching_rect" : [ 409.871192932128906, 344.5623779296875, 238.0, 20.0 ],
 					"text" : "https://github.com/mrRay/jit.gl.isf",
 					"textcolor" : [ 0.0, 0.258823529411765, 0.996078431372549, 1.0 ]
 				}
@@ -423,7 +405,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 405.166656494140625, 595.90673828125, 238.0, 20.0 ],
+					"patching_rect" : [ 409.871192932128906, 322.5623779296875, 238.0, 20.0 ],
 					"text" : "https://www.interactiveshaderformat.com/",
 					"textcolor" : [ 0.0, 0.258823529411765, 0.996078431372549, 1.0 ]
 				}
@@ -435,7 +417,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 405.166656494140625, 573.90673828125, 238.0, 20.0 ],
+					"patching_rect" : [ 409.871192932128906, 300.5623779296875, 238.0, 20.0 ],
 					"text" : "https://docs.isf.video/",
 					"textcolor" : [ 0.0, 0.258823529411765, 0.996078431372549, 1.0 ]
 				}
@@ -447,7 +429,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 405.166656494140625, 551.90673828125, 238.0, 20.0 ],
+					"patching_rect" : [ 409.871192932128906, 278.5623779296875, 238.0, 20.0 ],
 					"text" : "https://isf.video/",
 					"textcolor" : [ 0.0, 0.258823529411765, 0.996078431372549, 1.0 ]
 				}
@@ -474,7 +456,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 901.5909423828125, 468.0, 51.0, 22.0 ],
+					"patching_rect" : [ 793.166648864746094, 441.0, 51.0, 22.0 ],
 					"text" : "pcontrol"
 				}
 
@@ -633,7 +615,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-18", 0 ],
+					"destination" : [ "obj-17", 0 ],
 					"hidden" : 1,
 					"source" : [ "obj-14", 0 ]
 				}
@@ -641,7 +623,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-18", 0 ],
+					"destination" : [ "obj-17", 0 ],
 					"hidden" : 1,
 					"source" : [ "obj-15", 0 ]
 				}
@@ -649,7 +631,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-18", 0 ],
+					"destination" : [ "obj-17", 0 ],
 					"hidden" : 1,
 					"source" : [ "obj-16", 0 ]
 				}
@@ -665,14 +647,6 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-17", 0 ],
-					"hidden" : 1,
-					"source" : [ "obj-18", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-14", 0 ],
 					"hidden" : 1,
 					"source" : [ "obj-2", 0 ]
@@ -681,7 +655,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-18", 0 ],
+					"destination" : [ "obj-17", 0 ],
 					"hidden" : 1,
 					"source" : [ "obj-21", 0 ]
 				}
@@ -705,7 +679,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-1", 0 ],
+					"destination" : [ "obj-17", 0 ],
 					"hidden" : 1,
 					"source" : [ "obj-4", 0 ]
 				}
@@ -786,13 +760,15 @@
  ],
 		"dependency_cache" : [ 			{
 				"name" : "icon.png",
-				"bootpath" : "C74:/packages/ISF",
+				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF",
+				"patcherrelativepath" : "..",
 				"type" : "PNG",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "reltoabspath.js",
-				"bootpath" : "C74:/packages/ISF/javascript",
+				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF/javascript",
+				"patcherrelativepath" : "../javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
