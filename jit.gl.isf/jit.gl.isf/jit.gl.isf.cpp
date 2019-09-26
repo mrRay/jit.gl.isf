@@ -203,6 +203,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 		
 		TI->isfRenderer = new ISFRenderer(/*targetInstance*/);
 		TI->pending_file_read = 0;
+		TI->pending_tex_params = NULL;
 
 		TI->adapt = 1;
 		TI->creationName = dest_name;
@@ -309,6 +310,9 @@ void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
 	// free our internal texture
 	if(TI->outputTexObj)
 		jit_object_free(TI->outputTexObj);
+	
+	if(TI->pending_tex_params)
+		linklist_chuck(TI->pending_tex_params);
 }
 
 
@@ -481,174 +485,10 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 	case ISFValType_Audio:	//	audio-type ISF attribute
 	case ISFValType_AudioFFT:	//	audio-FFT-type ISF attribute
 		{
-			t_atom		*firstAtom = argAtoms;
-			t_atom		*secondAtom = firstAtom + 1;
-			//post("argc is %d",argc);
-			long		firstType = atom_gettype(firstAtom);
-			//long		secondType = atom_gettype(secondAtom);
-			if ( (argc == 3) && (firstType == A_SYM || firstType == A_DEFSYM) )	{
-				//std::string			msgSymString = std::string( (char*)av->a_w.w_sym->s_name );
-				t_symbol			*firstMsgSym = jit_atom_getsym(firstAtom);
-				t_symbol			*secondMsgSym = jit_atom_getsym(secondAtom);
-				if (firstMsgSym != NULL && secondMsgSym != NULL)	{
-					
-					//	if this is a jitter gl texture...
-					if (firstMsgSym == ps_jit_gl_texture)	{
-						//	the second msg sym is the name of the incoming jitter texture.  check to see if we're already registered as an observer
-						bool				alreadyRegistered = false;
-						
-						auto				inputNameIt = TI->inputToHostTexNameMap->find(inputName);
-						if (inputNameIt != TI->inputToHostTexNameMap->end()) {
-							string				oldJitTexName = inputNameIt->second;
-							t_symbol			*oldJitTexNameSym = gensym((char*)oldJitTexName.c_str());
-							if (oldJitTexNameSym != NULL) {
-								//	if it's the same texture then we're already registered
-								if (oldJitTexNameSym == secondMsgSym)
-									alreadyRegistered = true;
-								//	else it's not the same texture, we have to unregister the old!
-								else
-									jit_object_detach(oldJitTexNameSym, TI);
-							}
-						}
-						
-						//	if we aren't already registered as an observer of the passed texture, we need to do so
-						if (!alreadyRegistered)	{
-							//	attach to the jitter texture we were passed...
-							if (jit_object_attach(secondMsgSym, targetInstance) == NULL)
-								post("jit.gl.isf: ERR: unable to attach the jitter object to the param texture, %s",__func__);
-							else	{
-								//	store a record of this attachment in our map so we know to unattach later
-								TI->inputToHostTexNameMap->emplace( std::make_pair(inputName, std::string((char*)secondMsgSym->s_name)) );
-								
-								//	if we allocated a jit gl texture for this same input name (for GL textures), free it and delete it from the client texture map so there aren't two possible texture source for the same input name
-								
-								auto				inputNameIt = TI->inputToClientGLTexPtrMap->find(inputName);
-								if (inputNameIt != TI->inputToClientGLTexPtrMap->end()) {
-									t_jit_object		*clientTex = (t_jit_object*)inputNameIt->second;
-									if (clientTex != NULL) {
-										jit_object_free(clientTex);
-									}
-									TI->inputToClientGLTexPtrMap->erase(inputName);
-								}
-							}
-						}
-					
-						//	finally, pass the jitter texture object to the ISFRenderer, which will "wrap" it with a GLBufferRef from the appropriate pool/GL version to render
-						//GLBufferRef			wrapperTex = renderer->applyJitGLTexToInputKey(secondMsgSym, inputName);
-						MyBufferRef			wrapperTex = jit_gl_vvisf_apply_jit_tex_for_input_key(TI, secondMsgSym, inputName);
-						//	if this was the input image, we need to update the target instance's last adapt dims, so we know what res to render at next time we're told to do so
-						if (inputName == string("inputImage") && wrapperTex != nullptr)	{
-							TI->lastAdaptDims[0] = wrapperTex->size().width;
-							TI->lastAdaptDims[1] = wrapperTex->size().height;
-							//post("inputImage detected from GL tex, adapting to res %d x %d",TI->lastAdaptDims[0],TI->lastAdaptDims[1]);
-						}
-					}
-					//	else if this is a jitter matrix (CPU-based)...
-					else if (firstMsgSym == ps_jit_matrix)	{
-						//post("input named %s rxed a jitter matrix",inputName.c_str());
-						
-						//	try to get an existing client texture for the input name
-						t_jit_object		*clientTex = NULL;
-						
-						auto				clientIt = TI->inputToClientGLTexPtrMap->find(inputName);
-						if (clientIt != TI->inputToClientGLTexPtrMap->end()) {
-							clientTex = clientIt->second;
-						}
-
-						//	if we don't already have an existing client texture...
-						if (clientTex == NULL)	{
-							//	make a client texture, set it up
-							//clientTex = (t_jit_object*)jit_object_new(ps_jit_gl_texture, jit_attr_getsym(TI, ps_drawto_j));
-							clientTex = (t_jit_object*)jit_object_new(ps_jit_gl_texture, TI->creationName);
-							if (clientTex != NULL)	{
-								t_symbol			*tmpName = jit_symbol_unique();
-								jit_attr_setsym(clientTex, _jit_sym_name, tmpName);
-								jit_attr_setsym(clientTex, gensym("defaultimage"), gensym("white"));
-								jit_attr_setlong(clientTex, gensym("rectangle"), 1);
-								jit_attr_setsym(clientTex, gensym("mode"), gensym("dynamic"));
-								jit_attr_setlong(clientTex, ps_flip_j, 0);
-								
-								//	add the client texture to the map
-								TI->inputToClientGLTexPtrMap->emplace(inputName, clientTex);
-								
-								//	if we're attached to a host gl texture under this name as an observer, un-attach and remove the record of the attachment from the host texture name map
-								auto			tmpIt = TI->inputToHostTexNameMap->find(inputName);
-								if (tmpIt != TI->inputToHostTexNameMap->end()) {
-									string			jitHostTexName = tmpIt->second;
-									t_symbol		*jitHostTexNameSym = gensym((char*)jitHostTexName.c_str());
-									if (jitHostTexNameSym != NULL) {
-										jit_object_detach(jitHostTexNameSym, TI);
-										TI->inputToHostTexNameMap->erase(inputName);
-									}
-								}
-								
-								//	we just created a gl texture- we have to bind it to this context before we can use it...
-								t_symbol			*context = jit_attr_getsym(TI, ps_drawto_j);
-								if (context == NULL)	{
-									post("jit.gl.isf: ERR: context NULL in %s",__func__);
-								}
-								else	{
-									jit_attr_setsym(clientTex, ps_drawto_j, context);
-		
-									t_jit_gl_drawinfo			drawInfo;
-									t_symbol			*texName = jit_attr_getsym(clientTex, gensym("name"));
-									if (texName == NULL)	{
-										post("jit.gl.isf: ERR: texName NULL in %s",__func__);
-									}
-									else	{
-										//	this crashes with jit.gl.world, but doesn't crash with jit.gl.videoplane.  i'd like to include it because without it, we get a white flash because that first frame doesn't get rendered.
-										
-										jit_gl_drawinfo_setup(targetInstance, &drawInfo);
-										jit_gl_bindtexture(&drawInfo, texName, 0);
-										jit_gl_unbindtexture(&drawInfo, texName, 0);
-										
-									}
-		
-								}
-							}
-						}
-						
-						if (clientTex != NULL)	{
-							//	pass the jitter matrix to our client gl texture
-							//post("\tsending argc of %d, first argv is %s",argc-2,jit_atom_getsym(argv+2)->s_name);
-							//post("\ttexture class name check is %s",jit_object_classname(clientTex)->s_name);
-							
-							//void			*jitMatObj = jit_object_findregistered(secondMsgSym);
-							//if (jitMatObj != NULL)	{
-							//	t_atom_long		tmpLongAttr = jit_attr_getlong(jitMatObj, ps_flip_j);
-							//	jit_attr_setlong(clientTex, ps_flip_j, tmpLongAttr);
-							//}
-							
-							t_jit_gl_drawinfo			drawInfo;
-							t_symbol			*texName = jit_attr_getsym(clientTex, gensym("name"));
-							jit_gl_drawinfo_setup(targetInstance, &drawInfo);
-							jit_gl_bindtexture(&drawInfo, texName, 0);
-							
-							jit_object_method(clientTex, jit_atom_getsym(argv+1), jit_atom_getsym(argv+1), argc-2, argv+2);
-							
-							jit_gl_unbindtexture(&drawInfo, texName, 0);
-							
-							//	get the name of our client texture, pass it to the renderer, which will "wrap" it in a GLBufferRef from the appropriate pool/GL version to render
-							t_symbol			*clientTexSym = jit_attr_getsym(clientTex, gensym("name"));
-							//GLBufferRef			wrapperTex = (clientTexSym==NULL) ? NULL : renderer->applyJitGLTexToInputKey(clientTexSym, inputName);
-							MyBufferRef			wrapperTex = (clientTexSym==NULL) ? NULL : jit_gl_vvisf_apply_jit_tex_for_input_key(TI, clientTexSym, inputName);
-							//	if this was the input image, we need to update the target instance's last adapt dims, so we know what res to render at next time we're told to do so
-							if (inputName == string("inputImage") && wrapperTex != nullptr)	{
-								TI->lastAdaptDims[0] = wrapperTex->size().width;
-								TI->lastAdaptDims[1] = wrapperTex->size().height;
-								//post("inputImage detected from matrix texture, adapting to res %d x %d",TI->lastAdaptDims[0],TI->lastAdaptDims[1]);
-							}
-						}
-						else
-							post("jit.gl.isf: ERR: clientTex NULL in %s",__func__);
-					}
-					
-				}
-				else
-					post("jit.gl.isf: ERR: arg is wrong type, attr %s is an image and requires a GL texture for input",s->s_name);
-			}
-			else
-				post("jit.gl.isf: ERR: arg is wrong type, attr %s is an image and requires a GL texture for input",s->s_name);
+			// push any texture params onto our linklist to process in the draw call
+			if(!TI->pending_tex_params)
+				TI->pending_tex_params = linklist_new();
+			linklist_append(TI->pending_tex_params, atomarray_new(argc, argv));
 		}
 		break;
 	}
@@ -665,6 +505,190 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 	}
 #endif
 	
+}
+
+void jit_gl_vvisf_do_set_tex_params(t_atomarray *aa, t_jit_gl_vvisf *targetInstance) {
+	using namespace std;
+	using namespace VVISF;
+	long argc;
+	t_atom *argv = NULL;
+	atomarray_getatoms(aa, &argc, &argv);
+	
+	if(argc == 3 && argv) {
+		t_atom				*inputNameAtom = argv;
+		string				inputName = string( (char*)jit_atom_getsym(inputNameAtom)->s_name );
+		t_atom				*argAtoms = argv + 1;
+		ISFAttrRef			attr = TI->isfRenderer->paramNamed(inputName);
+
+		t_atom		*firstAtom = argAtoms;
+		t_atom		*secondAtom = firstAtom + 1;
+		//post("argc is %d",argc);
+		long		firstType = atom_gettype(firstAtom);
+		//long		secondType = atom_gettype(secondAtom);
+		if ( (firstType == A_SYM || firstType == A_DEFSYM) )	{
+			//std::string			msgSymString = std::string( (char*)av->a_w.w_sym->s_name );
+			t_symbol			*firstMsgSym = jit_atom_getsym(firstAtom);
+			t_symbol			*secondMsgSym = jit_atom_getsym(secondAtom);
+			if (firstMsgSym != NULL && secondMsgSym != NULL)	{
+				
+				//	if this is a jitter gl texture...
+				if (firstMsgSym == ps_jit_gl_texture)	{
+					//	the second msg sym is the name of the incoming jitter texture.  check to see if we're already registered as an observer
+					bool				alreadyRegistered = false;
+					
+					auto				inputNameIt = TI->inputToHostTexNameMap->find(inputName);
+					if (inputNameIt != TI->inputToHostTexNameMap->end()) {
+						string				oldJitTexName = inputNameIt->second;
+						t_symbol			*oldJitTexNameSym = gensym((char*)oldJitTexName.c_str());
+						if (oldJitTexNameSym != NULL) {
+							//	if it's the same texture then we're already registered
+							if (oldJitTexNameSym == secondMsgSym)
+								alreadyRegistered = true;
+							//	else it's not the same texture, we have to unregister the old!
+							else
+								jit_object_detach(oldJitTexNameSym, TI);
+						}
+					}
+					
+					//	if we aren't already registered as an observer of the passed texture, we need to do so
+					if (!alreadyRegistered)	{
+						//	attach to the jitter texture we were passed...
+						if (jit_object_attach(secondMsgSym, targetInstance) == NULL)
+							post("jit.gl.isf: ERR: unable to attach the jitter object to the param texture, %s",__func__);
+						else	{
+							//	store a record of this attachment in our map so we know to unattach later
+							TI->inputToHostTexNameMap->emplace( std::make_pair(inputName, std::string((char*)secondMsgSym->s_name)) );
+							
+							//	if we allocated a jit gl texture for this same input name (for GL textures), free it and delete it from the client texture map so there aren't two possible texture source for the same input name
+							
+							auto				inputNameIt = TI->inputToClientGLTexPtrMap->find(inputName);
+							if (inputNameIt != TI->inputToClientGLTexPtrMap->end()) {
+								t_jit_object		*clientTex = (t_jit_object*)inputNameIt->second;
+								if (clientTex != NULL) {
+									jit_object_free(clientTex);
+								}
+								TI->inputToClientGLTexPtrMap->erase(inputName);
+							}
+						}
+					}
+					
+					//	finally, pass the jitter texture object to the ISFRenderer, which will "wrap" it with a GLBufferRef from the appropriate pool/GL version to render
+					//GLBufferRef			wrapperTex = renderer->applyJitGLTexToInputKey(secondMsgSym, inputName);
+					MyBufferRef			wrapperTex = jit_gl_vvisf_apply_jit_tex_for_input_key(TI, secondMsgSym, inputName);
+					//	if this was the input image, we need to update the target instance's last adapt dims, so we know what res to render at next time we're told to do so
+					if (inputName == string("inputImage") && wrapperTex != nullptr)	{
+						TI->lastAdaptDims[0] = wrapperTex->size().width;
+						TI->lastAdaptDims[1] = wrapperTex->size().height;
+						//post("inputImage detected from GL tex, adapting to res %d x %d",TI->lastAdaptDims[0],TI->lastAdaptDims[1]);
+					}
+				}
+				//	else if this is a jitter matrix (CPU-based)...
+				else if (firstMsgSym == ps_jit_matrix)	{
+					//post("input named %s rxed a jitter matrix",inputName.c_str());
+					
+					//	try to get an existing client texture for the input name
+					t_jit_object		*clientTex = NULL;
+					
+					auto				clientIt = TI->inputToClientGLTexPtrMap->find(inputName);
+					if (clientIt != TI->inputToClientGLTexPtrMap->end()) {
+						clientTex = clientIt->second;
+					}
+					
+					//	if we don't already have an existing client texture...
+					if (clientTex == NULL)	{
+						//	make a client texture, set it up
+						//clientTex = (t_jit_object*)jit_object_new(ps_jit_gl_texture, jit_attr_getsym(TI, ps_drawto_j));
+						clientTex = (t_jit_object*)jit_object_new(ps_jit_gl_texture, TI->creationName);
+						if (clientTex != NULL)	{
+							t_symbol			*tmpName = jit_symbol_unique();
+							jit_attr_setsym(clientTex, _jit_sym_name, tmpName);
+							jit_attr_setsym(clientTex, gensym("defaultimage"), gensym("white"));
+							jit_attr_setlong(clientTex, gensym("rectangle"), 1);
+							jit_attr_setsym(clientTex, gensym("mode"), gensym("dynamic"));
+							jit_attr_setlong(clientTex, ps_flip_j, 0);
+							
+							//	add the client texture to the map
+							TI->inputToClientGLTexPtrMap->emplace(inputName, clientTex);
+							
+							//	if we're attached to a host gl texture under this name as an observer, un-attach and remove the record of the attachment from the host texture name map
+							auto			tmpIt = TI->inputToHostTexNameMap->find(inputName);
+							if (tmpIt != TI->inputToHostTexNameMap->end()) {
+								string			jitHostTexName = tmpIt->second;
+								t_symbol		*jitHostTexNameSym = gensym((char*)jitHostTexName.c_str());
+								if (jitHostTexNameSym != NULL) {
+									jit_object_detach(jitHostTexNameSym, TI);
+									TI->inputToHostTexNameMap->erase(inputName);
+								}
+							}
+							
+							//	we just created a gl texture- we have to bind it to this context before we can use it...
+							t_symbol			*context = jit_attr_getsym(TI, ps_drawto_j);
+							if (context == NULL)	{
+								post("jit.gl.isf: ERR: context NULL in %s",__func__);
+							}
+							else	{
+								jit_attr_setsym(clientTex, ps_drawto_j, context);
+								
+								t_jit_gl_drawinfo			drawInfo;
+								t_symbol			*texName = jit_attr_getsym(clientTex, gensym("name"));
+								if (texName == NULL)	{
+									post("jit.gl.isf: ERR: texName NULL in %s",__func__);
+								}
+								else	{
+									//	this crashes with jit.gl.world, but doesn't crash with jit.gl.videoplane.  i'd like to include it because without it, we get a white flash because that first frame doesn't get rendered.
+									
+									jit_gl_drawinfo_setup(targetInstance, &drawInfo);
+									jit_gl_bindtexture(&drawInfo, texName, 0);
+									jit_gl_unbindtexture(&drawInfo, texName, 0);
+									
+								}
+								
+							}
+						}
+					}
+					
+					if (clientTex != NULL)	{
+						//	pass the jitter matrix to our client gl texture
+						//post("\tsending argc of %d, first argv is %s",argc-2,jit_atom_getsym(argv+2)->s_name);
+						//post("\ttexture class name check is %s",jit_object_classname(clientTex)->s_name);
+						
+						//void			*jitMatObj = jit_object_findregistered(secondMsgSym);
+						//if (jitMatObj != NULL)	{
+						//	t_atom_long		tmpLongAttr = jit_attr_getlong(jitMatObj, ps_flip_j);
+						//	jit_attr_setlong(clientTex, ps_flip_j, tmpLongAttr);
+						//}
+						
+						t_jit_gl_drawinfo			drawInfo;
+						t_symbol			*texName = jit_attr_getsym(clientTex, gensym("name"));
+						jit_gl_drawinfo_setup(targetInstance, &drawInfo);
+						jit_gl_bindtexture(&drawInfo, texName, 0);
+						
+						jit_object_method(clientTex, jit_atom_getsym(argv+1), jit_atom_getsym(argv+1), argc-2, argv+2);
+						
+						jit_gl_unbindtexture(&drawInfo, texName, 0);
+						
+						//	get the name of our client texture, pass it to the renderer, which will "wrap" it in a GLBufferRef from the appropriate pool/GL version to render
+						t_symbol			*clientTexSym = jit_attr_getsym(clientTex, gensym("name"));
+						//GLBufferRef			wrapperTex = (clientTexSym==NULL) ? NULL : renderer->applyJitGLTexToInputKey(clientTexSym, inputName);
+						MyBufferRef			wrapperTex = (clientTexSym==NULL) ? NULL : jit_gl_vvisf_apply_jit_tex_for_input_key(TI, clientTexSym, inputName);
+						//	if this was the input image, we need to update the target instance's last adapt dims, so we know what res to render at next time we're told to do so
+						if (inputName == string("inputImage") && wrapperTex != nullptr)	{
+							TI->lastAdaptDims[0] = wrapperTex->size().width;
+							TI->lastAdaptDims[1] = wrapperTex->size().height;
+							//post("inputImage detected from matrix texture, adapting to res %d x %d",TI->lastAdaptDims[0],TI->lastAdaptDims[1]);
+						}
+					}
+					else
+						post("jit.gl.isf: ERR: clientTex NULL in %s",__func__);
+				}
+				
+			}
+			else
+				post("jit.gl.isf: ERR: arg is wrong type, attr %s is an image and requires a GL texture for input",inputName.c_str());
+		}
+		else
+			post("jit.gl.isf: ERR: arg is wrong type, attr %s is an image and requires a GL texture for input",inputName.c_str());
+	}
 }
 
 t_jit_err jit_gl_vvisf_jit_matrix(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
@@ -869,6 +893,26 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		TI->pending_file_read = 0;
 	}
 
+	//	get the host context, use that to retrieve the cache item which holds the shared contexts, buffer pools, and buffer copiers
+#if defined(VVGL_SDK_WIN)
+	HGLRC				origGLCtx = wglGetCurrentContext();
+	HDC					origDevCtx = wglGetCurrentDC();
+	if (origGLCtx == NULL) {
+		post("jit.gl.isf: ERR: no host GL ctx");
+		return JIT_ERR_INVALID_PTR;
+	}
+	VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(origGLCtx, origDevCtx);
+#elif defined(VVGL_SDK_MAC)
+	CGLContextObj		origCglCtx = CGLGetCurrentContext();
+	VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(origCglCtx);
+#endif
+	
+	// process any texture params received since last drawcall
+	if(TI->pending_tex_params) {
+		linklist_funall(TI->pending_tex_params, (method)jit_gl_vvisf_do_set_tex_params, TI);
+		linklist_clear(TI->pending_tex_params);
+		TI->pending_tex_params = NULL;
+	}
 	//post("\trendering a frame...");
 	
 	//	calculate the size at which we should be rendering
@@ -902,19 +946,6 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		}
 	}
 	
-	//	get the host context, use that to retrieve the cache item which holds the shared contexts, buffer pools, and buffer copiers
-#if defined(VVGL_SDK_WIN)
-	HGLRC				origGLCtx = wglGetCurrentContext();
-	HDC					origDevCtx = wglGetCurrentDC();
-	if (origGLCtx == NULL) {
-		post("jit.gl.isf: ERR: no host GL ctx");
-		return JIT_ERR_INVALID_PTR;
-	}
-	VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(origGLCtx, origDevCtx);
-#elif defined(VVGL_SDK_MAC)
-	CGLContextObj		origCglCtx = CGLGetCurrentContext();
-	VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(origCglCtx);
-#endif
 	if (cacheItem != nullptr)	{
 		TI->isfRenderer->configureWithCache(cacheItem);
 		ReturnCacheItemToPool(cacheItem);
