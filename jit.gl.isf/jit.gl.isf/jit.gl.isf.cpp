@@ -1008,11 +1008,12 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf* targetInstance, void* attr, 
 	//post("%s",__func__);
 	//t_symbol			*srvname;
 
-	if (targetInstance != NULL) {
-		if (argc && argv) {
+	if (targetInstance != NULL && argc && argv) {
+		t_symbol *fsym = jit_atom_getsym(argv);
+		if (fsym && fsym != _jit_sym_nothing) {
 			static t_symbol *ps_VDVX_COLORBARS = NULL;
 			if(!ps_VDVX_COLORBARS) ps_VDVX_COLORBARS = gensym("VDVX:COLORBARS");
-			t_symbol *fsym = jit_atom_getsym(argv);
+			
 			char conformpath[MAX_PATH_CHARS];
 			//bool				foundTheFile = false;
 			//	we don't know if the passed symbol is a filename or a path- assume a filename at first
@@ -1034,6 +1035,17 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf* targetInstance, void* attr, 
 				}
 			}
 			else {
+				char pathfile[MAX_PATH_CHARS];
+				t_fourcc filetype = 0;
+				short volume = 0;
+				// make a copy of the filename for locatefile
+				strcpy(pathfile, fsym->s_name);
+				// locate the file
+				if (locatefile_extended(pathfile, &volume, &filetype, NULL, 0))  {
+					TI->pending_file_read = 0;
+					jit_object_error((t_object *)targetInstance, (char*)"jit.gl.isf: can't find file %s", fsym->s_name);
+					return JIT_ERR_GENERIC;
+				}
 				TI->file = fsym;
 			}
 		}
@@ -1074,16 +1086,6 @@ t_bool jit_gl_vvisf_do_set_file(t_jit_gl_vvisf* targetInstance) {
 	CGLContextObj		origCglCtx = CGLGetCurrentContext();
 #endif
 
-	//	run through the input name to texture map, unregistering for notification on all of the textures in it
-	auto			iter = TI->inputToHostTexNameMap->begin();
-	while (iter != TI->inputToHostTexNameMap->end())	{
-		t_symbol		*textureSym = gensym((char*)iter->second.c_str());
-		if (textureSym != NULL)	{
-			jit_object_detach(textureSym, TI);
-		}
-		iter = TI->inputToHostTexNameMap->erase(iter);
-	}
-
 	//	load the file (or load a nil file if we weren't passed any args)
 	if (TI->isfRenderer == nullptr) {
 		post("jit.gl.isf: ERR: isfRenderer NULL in %s", __func__);
@@ -1093,16 +1095,34 @@ t_bool jit_gl_vvisf_do_set_file(t_jit_gl_vvisf* targetInstance) {
 		if (TI->file == _jit_sym_nothing)
 			TI->isfRenderer->loadFile();
 		else	{
+			std::string		curPath;
+			bool reloadOnFail = false;
+			if(TI->isfRenderer->isFileLoaded()) {
+				reloadOnFail = true;
+				curPath= TI->isfRenderer->loadedISFDoc()->path();
+			}
 			std::string		tmpStr = std::string(conformpath);
 			TI->isfRenderer->loadFile(&tmpStr);
 			if (!TI->isfRenderer->isFileLoaded())	{
 				//post("jit.gl.isf: ERR- shader could not be compiled, sorry! %s",tmpStr.c_str());
 				//jit_object_error((t_object *)targetInstance,(char*)"jit.gl.isf: ERR: shader would not compile! (%s)",tmpStr.c_str());
+				if(reloadOnFail)
+					TI->isfRenderer->loadFile(&curPath);
 				success = false;
 			}
 		}
 		
 		if (success) {
+			//	run through the input name to texture map, unregistering for notification on all of the textures in it
+			auto			iter = TI->inputToHostTexNameMap->begin();
+			while (iter != TI->inputToHostTexNameMap->end())	{
+				t_symbol		*textureSym = gensym((char*)iter->second.c_str());
+				if (textureSym != NULL)	{
+					jit_object_detach(textureSym, TI);
+				}
+				iter = TI->inputToHostTexNameMap->erase(iter);
+			}
+
 			//	fake an input call- this sends information describing the inputs of the loaded file from the appropriate outlet
 			max_jit_gl_vvisf_getparamlist((t_max_jit_gl_vvisf*)TI->maxWrapperStruct);
 		}

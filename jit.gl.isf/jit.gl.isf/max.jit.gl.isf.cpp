@@ -291,17 +291,28 @@ void max_jit_gl_vvisf_anything(t_max_jit_gl_vvisf *targetInstance, t_symbol *s, 
 */
 void max_jit_gl_vvisf_read(t_max_jit_gl_vvisf *targetInstance, t_symbol *sym, long argc, t_atom *argv)	{
 	//post("%s ... %s",__func__,s->s_name);
-	
-	if (!argc || !argv)
-		return;
+	t_symbol *filesym = _jit_sym_nothing;
+	if (argc && argv) {
+		filesym = atom_getsym(argv);
+	}
+	else {
+		// open the dialog for the file if unspecified
+		char pathname[MAX_PATH_CHARS];
+		char pathfile[MAX_PATH_CHARS];
+		t_fourcc filetype = 0;
+		short volume = 0;
+		pathfile[0] = 0;
+		if (open_dialog(pathfile, &volume, &filetype, &filetype, 0)) {
+			return;
+		}
+		path_topathname(volume, pathfile, pathname);
+		filesym = gensym(pathname);
+	}
 	
 	t_jit_object		*jitob = (t_jit_object*)max_jit_obex_jitob_get(targetInstance);
 	if (jitob != NULL)	{
-		jit_attr_setsym(jitob, ps_file, atom_getsym(argv));
+		jit_attr_setsym(jitob, ps_file, filesym);
 	}
-	
-	max_jit_gl_vvisf_draw(targetInstance, ps_draw, 0, NULL);
-	
 }
 void max_jit_gl_vvisf_getparamlist(t_max_jit_gl_vvisf *targetInstance)	{
 	//post("%s",__func__);
@@ -897,9 +908,9 @@ t_max_err max_jit_gl_vvisf_notify(t_max_jit_gl_vvisf *x, t_symbol *s, t_symbol *
 
 void max_jit_gl_vvisf_edclose(t_max_jit_gl_vvisf *x, char **ht, long size)
 {
-	void *job = max_jit_obex_jitob_get(x);
-	if(jit_attr_getsym(job, ps_file) != _jit_sym_nothing)
-		jit_attr_setsym(job, ps_file, jit_attr_getsym(job, ps_file));
+	//void *job = max_jit_obex_jitob_get(x);
+	//if(jit_attr_getsym(job, ps_file) != _jit_sym_nothing)
+		//jit_attr_setsym(job, ps_file, jit_attr_getsym(job, ps_file));
 	x->j_edit = 0;
 	if(x->source)
 		sysmem_lockhandle(x->source,1);
