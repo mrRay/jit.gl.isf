@@ -578,7 +578,7 @@
 					"numoutlets" : 4,
 					"outlettype" : [ "jit_gl_texture", "", "", "" ],
 					"patching_rect" : [ 44.371124267578125, 510.43212890625, 167.0, 22.0 ],
-					"text" : "jit.gl.isf @file \"Window Blinds\""
+					"text" : "jit.gl.isf @file Wipe_Star.fs"
 				}
 
 			}

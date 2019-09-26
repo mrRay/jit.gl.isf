@@ -1036,6 +1036,7 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf* targetInstance, void* attr, 
 			}
 			else {
 				char pathfile[MAX_PATH_CHARS];
+				char pathname[MAX_PATH_CHARS];
 				t_fourcc filetype = 0;
 				short volume = 0;
 				// make a copy of the filename for locatefile
@@ -1046,7 +1047,8 @@ t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf* targetInstance, void* attr, 
 					jit_object_error((t_object *)targetInstance, (char*)"jit.gl.isf: can't find file %s", fsym->s_name);
 					return JIT_ERR_GENERIC;
 				}
-				TI->file = fsym;
+				path_topathname(volume, pathfile, pathname);
+				TI->file = gensym(pathname);
 			}
 		}
 		else {
