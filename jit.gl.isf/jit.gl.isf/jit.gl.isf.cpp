@@ -76,11 +76,17 @@ t_jit_err jit_gl_vvisf_init(void)	{
 	long			ob3d_flags = JIT_OB3D_NO_MATRIXOUTPUT; // no matrix output
 	ob3d_flags |= JIT_OB3D_NO_ROTATION_SCALE;
 	ob3d_flags |= JIT_OB3D_NO_POLY_VARS;
-	ob3d_flags |= JIT_OB3D_NO_FOG;
-	ob3d_flags |= JIT_OB3D_NO_MATRIXOUTPUT;
-	ob3d_flags |= JIT_OB3D_NO_LIGHTING_MATERIAL;
+	ob3d_flags |= JIT_OB3D_NO_BLEND;
+	ob3d_flags |= JIT_OB3D_NO_TEXTURE;
 	ob3d_flags |= JIT_OB3D_NO_DEPTH;
+	ob3d_flags |= JIT_OB3D_NO_ANTIALIAS;
+	ob3d_flags |= JIT_OB3D_NO_FOG;
+	ob3d_flags |= JIT_OB3D_NO_LIGHTING_MATERIAL;
 	ob3d_flags |= JIT_OB3D_NO_COLOR;
+	ob3d_flags |= JIT_OB3D_NO_TEXTURE;
+	ob3d_flags |= JIT_OB3D_NO_SHADER;
+	ob3d_flags |= JIT_OB3D_NO_BOUNDS;
+	ob3d_flags |= JIT_OB3D_NO_POSITION;
 	
 	_jit_gl_vvisf_class = jit_class_new(
 		"jit_gl_vvisf", 
@@ -533,6 +539,7 @@ void jit_gl_vvisf_do_set_tex_params(t_atomarray *aa, t_jit_gl_vvisf *targetInsta
 				
 				//	if this is a jitter gl texture...
 				if (firstMsgSym == ps_jit_gl_texture)	{
+					
 					//	the second msg sym is the name of the incoming jitter texture.  check to see if we're already registered as an observer
 					bool				alreadyRegistered = false;
 					
@@ -1241,8 +1248,19 @@ MyBufferRef jit_gl_vvisf_apply_jit_tex_for_input_key(t_jit_gl_vvisf *targetInsta
 			//	jit_ob3d_set_context(_parentJitterObject);
 			//t_symbol			*tmpClassName = jit_object_classname(jitTexture);
 			//post("texture is %p, class name check is %s",jitTexture,tmpClassName->s_name);
+			
+			// ensure jitter-texture is properly initialized and submitted
+			t_jit_gl_drawinfo drawInfo;
+			jit_gl_drawinfo_setup(targetInstance, &drawInfo);
+			jit_gl_bindtexture(&drawInfo, inJitGLTexNameSym, 0);
+			jit_gl_unbindtexture(&drawInfo, inJitGLTexNameSym, 0);
 
 			uint32_t			texName = jit_attr_getlong(jitTexture, ps_glid_j);
+			if(!texName) {
+				post("jit.gl.isf: ERR: cant bind texture registered for %s", static_cast<t_symbol*>(inJitGLTexNameSym)->s_name);
+				return nullptr;
+			}
+			
 			//VVGL::Size			tmpSize = VVGL::Size(jitObj->dim[0], jitObj->dim[1]);
 			VVGL::Size			tmpSize;
 			tmpSize.width = (double)jit_attr_getlong(jitTexture, ps_width_j);

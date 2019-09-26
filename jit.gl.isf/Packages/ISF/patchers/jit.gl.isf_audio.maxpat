@@ -55,7 +55,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 360.0, 564.17938232421875, 70.0, 22.0 ],
+					"patching_rect" : [ 352.859886169433594, 559.17938232421875, 70.0, 22.0 ],
 					"text" : "loadmess 1"
 				}
 
@@ -66,7 +66,7 @@
 					"maxclass" : "ezdac~",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 360.0, 588.17938232421875, 45.0, 45.0 ]
+					"patching_rect" : [ 352.859886169433594, 583.17938232421875, 45.0, 45.0 ]
 				}
 
 			}
@@ -144,12 +144,35 @@
 						"subpatcher_template" : "",
 						"boxes" : [ 							{
 								"box" : 								{
+									"id" : "obj-3",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 647.0, 109.0, 152.0, 20.0 ],
+									"text" : "wait 1 frame for IFT to load"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-1",
+									"maxclass" : "newobj",
+									"numinlets" : 2,
+									"numoutlets" : 2,
+									"outlettype" : [ "bang", "bang" ],
+									"patching_rect" : [ 603.0, 132.0, 65.0, 22.0 ],
+									"text" : "onebang 1"
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"id" : "obj-10",
 									"maxclass" : "newobj",
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 600.0, 132.0, 42.0, 22.0 ],
+									"patching_rect" : [ 603.0, 108.0, 42.0, 22.0 ],
 									"text" : "r draw"
 								}
 
@@ -404,7 +427,7 @@
 								"patchline" : 								{
 									"destination" : [ "obj-54", 0 ],
 									"order" : 1,
-									"source" : [ "obj-10", 0 ]
+									"source" : [ "obj-1", 1 ]
 								}
 
 							}
@@ -412,6 +435,13 @@
 								"patchline" : 								{
 									"destination" : [ "obj-64", 0 ],
 									"order" : 0,
+									"source" : [ "obj-1", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-1", 0 ],
 									"source" : [ "obj-10", 0 ]
 								}
 
@@ -963,63 +993,63 @@
 			}
  ],
 		"parameters" : 		{
-			"obj-10::obj-31::obj-4" : [ "gainFFT", "gainFFT", 0 ],
-			"obj-10::obj-39::obj-4" : [ "stereo", "stereo", 0 ],
-			"obj-10::obj-43::obj-4" : [ "color2", "color2", 0 ],
-			"obj-10::obj-33::obj-4" : [ "rangeFFT", "rangeFFT", 0 ],
-			"obj-10::obj-35::obj-4" : [ "waveSize", "waveSize", 0 ],
-			"obj-10::obj-37::obj-4" : [ "vertical", "vertical", 0 ],
-			"obj-10::obj-47::obj-4" : [ "wavecolor", "wavecolor", 0 ],
-			"obj-10::obj-41::obj-4" : [ "color1", "color1", 0 ],
-			"obj-10::obj-45::obj-4" : [ "color3", "color3", 0 ],
+			"obj-10::obj-23::obj-4" : [ "color3", "color3", 0 ],
+			"obj-10::obj-11::obj-4" : [ "rangeFFT", "rangeFFT", 0 ],
+			"obj-10::obj-15::obj-4" : [ "vertical", "vertical", 0 ],
+			"obj-10::obj-17::obj-4" : [ "stereo", "stereo", 0 ],
+			"obj-10::obj-21::obj-4" : [ "color2", "color2", 0 ],
+			"obj-10::obj-9::obj-4" : [ "gainFFT", "gainFFT", 0 ],
+			"obj-10::obj-13::obj-4" : [ "waveSize", "waveSize", 0 ],
+			"obj-10::obj-25::obj-4" : [ "wavecolor", "wavecolor", 0 ],
+			"obj-10::obj-19::obj-4" : [ "color1", "color1", 0 ],
 			"parameterbanks" : 			{
 
 			}
 ,
 			"parameter_overrides" : 			{
-				"obj-10::obj-31::obj-4" : 				{
-					"parameter_longname" : "gainFFT",
-					"parameter_shortname" : "gainFFT"
+				"obj-10::obj-23::obj-4" : 				{
+					"parameter_longname" : "color3",
+					"parameter_shortname" : "color3"
 				}
 ,
-				"obj-10::obj-39::obj-4" : 				{
-					"parameter_longname" : "stereo",
-					"parameter_shortname" : "stereo"
-				}
-,
-				"obj-10::obj-43::obj-4" : 				{
-					"parameter_longname" : "color2",
-					"parameter_shortname" : "color2"
-				}
-,
-				"obj-10::obj-33::obj-4" : 				{
+				"obj-10::obj-11::obj-4" : 				{
 					"parameter_longname" : "rangeFFT",
 					"parameter_shortname" : "rangeFFT"
 				}
 ,
-				"obj-10::obj-35::obj-4" : 				{
-					"parameter_longname" : "waveSize",
-					"parameter_shortname" : "waveSize"
-				}
-,
-				"obj-10::obj-37::obj-4" : 				{
+				"obj-10::obj-15::obj-4" : 				{
 					"parameter_longname" : "vertical",
 					"parameter_shortname" : "vertical"
 				}
 ,
-				"obj-10::obj-47::obj-4" : 				{
+				"obj-10::obj-17::obj-4" : 				{
+					"parameter_longname" : "stereo",
+					"parameter_shortname" : "stereo"
+				}
+,
+				"obj-10::obj-21::obj-4" : 				{
+					"parameter_longname" : "color2",
+					"parameter_shortname" : "color2"
+				}
+,
+				"obj-10::obj-9::obj-4" : 				{
+					"parameter_longname" : "gainFFT",
+					"parameter_shortname" : "gainFFT"
+				}
+,
+				"obj-10::obj-13::obj-4" : 				{
+					"parameter_longname" : "waveSize",
+					"parameter_shortname" : "waveSize"
+				}
+,
+				"obj-10::obj-25::obj-4" : 				{
 					"parameter_longname" : "wavecolor",
 					"parameter_shortname" : "wavecolor"
 				}
 ,
-				"obj-10::obj-41::obj-4" : 				{
+				"obj-10::obj-19::obj-4" : 				{
 					"parameter_longname" : "color1",
 					"parameter_shortname" : "color1"
-				}
-,
-				"obj-10::obj-45::obj-4" : 				{
-					"parameter_longname" : "color3",
-					"parameter_shortname" : "color3"
 				}
 
 			}
