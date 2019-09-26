@@ -1,0 +1,1 @@
+max fileformat .fs ISFS 0 "OpenGL Shading Language Fragment Shader" isfshader;

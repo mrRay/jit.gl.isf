@@ -3,6 +3,8 @@
 #include "jit.gl.isf.h"
 #include "jit.gl.common.h"
 
+#include "ext_drag.h"
+
 #include "ISFRenderer.hpp"
 #include "ISFAttr.hpp"
 #include "VVISF_Base.hpp"
@@ -27,7 +29,7 @@ void max_jit_gl_vvisf_getsyntax(t_max_jit_gl_vvisf *x, t_symbol **syntax);
 void max_jit_gl_vvisf_watch_begin(t_max_jit_gl_vvisf *x);
 void max_jit_gl_vvisf_watch_end(t_max_jit_gl_vvisf *x);
 void max_jit_gl_vvisf_filechanged(t_max_jit_gl_vvisf *x, char *filename, short path);
-
+t_atom_long max_jit_gl_vvisf_acceptsdrag(t_max_jit_gl_vvisf *x, t_object *drag, t_object *view);
 
 t_class				*max_jit_gl_vvisf_class;
 
@@ -146,6 +148,8 @@ int C74_EXPORT main(void)
 	class_addmethod(maxclass, (method)max_jit_gl_vvisf_getsyntax, "getsyntax", A_CANT, 0);
 	class_addmethod(maxclass, (method)max_jit_gl_vvisf_open, "open", 0);
 	class_addmethod(maxclass, (method)max_jit_gl_vvisf_filechanged, "filechanged", A_CANT, 0);
+	class_addmethod(maxclass, (method)max_jit_gl_vvisf_acceptsdrag, "acceptsdrag_unlocked", A_CANT, 0);
+	class_addmethod(maxclass, (method)max_jit_gl_vvisf_acceptsdrag, "acceptsdrag_locked", A_CANT, 0);
 
 	
 	//	the 'read' method basically just sets the file attribute
@@ -299,10 +303,10 @@ void max_jit_gl_vvisf_read(t_max_jit_gl_vvisf *targetInstance, t_symbol *sym, lo
 		// open the dialog for the file if unspecified
 		char pathname[MAX_PATH_CHARS];
 		char pathfile[MAX_PATH_CHARS];
-		t_fourcc filetype = 0;
+		t_fourcc filetype = FOUR_CHAR_CODE( 'ISFS' );
 		short volume = 0;
 		pathfile[0] = 0;
-		if (open_dialog(pathfile, &volume, &filetype, &filetype, 0)) {
+		if (open_dialog(pathfile, &volume, &filetype, &filetype, 1)) {
 			return;
 		}
 		path_topathname(volume, pathfile, pathname);
@@ -1029,4 +1033,13 @@ void max_jit_gl_vvisf_dblclick(t_max_jit_gl_vvisf *x)
 	}
 	
 	object_method(x->j_edit, gensym("openwindow"));
+}
+
+t_atom_long max_jit_gl_vvisf_acceptsdrag(t_max_jit_gl_vvisf *x, t_object *drag, t_object *view)
+{
+	if (jdrag_matchdragrole(drag, gensym("isfshader"), 0)) {
+		jdrag_object_add(drag, (t_object *)x, gensym("read"));
+		return true;
+	}
+	return false;
 }
