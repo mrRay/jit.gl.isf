@@ -9,7 +9,7 @@
 	</digest>
 	
 	<description>
-		Use <o>jit.gl.isf</o> to render ISF files to GL textures.
+		Use <o>jit.gl.isf</o> to render <a href="https://isf.video">ISF</a> files to GL textures.
 	</description>
 	
 	<!--METADATA-->
@@ -250,20 +250,18 @@
 	<!--SEEALSO-->
 	<seealsolist>
 		<seealso name="jit.gl.texture" />
-		<seealso display="Video and Graphics 01: Display a Video" module="Video and Graphics" name="01-Display a Video" type="tutorial">
-			Video and Graphics 01: Display a Video
-		</seealso>
-		<seealso display="Video and Graphics 09: Building Live Video Effects" module="Video and Graphics" name="09-Building Live Video Effects" type="tutorial">
-			Video and Graphics 09: Building Live Video Effects
-		</seealso>
-		<seealso display="Video Engines" module="Video and Graphics" name="01-Video Engines" type="vignette">
-			Video Engines
-		</seealso>
-		<seealso display="Direct Texture Output" module="Video and Graphics" name="02-GL Texture Output" type="vignette">
-			GL Texture Output
-		</seealso>
+		<seealso name="jit.gl.slab" />
+		<seealso name="jit.gl.pix" />
+		<seealso name="jit.gl.bfg" />
+		<seealso display="Video and Graphics 01: Display a Video" module="Video and Graphics" name="01-Display a Video" type="tutorial"/>
+		<seealso display="Video and Graphics 09: Building Live Video Effects" module="Video and Graphics" name="09-Building Live Video Effects" type="tutorial"/>
+		<seealso display="Video Engines" name="jitter_video_engines" type="vignette"/>
+		<seealso display="Direct Texture Output" name="jitter_gl_texture_output" type="vignette"/>
 	</seealsolist>
 	<discussion>
-		DISCUSSION_TEXT_HERE
+		ISF is designed to provide a simple, reusable and open format for creating efficient hardware-accelerated interactive resources for media servers, VJ software, non-linear editors, creative coding environments, and any place where you want some gorgeous eye-candy.
+		<br/> 
+		<br/> 
+		ISF is short for "Interactive Shader Format", and is a simple file format that combines a GL shader with metadata that describes how to execute and interact with it. This creates a simple, minimal interface for interacting with the shader that can be shared and reused immediately across any host that supports ISF.
 	</discussion>
 </c74object>
