@@ -443,8 +443,9 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 793.166648864746094, 220.40911865234375, 71.0, 22.0 ],
-					"text" : "help jit.gl.isf"
+					"patching_rect" : [ 793.166648864746094, 220.40911865234375, 94.0, 22.0 ],
+					"presentation_linecount" : 2,
+					"text" : "jit.gl.isf.maxhelp"
 				}
 
 			}
