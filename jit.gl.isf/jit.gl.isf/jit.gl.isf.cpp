@@ -319,7 +319,7 @@ void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
 		jit_object_free(TI->outputTexObj);
 	
 	if(TI->pending_tex_params)
-		linklist_chuck(TI->pending_tex_params);
+		object_free(TI->pending_tex_params);
 }
 
 
@@ -494,8 +494,8 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 		{
 			// push any texture params onto our linklist to process in the draw call
 			if(!TI->pending_tex_params)
-				TI->pending_tex_params = linklist_new();
-			linklist_append(TI->pending_tex_params, atomarray_new(argc, argv));
+				TI->pending_tex_params = hashtab_new(7);
+			hashtab_store(TI->pending_tex_params, atom_getsym(inputNameAtom), (t_object*)atomarray_new(argc, argv));
 		}
 		break;
 	}
@@ -532,13 +532,13 @@ typedef struct _tex_param_info {
 	void			*dev;
 }t_tex_param_info;
 
-void jit_gl_vvisf_do_set_tex_params(t_atomarray *aa, t_tex_param_info *tpinfo) {
+void jit_gl_vvisf_do_set_tex_params(t_hashtab_entry *e, t_tex_param_info *tpinfo) {
 	using namespace std;
 	using namespace VVISF;
 	t_jit_gl_vvisf *TI = tpinfo->targetInstance;
 	long argc;
 	t_atom *argv = NULL;
-	atomarray_getatoms(aa, &argc, &argv);
+	atomarray_getatoms((t_atomarray*)e->value, &argc, &argv);
 	
 #if defined(VVGL_SDK_WIN)
 	if (tpinfo->dev && tpinfo->ctx && wglGetCurrentContext() != tpinfo->ctx) {
@@ -874,8 +874,8 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		tpinfo.dev = NULL;
 		tpinfo.ctx = origCglCtx;
 #endif
-		linklist_funall(TI->pending_tex_params, (method)jit_gl_vvisf_do_set_tex_params, &tpinfo);
-		linklist_clear(TI->pending_tex_params);
+		hashtab_funall(TI->pending_tex_params, (method)jit_gl_vvisf_do_set_tex_params, &tpinfo);
+		object_free(TI->pending_tex_params);
 		TI->pending_tex_params = NULL;
 	}
 	//post("\trendering a frame...");

@@ -45,7 +45,7 @@ typedef struct _jit_gl_vvisf	{
 	void				*maxWrapperStruct;	//	weak ptr to t_max_jit_gl_vvisf struct that "wraps" my jitter object
 	
 	t_bool				pending_file_read;
-	t_linklist			*pending_tex_params;
+	t_hashtab			*pending_tex_params;
 } t_jit_gl_vvisf;
 
 //	init/constructor/free
