@@ -514,6 +514,18 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 	
 }
 
+bool jit_gl_vvisf_setup_jitter_texture(t_jit_gl_vvisf *targetInstance, t_symbol *texName) {
+	// our texture has to be bound in the new context before we can use it
+	// http://cycling74.com/forums/topic.php?id=29197
+	t_jit_gl_drawinfo			drawInfo;
+	if(jit_gl_drawinfo_setup(targetInstance, &drawInfo)) {
+		return false;
+	}
+	jit_gl_bindtexture(&drawInfo, texName, 0);
+	jit_gl_unbindtexture(&drawInfo, texName, 0);
+	return true;
+}
+
 void jit_gl_vvisf_do_set_tex_params(t_atomarray *aa, t_jit_gl_vvisf *targetInstance) {
 	using namespace std;
 	using namespace VVISF;
@@ -608,13 +620,6 @@ void jit_gl_vvisf_do_set_tex_params(t_atomarray *aa, t_jit_gl_vvisf *targetInsta
 						//clientTex = (t_jit_object*)jit_object_new(ps_jit_gl_texture, jit_attr_getsym(TI, ps_drawto_j));
 						clientTex = (t_jit_object*)jit_object_new(ps_jit_gl_texture, jit_attr_getsym(TI, ps_drawto_j));
 						if (clientTex != NULL)	{
-							t_symbol			*tmpName = jit_symbol_unique();
-							jit_attr_setsym(clientTex, _jit_sym_name, tmpName);
-							jit_attr_setsym(clientTex, gensym("defaultimage"), gensym("white"));
-							jit_attr_setlong(clientTex, gensym("rectangle"), 1);
-							jit_attr_setsym(clientTex, gensym("mode"), gensym("dynamic"));
-							jit_attr_setlong(clientTex, ps_flip_j, 0);
-							
 							//	add the client texture to the map
 							TI->inputToClientGLTexPtrMap->emplace(inputName, clientTex);
 							
@@ -628,57 +633,16 @@ void jit_gl_vvisf_do_set_tex_params(t_atomarray *aa, t_jit_gl_vvisf *targetInsta
 									TI->inputToHostTexNameMap->erase(inputName);
 								}
 							}
-							
-							//	we just created a gl texture- we have to bind it to this context before we can use it...
-							t_symbol			*context = jit_attr_getsym(TI, ps_drawto_j);
-							if (context == NULL)	{
-								post("jit.gl.isf: ERR: context NULL in %s",__func__);
-							}
-							else	{
-								jit_attr_setsym(clientTex, ps_drawto_j, context);
-								
-								t_jit_gl_drawinfo			drawInfo;
-								t_symbol			*texName = jit_attr_getsym(clientTex, gensym("name"));
-								if (texName == NULL)	{
-									post("jit.gl.isf: ERR: texName NULL in %s",__func__);
-								}
-								else	{
-									//	this crashes with jit.gl.world, but doesn't crash with jit.gl.videoplane.  i'd like to include it because without it, we get a white flash because that first frame doesn't get rendered.
-									
-									jit_gl_drawinfo_setup(targetInstance, &drawInfo);
-									jit_gl_bindtexture(&drawInfo, texName, 0);
-									jit_gl_unbindtexture(&drawInfo, texName, 0);
-									
-								}
-								
-							}
 						}
 					}
 					
 					if (clientTex != NULL)	{
 						//	pass the jitter matrix to our client gl texture
-						//post("\tsending argc of %d, first argv is %s",argc-2,jit_atom_getsym(argv+2)->s_name);
-						//post("\ttexture class name check is %s",jit_object_classname(clientTex)->s_name);
-						
-						//void			*jitMatObj = jit_object_findregistered(secondMsgSym);
-						//if (jitMatObj != NULL)	{
-						//	t_atom_long		tmpLongAttr = jit_attr_getlong(jitMatObj, ps_flip_j);
-						//	jit_attr_setlong(clientTex, ps_flip_j, tmpLongAttr);
-						//}
-						
-						t_jit_gl_drawinfo			drawInfo;
-						t_symbol			*texName = jit_attr_getsym(clientTex, gensym("name"));
-						jit_gl_drawinfo_setup(targetInstance, &drawInfo);
-						jit_gl_bindtexture(&drawInfo, texName, 0);
-						
 						jit_object_method(clientTex, jit_atom_getsym(argv+1), jit_atom_getsym(argv+1), argc-2, argv+2);
 						
-						jit_gl_unbindtexture(&drawInfo, texName, 0);
-						
 						//	get the name of our client texture, pass it to the renderer, which will "wrap" it in a GLBufferRef from the appropriate pool/GL version to render
-						t_symbol			*clientTexSym = jit_attr_getsym(clientTex, gensym("name"));
 						//GLBufferRef			wrapperTex = (clientTexSym==NULL) ? NULL : renderer->applyJitGLTexToInputKey(clientTexSym, inputName);
-						MyBufferRef			wrapperTex = (clientTexSym==NULL) ? NULL : jit_gl_vvisf_apply_jit_tex_for_input_key(TI, clientTexSym, inputName);
+						MyBufferRef			wrapperTex = jit_gl_vvisf_apply_jit_tex_for_input_key(TI, jit_attr_getsym(clientTex, _jit_sym_name), inputName);
 						//	if this was the input image, we need to update the target instance's last adapt dims, so we know what res to render at next time we're told to do so
 						if (inputName == string("inputImage") && wrapperTex != nullptr)	{
 							TI->lastAdaptDims[0] = wrapperTex->size().width;
@@ -907,17 +871,19 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 	if (renderSize != tmpSize && TI->outputTexObj != NULL)	{
 		//	first update the texture's size attr
 		jit_attr_setlong_array(TI->outputTexObj, _jit_sym_dim, 2, renderSizeAtoms);
-		
-		// our texture has to be bound in the new context before we can use it
-		// http://cycling74.com/forums/topic.php?id=29197
-		t_jit_gl_drawinfo			drawInfo;
-		t_symbol			*texName = jit_attr_getsym(TI->outputTexObj, gensym("name"));
-		if (texName == NULL)
-			post("jit.gl.isf: ERR: texName NULL in %s",__func__);
-		else	{
-			jit_gl_drawinfo_setup(targetInstance, &drawInfo);
-			jit_gl_bindtexture(&drawInfo, texName, 0);
-			jit_gl_unbindtexture(&drawInfo, texName, 0);
+		//	restore the original GL context
+#if defined(VVGL_SDK_WIN)
+		if (origDevCtx && origGLCtx && wglGetCurrentContext() != origGLCtx) {
+			wglMakeCurrent(origDevCtx, origGLCtx);
+		}
+#elif defined(VVGL_SDK_MAC)
+		if (origCglCtx && origCglCtx != CGLGetCurrentContext())	{
+			CGLSetCurrentContext(origCglCtx);
+		}
+#endif
+		if(!jit_gl_vvisf_setup_jitter_texture(targetInstance, jit_attr_getsym(TI->outputTexObj, _jit_sym_name))) {
+			jit_object_error((t_object*)targetInstance, (char*)"failed to setup output texture");
+			return JIT_ERR_INVALID_PTR;
 		}
 	}
 	
@@ -1216,7 +1182,7 @@ MyBufferRef jit_gl_vvisf_apply_jit_tex_for_input_key(t_jit_gl_vvisf *targetInsta
 		//	retrieve the actual jitter texture for the passed texture name, query its basic properties
 		void				*jitTexture = jit_object_findregistered(static_cast<t_symbol*>(inJitGLTexNameSym));
 		if (jitTexture == NULL) {
-			post("jit.gl.isf: ERR: cant find jitter object registered for %s", static_cast<t_symbol*>(inJitGLTexNameSym)->s_name);
+			jit_object_error((t_object*)targetInstance, (char*)"cant find jitter object registered for %s", static_cast<t_symbol*>(inJitGLTexNameSym)->s_name);
 		}
 		else {
 			//GLuint width = jit_attr_getlong(texture,ps_width);
@@ -1231,14 +1197,14 @@ MyBufferRef jit_gl_vvisf_apply_jit_tex_for_input_key(t_jit_gl_vvisf *targetInsta
 			//post("texture is %p, class name check is %s",jitTexture,tmpClassName->s_name);
 			
 			// ensure jitter-texture is properly initialized and submitted
-			t_jit_gl_drawinfo drawInfo;
-			jit_gl_drawinfo_setup(targetInstance, &drawInfo);
-			jit_gl_bindtexture(&drawInfo, inJitGLTexNameSym, 0);
-			jit_gl_unbindtexture(&drawInfo, inJitGLTexNameSym, 0);
+			if(!jit_gl_vvisf_setup_jitter_texture(targetInstance, inJitGLTexNameSym)) {
+				jit_object_error((t_object*)targetInstance, (char*)"failed to setup texture %s", static_cast<t_symbol*>(inJitGLTexNameSym)->s_name);
+				return nullptr;
+			}
 
 			uint32_t			texName = jit_attr_getlong(jitTexture, ps_glid_j);
 			if(!texName) {
-				post("jit.gl.isf: ERR: cant bind texture registered for %s", static_cast<t_symbol*>(inJitGLTexNameSym)->s_name);
+				jit_object_error((t_object*)targetInstance, (char*)"cant bind texture %s", static_cast<t_symbol*>(inJitGLTexNameSym)->s_name);
 				return nullptr;
 			}
 			
