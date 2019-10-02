@@ -74,8 +74,9 @@ t_jit_err jit_gl_vvisf_drawto(t_jit_gl_vvisf *targetInstance, t_symbol *s, int a
 //attributes
 t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv);
 
-// @out_tex_sym for output...
-t_jit_err jit_gl_vvisf_getattr_out_tex_sym(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av);
+// @out_name for output...
+t_jit_err jit_gl_vvisf_setattr_out_name(t_jit_gl_vvisf *targetInstance, void *attr, long ac, t_atom *av);
+t_jit_err jit_gl_vvisf_getattr_out_name(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av);
 
 // dim
 t_jit_err jit_gl_vvisf_getattr_adapt(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av);

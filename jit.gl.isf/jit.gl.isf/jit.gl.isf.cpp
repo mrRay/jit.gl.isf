@@ -163,6 +163,7 @@ t_jit_err jit_gl_vvisf_init(void)	{
 		0/*fix*/,
 		calcoffset(t_jit_gl_vvisf,dim));
 	jit_class_addattr(_jit_gl_vvisf_class, attr);	
+	object_addattr_parse(attr,"label",_jit_sym_symbol,0,"Dimensions");
 	
 	attr = (t_jit_object*)jit_object_new(
 		_jit_sym_jit_attr_offset,
@@ -173,17 +174,18 @@ t_jit_err jit_gl_vvisf_init(void)	{
 		jit_gl_vvisf_setattr_file,
 		calcoffset(t_jit_gl_vvisf, file)); 
 	jit_class_addattr(_jit_gl_vvisf_class, attr);
+	object_addattr_parse(attr,"label",_jit_sym_symbol,0,"File");
 	
-	attrflags = JIT_ATTR_GET_DEFER_LOW | JIT_ATTR_SET_OPAQUE_USER | JIT_ATTR_GET_OPAQUE_USER;
 	attr = (t_jit_object*)jit_object_new(
 		_jit_sym_jit_attr_offset,
-		"out_tex_sym",
+		"out_name",
 		_jit_sym_symbol,
-		attrflags,
-		(method)jit_gl_vvisf_getattr_out_tex_sym,
+		(method)jit_gl_vvisf_setattr_out_name,
+		(method)jit_gl_vvisf_getattr_out_name,
 		(method)0L,
 		0);	
 	jit_class_addattr(_jit_gl_vvisf_class,attr);
+	object_addattr_parse(attr,"label",_jit_sym_symbol,0,"\"Output Texture Name\"");
 	
 	//attr = (t_jit_object*)jit_object_new(
 	//	_jit_sym_jit_attr_offset,
@@ -1143,23 +1145,14 @@ t_bool jit_gl_vvisf_do_set_file(t_jit_gl_vvisf* targetInstance) {
 	return success;
 }
 
-											  
-t_jit_err jit_gl_vvisf_getattr_out_tex_sym(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av)	{
-	//post("%s",__func__);
-	if ((*ac) && (*av))	{
-		//	memory passed in, use it
-	}
-	else	{
-		//	otherwise allocate memory
-		*ac = 1;
-		if (!(*av = (atom*)jit_getbytes(sizeof(t_atom)*(*ac)))) {
-			*ac = 0;
-			return JIT_ERR_OUT_OF_MEM;
-		}
-	}
-	
-	jit_atom_setsym(*av, jit_attr_getsym(TI->outputTexObj, _jit_sym_name));
-	
+
+t_jit_err jit_gl_vvisf_setattr_out_name(t_jit_gl_vvisf *targetInstance, void *attr, long ac, t_atom *av)	{
+	object_attr_setvalueof(TI->outputTexObj, _jit_sym_name, ac, av);
+	return JIT_ERR_NONE;
+}
+
+t_jit_err jit_gl_vvisf_getattr_out_name(t_jit_gl_vvisf *targetInstance, void *attr, long *ac, t_atom **av)	{
+	object_attr_getvalueof(TI->outputTexObj, _jit_sym_name, ac, av);
 	return JIT_ERR_NONE;
 }											  
 

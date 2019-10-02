@@ -36,7 +36,7 @@ t_class				*max_jit_gl_vvisf_class;
 t_symbol			*ps_jit_gl_texture;
 t_symbol			*ps_jit_matrix;
 t_symbol			*ps_draw;
-t_symbol			*ps_out_tex_sym;
+t_symbol			*ps_out_name;
 t_symbol			*ps_file;
 t_symbol			*ps_clear;
 t_symbol			*ps_done;
@@ -81,7 +81,7 @@ int C74_EXPORT main(void)
 	ps_jit_gl_texture = gensym("jit_gl_texture");
 	ps_jit_matrix = gensym("jit_matrix");
 	ps_draw = gensym("draw");
-	ps_out_tex_sym = gensym("out_tex_sym");
+	ps_out_name = gensym("out_name");
 	ps_file = gensym("file");
 	ps_clear = gensym("clear");
 	ps_done = gensym("done");
@@ -894,7 +894,7 @@ void max_jit_gl_vvisf_draw(t_max_jit_gl_vvisf *x, t_symbol *s, long argc, t_atom
 	jit_object_method(jitob, s, s, argc, argv);
 	
 	// query the texture name and send out the texture output 
-	jit_atom_setsym(&a, jit_attr_getsym(jitob, ps_out_tex_sym));
+	jit_atom_setsym(&a, jit_attr_getsym(jitob, ps_out_name));
 	
 	outlet_anything(x->texout, ps_jit_gl_texture, 1, &a);
 }
