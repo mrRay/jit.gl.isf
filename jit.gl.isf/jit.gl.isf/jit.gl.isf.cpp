@@ -526,13 +526,30 @@ bool jit_gl_vvisf_setup_jitter_texture(t_jit_gl_vvisf *targetInstance, t_symbol 
 	return true;
 }
 
-void jit_gl_vvisf_do_set_tex_params(t_atomarray *aa, t_jit_gl_vvisf *targetInstance) {
+typedef struct _tex_param_info {
+	t_jit_gl_vvisf 	*targetInstance;
+	void			*ctx;
+	void			*dev;
+}t_tex_param_info;
+
+void jit_gl_vvisf_do_set_tex_params(t_atomarray *aa, t_tex_param_info *tpinfo) {
 	using namespace std;
 	using namespace VVISF;
+	t_jit_gl_vvisf *TI = tpinfo->targetInstance;
 	long argc;
 	t_atom *argv = NULL;
 	atomarray_getatoms(aa, &argc, &argv);
 	
+#if defined(VVGL_SDK_WIN)
+	if (tpinfo->dev && tpinfo->ctx && wglGetCurrentContext() != tpinfo->ctx) {
+		wglMakeCurrent((HDC)tpinfo->dev, (HGLRC)tpinfo->ctx);
+	}
+#elif defined(VVGL_SDK_MAC)
+	if (tpinfo->ctx && tpinfo->ctx != CGLGetCurrentContext())	{
+		CGLSetCurrentContext((CGLContextObj)tpinfo->ctx);
+	}
+#endif
+
 	if(argc == 3 && argv) {
 		t_atom				*inputNameAtom = argv;
 		string				inputName = string( (char*)jit_atom_getsym(inputNameAtom)->s_name );
@@ -848,7 +865,16 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 	
 	// process any texture params received since last drawcall
 	if(TI->pending_tex_params) {
-		linklist_funall(TI->pending_tex_params, (method)jit_gl_vvisf_do_set_tex_params, TI);
+		t_tex_param_info tpinfo;
+		tpinfo.targetInstance = TI;
+#if defined(VVGL_SDK_WIN)
+		tpinfo.dev = origDevCtx;
+		tpinfo.ctx = origGLCtx;
+#elif defined(VVGL_SDK_MAC)
+		tpinfo.dev = NULL;
+		tpinfo.ctx = origCglCtx;
+#endif
+		linklist_funall(TI->pending_tex_params, (method)jit_gl_vvisf_do_set_tex_params, &tpinfo);
 		linklist_clear(TI->pending_tex_params);
 		TI->pending_tex_params = NULL;
 	}
