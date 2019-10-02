@@ -527,9 +527,8 @@ bool jit_gl_vvisf_setup_jitter_texture(t_jit_gl_vvisf *targetInstance, t_symbol 
 }
 
 typedef struct _tex_param_info {
-	t_jit_gl_vvisf 	*targetInstance;
-	void			*ctx;
-	void			*dev;
+	t_jit_gl_vvisf 		*targetInstance;
+	t_jit_gl_context	ctx;
 }t_tex_param_info;
 
 void jit_gl_vvisf_do_set_tex_params(t_hashtab_entry *e, t_tex_param_info *tpinfo) {
@@ -540,15 +539,7 @@ void jit_gl_vvisf_do_set_tex_params(t_hashtab_entry *e, t_tex_param_info *tpinfo
 	t_atom *argv = NULL;
 	atomarray_getatoms((t_atomarray*)e->value, &argc, &argv);
 	
-#if defined(VVGL_SDK_WIN)
-	if (tpinfo->dev && tpinfo->ctx && wglGetCurrentContext() != tpinfo->ctx) {
-		wglMakeCurrent((HDC)tpinfo->dev, (HGLRC)tpinfo->ctx);
-	}
-#elif defined(VVGL_SDK_MAC)
-	if (tpinfo->ctx && tpinfo->ctx != CGLGetCurrentContext())	{
-		CGLSetCurrentContext((CGLContextObj)tpinfo->ctx);
-	}
-#endif
+	jit_gl_set_context(tpinfo->ctx);
 
 	if(argc == 3 && argv) {
 		t_atom				*inputNameAtom = argv;
@@ -848,7 +839,13 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		}
 		TI->pending_file_read = 0;
 	}
-
+	
+	t_jit_gl_context ctx = jit_gl_get_context();
+	if(!ctx) {
+		jit_object_error((t_object*)targetInstance, (char*)"no context!");
+		return JIT_ERR_GENERIC;
+	}
+	
 	//	get the host context, use that to retrieve the cache item which holds the shared contexts, buffer pools, and buffer copiers
 #if defined(VVGL_SDK_WIN)
 	HGLRC				origGLCtx = wglGetCurrentContext();
@@ -867,13 +864,7 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 	if(TI->pending_tex_params) {
 		t_tex_param_info tpinfo;
 		tpinfo.targetInstance = TI;
-#if defined(VVGL_SDK_WIN)
-		tpinfo.dev = origDevCtx;
-		tpinfo.ctx = origGLCtx;
-#elif defined(VVGL_SDK_MAC)
-		tpinfo.dev = NULL;
-		tpinfo.ctx = origCglCtx;
-#endif
+		tpinfo.ctx = ctx;
 		hashtab_funall(TI->pending_tex_params, (method)jit_gl_vvisf_do_set_tex_params, &tpinfo);
 		object_free(TI->pending_tex_params);
 		TI->pending_tex_params = NULL;
@@ -898,15 +889,7 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 		//	first update the texture's size attr
 		jit_attr_setlong_array(TI->outputTexObj, _jit_sym_dim, 2, renderSizeAtoms);
 		//	restore the original GL context
-#if defined(VVGL_SDK_WIN)
-		if (origDevCtx && origGLCtx && wglGetCurrentContext() != origGLCtx) {
-			wglMakeCurrent(origDevCtx, origGLCtx);
-		}
-#elif defined(VVGL_SDK_MAC)
-		if (origCglCtx && origCglCtx != CGLGetCurrentContext())	{
-			CGLSetCurrentContext(origCglCtx);
-		}
-#endif
+		jit_gl_set_context(ctx);
 		if(!jit_gl_vvisf_setup_jitter_texture(targetInstance, jit_attr_getsym(TI->outputTexObj, _jit_sym_name))) {
 			jit_object_error((t_object*)targetInstance, (char*)"failed to setup output texture");
 			return JIT_ERR_INVALID_PTR;
@@ -937,15 +920,7 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 	jit_attr_setlong(TI->outputTexObj, ps_flip_j, (wrapperTex->flipped())?1:0);
 	
 	//	restore the original GL context
-#if defined(VVGL_SDK_WIN)
-	if (origDevCtx != NULL && origGLCtx != NULL) {
-		wglMakeCurrent(origDevCtx, origGLCtx);
-	}
-#elif defined(VVGL_SDK_MAC)
-	if (origCglCtx != NULL)	{
-		CGLSetCurrentContext(origCglCtx);
-	}
-#endif
+	jit_gl_set_context(ctx);
 	
 	//	publish the texture
 	t_max_jit_gl_vvisf		*mws = (t_max_jit_gl_vvisf*)TI->maxWrapperStruct;
