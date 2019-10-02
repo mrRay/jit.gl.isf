@@ -214,7 +214,6 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 		TI->pending_tex_params = NULL;
 
 		TI->adapt = 1;
-		TI->creationName = dest_name;
 		
 		TI->renderTimeOverride = -1.0;
 		
@@ -607,7 +606,7 @@ void jit_gl_vvisf_do_set_tex_params(t_atomarray *aa, t_jit_gl_vvisf *targetInsta
 					if (clientTex == NULL)	{
 						//	make a client texture, set it up
 						//clientTex = (t_jit_object*)jit_object_new(ps_jit_gl_texture, jit_attr_getsym(TI, ps_drawto_j));
-						clientTex = (t_jit_object*)jit_object_new(ps_jit_gl_texture, TI->creationName);
+						clientTex = (t_jit_object*)jit_object_new(ps_jit_gl_texture, jit_attr_getsym(TI, ps_drawto_j));
 						if (clientTex != NULL)	{
 							t_symbol			*tmpName = jit_symbol_unique();
 							jit_attr_setsym(clientTex, _jit_sym_name, tmpName);
@@ -835,30 +834,7 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 	
 	//	get the jit.gl.texture object we render into for output
 	if (TI->outputTexObj != NULL)	{
-		t_symbol			*context = jit_attr_getsym(targetInstance, ps_drawto_j);
-		if (context == NULL)	{
-			post("jit.gl.isf: ERR: context NULL in %s",__func__);
-		}
-		else	{
-			jit_attr_setsym(TI->outputTexObj, ps_drawto_j, context);
-			
-			// our texture has to be bound in the new context before we can use it
-			// http://cycling74.com/forums/topic.php?id=29197
-			//t_jit_gl_drawinfo			drawInfo;
-			t_symbol			*texName = jit_attr_getsym(TI->outputTexObj, gensym("name"));
-			if (texName == NULL)	{
-				post("jit.gl.isf: ERR: texName NULL in %s",__func__);
-			}
-			else	{
-				//	this crashes with jit.gl.world, but doesn't crash with jit.gl.videoplane.  i'd like to include it because without it, we get a white flash because that first frame doesn't get rendered.
-				
-				//jit_gl_drawinfo_setup(targetInstance, &drawInfo);
-				//jit_gl_bindtexture(&drawInfo, texName, 0);
-				//jit_gl_unbindtexture(&drawInfo, texName, 0);
-				
-			}
-			
-		}
+		jit_attr_setsym(TI->outputTexObj, ps_drawto_j, jit_attr_getsym(targetInstance, ps_drawto_j));
 	}
 	else
 		post("jit.gl.isf: ERR: outputTexObj null in %s",__func__);
@@ -875,16 +851,6 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
 #pragma mark -
 #pragma mark Draw
 
-t_jit_err jit_gl_vvisf_drawto(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv)	{
-	//post("%s",__func__);
-	/*
-	object_attr_setvalueof(TI->outputTexObj, s, argc, argv);	
-	jit_ob3d_dest_name_set((t_jit_object *)targetInstance, NULL, argc, argv);
-	*/
-	
-	return JIT_ERR_NONE;
-}
-
 /*
 static VVGL::Timestamp			nowStamp = VVGL::Timestamp();
 */
@@ -897,7 +863,7 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 	
 	if (TI->pending_file_read) {
 		if (!jit_gl_vvisf_do_set_file(TI)) {
-			jit_object_error((t_object*)targetInstance, (char*)"jit.gl.isf: ERR: shader would not compile! (%s)", TI->file->s_name);
+			jit_object_error((t_object*)targetInstance, (char*)"shader would not compile! (%s)", TI->file->s_name);
 		}
 		TI->pending_file_read = 0;
 	}

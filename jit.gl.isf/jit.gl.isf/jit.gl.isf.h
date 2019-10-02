@@ -39,8 +39,6 @@ typedef struct _jit_gl_vvisf	{
 	//	key is string of attribute name, value is a ptr to the jit_gl_texture object allocated and owned by this object.  THIS OBJECT ALLOCATES AND OWNS AND MUST DELETE ALL OF THE JIT_GL_TEXTURE OBJECTS OWNED BY THIS MAP!
 	std::map<std::string,t_jit_object*>		*inputToClientGLTexPtrMap;
 	
-	t_symbol			*creationName;	//	the symbol passed on instance creation
-	
 	// internal jit.gl.texture object
 	t_jit_object		*outputTexObj;
 	
@@ -69,7 +67,6 @@ t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance);
 
 //	draw;
 t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance);
-t_jit_err jit_gl_vvisf_drawto(t_jit_gl_vvisf *targetInstance, t_symbol *s, int argc, t_atom *argv);
 
 //attributes
 t_jit_err jit_gl_vvisf_setattr_file(t_jit_gl_vvisf *targetInstance, void *attr, long argc, t_atom *argv);
