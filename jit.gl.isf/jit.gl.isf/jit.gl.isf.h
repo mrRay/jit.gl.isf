@@ -46,6 +46,7 @@ typedef struct _jit_gl_vvisf	{
 	
 	t_bool				pending_file_read;
 	t_hashtab			*pending_tex_params;
+	t_hashtab			*pending_params;
 } t_jit_gl_vvisf;
 
 //	init/constructor/free

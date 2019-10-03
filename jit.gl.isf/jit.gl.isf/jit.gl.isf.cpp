@@ -216,6 +216,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 		TI->isfRenderer = new ISFRenderer(/*targetInstance*/);
 		TI->pending_file_read = 0;
 		TI->pending_tex_params = NULL;
+		TI->pending_params = NULL;
 
 		TI->adapt = 1;
 		
@@ -324,6 +325,9 @@ void jit_gl_vvisf_free(t_jit_gl_vvisf *targetInstance)	{
 	
 	if(TI->pending_tex_params)
 		object_free(TI->pending_tex_params);
+	if(TI->pending_params)
+		object_free(TI->pending_params);
+
 }
 
 
@@ -343,8 +347,16 @@ void jit_gl_vvisf_setParamValue(t_jit_gl_vvisf *targetInstance, t_symbol *s, int
 
 	//post("%s, argc is %d",__func__,argc);
 	
-	if (argv == NULL)
+	if (argv == NULL || atom_gettype(argv) != A_SYM)
 		return;
+	
+	if(!TI->isfRenderer->isFileLoaded()) {
+		//post("jit.gl.isf: file not yet loaded");
+		if(!TI->pending_params)
+			TI->pending_params = hashtab_new(11);
+		hashtab_store(TI->pending_params, atom_getsym(argv), (t_object*)atomarray_new(argc, argv));
+		return;
+	}
 	
 	//	's' would ordinarily be the message/method name, but in this case it's the name of the input
 	t_atom				*inputNameAtom = argv;
@@ -534,6 +546,14 @@ typedef struct _tex_param_info {
 	t_jit_gl_vvisf 		*targetInstance;
 	t_jit_gl_context	ctx;
 }t_tex_param_info;
+
+void jit_gl_vvisf_do_set_params(t_hashtab_entry *e, t_tex_param_info *tpinfo) {
+	long argc;
+	t_atom *argv = NULL;
+	atomarray_getatoms((t_atomarray*)e->value, &argc, &argv);
+	jit_gl_set_context(tpinfo->ctx);
+	jit_gl_vvisf_setParamValue(tpinfo->targetInstance, gensym("param"), argc, argv);
+}
 
 void jit_gl_vvisf_do_set_tex_params(t_hashtab_entry *e, t_tex_param_info *tpinfo) {
 	using namespace std;
@@ -864,6 +884,16 @@ t_jit_err jit_gl_vvisf_draw(t_jit_gl_vvisf *targetInstance)	{
 	CGLContextObj		origCglCtx = CGLGetCurrentContext();
 	VVGLContextCacheItemRef		cacheItem = GetCacheItemForContext(origCglCtx);
 #endif
+
+	// process any general params received prior to completion of file load
+	if(TI->pending_params) {
+		t_tex_param_info tpinfo;
+		tpinfo.targetInstance = TI;
+		tpinfo.ctx = ctx;
+		hashtab_funall(TI->pending_params, (method)jit_gl_vvisf_do_set_params, &tpinfo);
+		object_free(TI->pending_params);
+		TI->pending_params = NULL;
+	}
 	
 	// process any texture params received since last drawcall
 	if(TI->pending_tex_params) {
