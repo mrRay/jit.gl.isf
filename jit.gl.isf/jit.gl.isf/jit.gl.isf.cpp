@@ -3,6 +3,8 @@
 
 #include "max.jit.gl.isf.h"
 
+#include "ext_preferences.h"
+
 #include "VVGLContextCacheItem.hpp"
 
 //#include "VVGL_Geom.hpp"
@@ -37,6 +39,7 @@ t_symbol			*ps_free_j;
 t_symbol			*ps_jit_gl_texture_j;
 t_symbol			*ps_gltarget_j;
 
+static bool isGL3 = false;
 
 
 
@@ -199,6 +202,7 @@ t_jit_err jit_gl_vvisf_init(void)	{
 	
 	jit_class_register(_jit_gl_vvisf_class);
 
+	isGL3 = (preferences_getsym("glengine") == gensym("gl3"));
 	return JIT_ERR_NONE;
 }
 
@@ -559,7 +563,7 @@ void jit_gl_vvisf_do_set_tex_params(t_hashtab_entry *e, t_tex_param_info *tpinfo
 			if (firstMsgSym != NULL && secondMsgSym != NULL)	{
 				
 				//	if this is a jitter gl texture...
-				if (firstMsgSym == ps_jit_gl_texture)	{
+				/*if (firstMsgSym == ps_jit_gl_texture)	{
 					
 					//	the second msg sym is the name of the incoming jitter texture.  check to see if we're already registered as an observer
 					bool				alreadyRegistered = false;
@@ -611,7 +615,7 @@ void jit_gl_vvisf_do_set_tex_params(t_hashtab_entry *e, t_tex_param_info *tpinfo
 					}
 				}
 				//	else if this is a jitter matrix (CPU-based)...
-				else if (firstMsgSym == ps_jit_matrix)	{
+				else if (firstMsgSym == ps_jit_matrix)	{*/
 					//post("input named %s rxed a jitter matrix",inputName.c_str());
 					
 					//	try to get an existing client texture for the input name
@@ -645,6 +649,7 @@ void jit_gl_vvisf_do_set_tex_params(t_hashtab_entry *e, t_tex_param_info *tpinfo
 					}
 					
 					if (clientTex != NULL)	{
+						jit_attr_setlong(clientTex, ps_flip_j, firstMsgSym == ps_jit_matrix || isGL3 ? 0 : 1);
 						//	pass the jitter matrix to our client gl texture
 						jit_object_method(clientTex, jit_atom_getsym(argv+1), jit_atom_getsym(argv+1), argc-2, argv+2);
 						
@@ -660,7 +665,7 @@ void jit_gl_vvisf_do_set_tex_params(t_hashtab_entry *e, t_tex_param_info *tpinfo
 					}
 					else
 						post("jit.gl.isf: ERR: clientTex NULL in %s",__func__);
-				}
+				//}
 				
 			}
 			else
@@ -760,7 +765,7 @@ t_jit_err jit_gl_vvisf_dest_closing(t_jit_gl_vvisf *targetInstance)	{
 }
 
 t_jit_err jit_gl_vvisf_dest_changed(t_jit_gl_vvisf *targetInstance)	{
-	std::cout << __PRETTY_FUNCTION__ << std::endl;
+	//std::cout << __PRETTY_FUNCTION__ << std::endl;
 	
 	
 #if defined(VVGL_SDK_WIN)
