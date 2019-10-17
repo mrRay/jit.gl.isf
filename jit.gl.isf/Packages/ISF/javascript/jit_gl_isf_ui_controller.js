@@ -134,7 +134,7 @@ function type(inType)	{
 		//	connect the string umenu to the int umenu
 		this.patcher.hiddenconnect(stringMenu, 0, intMenu, 0);
 		//	connect the int umenu to the param set msg
-		this.patcher.hiddenconnect(intMenu, 1, msgToOut, 0);
+		//this.patcher.hiddenconnect(intMenu, 1, msgToOut, 0);
 		//	connect the param set msg to the outlet
 		this.patcher.hiddenconnect(msgToOut, 0, this.patcher.getnamed("OUTLET"), 0);
 		//	hide all the items i want hidden!
@@ -278,6 +278,14 @@ function type(inType)	{
 		var pattr = this.patcher.newdefault(0, 0,"pattr", myName+"_pattr", items[0].varname);
 		pattr.hidden = true;
 		items.push(pattr);
+		if(myType == "long") {
+			items[1].message("parameter_enable", 1);
+			items[1].message("_parameter_longname", myName);
+			items[1].message("_parameter_shortname", myName);
+			pattr = this.patcher.newdefault(0, 0,"pattr", myName+"_pattr_2", items[1].varname);
+			pattr.hidden = true;
+			items.push(pattr);
+		}
 	}
 }
 
@@ -427,6 +435,8 @@ function values()	{
 	if (myType != "long" || args.length < 1)
 		return;
 	
+	this.patcher.hiddenconnect(items[2], 1, items[3], 0);
+
 	//	hide the number object
 	items[0].hidden = true;
 	//	show the string menu and int menu

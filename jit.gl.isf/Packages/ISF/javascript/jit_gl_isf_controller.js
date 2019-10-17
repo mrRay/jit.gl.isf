@@ -31,7 +31,17 @@ var			inputMin = null;
 var			inputMax = null;
 
 
+function init() {
+	this.patcher.apply(addbpatchers);
+}
 
+function addbpatchers(b) {
+	if(b.maxclass === "patcher") {
+		//post(b.varname);post();	
+		bpatchers.push(b);
+	}
+	return true;	
+}
 
 function anything()	{
 	var			a = arrayfromargs(messagename, arguments);
