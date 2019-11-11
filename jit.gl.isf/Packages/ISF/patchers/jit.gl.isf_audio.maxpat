@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 1,
-			"revision" : 0,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -39,12 +39,116 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"hidden" : 1,
+					"id" : "obj-40",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 875.0, 426.0, 54.0, 22.0 ],
+					"text" : "onecopy"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontface" : 1,
+					"fontname" : "Arial",
+					"fontsize" : 18.0,
+					"id" : "obj-39",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 52.121097564697266, 385.5, 121.0, 27.0 ],
+					"text" : "Select an ISF",
+					"textcolor" : [ 0.545098039215686, 0.545098039215686, 0.545098039215686, 1.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"bgmode" : 0,
+					"border" : 0,
+					"clickthrough" : 0,
+					"enablehscroll" : 0,
+					"enablevscroll" : 0,
+					"id" : "obj-20",
+					"lockeddragscroll" : 0,
+					"maxclass" : "bpatcher",
+					"name" : "demosound.maxpat",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"offset" : [ 0.0, 0.0 ],
+					"outlettype" : [ "signal" ],
+					"patching_rect" : [ 240.462120056152344, 412.93212890625, 221.0, 93.861877882812678 ],
+					"viewvisibility" : 1
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-7",
+					"linecount" : 2,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 11.371124267578125, 274.861877882812678, 363.0, 33.0 ],
+					"text" : "These examples convert audio to video streams both directly and after performing an FFT analysis."
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-14",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 11.371124267578125, 238.861877882812678, 365.0, 20.0 ],
+					"text" : "ISF can be used to create audio reactive and visualization shaders."
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-29",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 103.121097564697266, 437.93212890625, 49.0, 22.0 ],
+					"text" : "read $1"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"bgfillcolor_angle" : 270.0,
+					"bgfillcolor_autogradient" : 0,
+					"bgfillcolor_color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
+					"bgfillcolor_color1" : [ 0.886424, 0.275073, 0.287164, 1.0 ],
+					"bgfillcolor_color2" : [ 0.263682, 0.004541, 0.038797, 1.0 ],
+					"bgfillcolor_proportion" : 0.39,
+					"bgfillcolor_type" : "gradient",
+					"color" : [ 0.784314, 0.145098, 0.023529, 1.0 ],
+					"elementcolor" : [ 0.784314, 0.145098, 0.023529, 1.0 ],
+					"id" : "obj-15",
+					"items" : [ "FFT Color Lines", ",", "FFT Filled Waveform", ",", "FFT Spectrogram", ",", "Radial Spectrogram" ],
+					"maxclass" : "umenu",
+					"numinlets" : 1,
+					"numoutlets" : 3,
+					"outlettype" : [ "int", "", "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 44.613483428955078, 412.93212890625, 136.015228271484375, 22.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-21",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 157.621097564697266, 635.17938232421875, 44.0, 22.0 ],
-					"text" : "s draw"
+					"patching_rect" : [ 64.121097564697266, 622.17938232421875, 80.0, 22.0 ],
+					"text" : "s draw_audio"
 				}
 
 			}
@@ -55,7 +159,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 352.859886169433594, 559.17938232421875, 70.0, 22.0 ],
+					"patching_rect" : [ 313.962120056152344, 575.17938232421875, 74.0, 22.0 ],
 					"text" : "loadmess 1"
 				}
 
@@ -63,22 +167,24 @@
 , 			{
 				"box" : 				{
 					"id" : "obj-1",
+					"local" : 1,
 					"maxclass" : "ezdac~",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 352.859886169433594, 583.17938232421875, 45.0, 45.0 ]
+					"patching_rect" : [ 313.962120056152344, 599.17938232421875, 45.0, 45.0 ]
 				}
 
 			}
 , 			{
 				"box" : 				{
+					"bubble" : 1,
 					"id" : "obj-23",
 					"linecount" : 3,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 304.462120056152344, 460.93212890625, 193.499946594238281, 47.0 ],
-					"text" : "- creates video stream from audio\n- creates video stream of FFT run on audio",
+					"patching_rect" : [ 352.859886169433594, 504.93212890625, 157.499946594238281, 51.0 ],
+					"text" : "Double click to see how audio input is translated into video for use by ISF",
 					"textcolor" : [ 0.545098039215686, 0.545098039215686, 0.545098039215686, 1.0 ]
 				}
 
@@ -92,7 +198,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 304.462120056152344, 426.93212890625, 166.7955322265625, 27.0 ],
+					"patching_rect" : [ 240.462120056152344, 385.5, 166.7955322265625, 27.0 ],
 					"text" : "Audio Processing",
 					"textcolor" : [ 0.545098039215686, 0.545098039215686, 0.545098039215686, 1.0 ]
 				}
@@ -102,14 +208,14 @@
 				"box" : 				{
 					"id" : "obj-3",
 					"maxclass" : "newobj",
-					"numinlets" : 0,
+					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 1,
-							"revision" : 0,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -144,11 +250,82 @@
 						"subpatcher_template" : "",
 						"boxes" : [ 							{
 								"box" : 								{
+									"id" : "obj-30",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 55.5, 492.5, 85.0, 22.0 ],
+									"text" : "s ToISF_audio"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-44",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 55.5, 446.0, 122.0, 22.0 ],
+									"text" : "param fftImage $1 $2"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-45",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 494.0, 446.0, 141.0, 22.0 ],
+									"text" : "param waveImage $1 $2"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-8",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 61.5, 86.0, 264.0, 20.0 ],
+									"presentation_linecount" : 2,
+									"text" : "This creates a video stream of FFT run on audio"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-7",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 513.0, 108.0, 219.0, 20.0 ],
+									"text" : "This creates a video stream from audio"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"comment" : "",
+									"id" : "obj-5",
+									"index" : 1,
+									"maxclass" : "inlet",
+									"numinlets" : 0,
+									"numoutlets" : 1,
+									"outlettype" : [ "signal" ],
+									"patching_rect" : [ 55.0, 9.0, 30.0, 30.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"id" : "obj-3",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 647.0, 109.0, 152.0, 20.0 ],
+									"patching_rect" : [ 326.5, 138.0, 152.0, 20.0 ],
 									"text" : "wait 1 frame for IFT to load"
 								}
 
@@ -160,7 +337,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "bang", "bang" ],
-									"patching_rect" : [ 603.0, 132.0, 65.0, 22.0 ],
+									"patching_rect" : [ 260.5, 138.0, 65.0, 22.0 ],
 									"text" : "onebang 1"
 								}
 
@@ -172,8 +349,8 @@
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 603.0, 108.0, 42.0, 22.0 ],
-									"text" : "r draw"
+									"patching_rect" : [ 260.5, 114.0, 78.0, 22.0 ],
+									"text" : "r draw_audio"
 								}
 
 							}
@@ -186,17 +363,6 @@
 									"outlettype" : [ "jit_matrix", "" ],
 									"patching_rect" : [ 55.5, 344.0, 136.0, 22.0 ],
 									"text" : "jit.matrix 1 float32 256 1"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-40",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 55.5, 474.0, 137.0, 22.0 ],
-									"text" : "s msgsToISFInlet_audio"
 								}
 
 							}
@@ -233,42 +399,6 @@
 									"outlettype" : [ "jit_gl_texture", "" ],
 									"patching_rect" : [ 494.0, 391.0, 276.0, 22.0 ],
 									"text" : "jit.gl.texture isfaudioctx @type float32 @dim 512 1"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-44",
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 55.5, 415.0, 122.0, 22.0 ],
-									"text" : "param fftImage $1 $2"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-45",
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 494.0, 415.0, 141.0, 22.0 ],
-									"text" : "param waveImage $1 $2"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-49",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 2,
-									"outlettype" : [ "signal", "signal" ],
-									"patching_rect" : [ 55.0, 62.0, 35.0, 22.0 ],
-									"text" : "adc~"
 								}
 
 							}
@@ -469,14 +599,14 @@
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-40", 0 ],
+									"destination" : [ "obj-30", 0 ],
 									"source" : [ "obj-44", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-40", 0 ],
+									"destination" : [ "obj-30", 0 ],
 									"source" : [ "obj-45", 0 ]
 								}
 
@@ -485,16 +615,16 @@
 								"patchline" : 								{
 									"destination" : [ "obj-53", 0 ],
 									"order" : 1,
-									"source" : [ "obj-49", 0 ]
+									"source" : [ "obj-5", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-61", 0 ],
-									"midpoints" : [ 64.5, 95.0, 503.5, 95.0 ],
+									"midpoints" : [ 64.5, 70.0, 503.5, 70.0 ],
 									"order" : 0,
-									"source" : [ "obj-49", 0 ]
+									"source" : [ "obj-5", 0 ]
 								}
 
 							}
@@ -592,7 +722,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 304.462120056152344, 510.43212890625, 108.0, 22.0 ],
+					"patching_rect" : [ 240.462120056152344, 519.43212890625, 110.39776611328125, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -685,7 +815,7 @@
 					"numoutlets" : 1,
 					"offset" : [ 0.0, 0.0 ],
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 531.181884765625, 36.5, 301.9090576171875, 584.5206298828125 ],
+					"patching_rect" : [ 531.181884765625, 36.5, 301.9090576171875, 527.5 ],
 					"varname" : "mybpatcher",
 					"viewvisibility" : 1
 				}
@@ -697,8 +827,8 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 531.181884765625, 632.5, 137.0, 22.0 ],
-					"text" : "s msgsToISFInlet_audio"
+					"patching_rect" : [ 531.181884765625, 580.67938232421875, 85.0, 22.0 ],
+					"text" : "s ToISF_audio"
 				}
 
 			}
@@ -709,8 +839,8 @@
 					"numinlets" : 0,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 531.181884765625, 1.5, 153.0, 22.0 ],
-					"text" : "r msgsFromINPUTS_audio"
+					"patching_rect" : [ 531.181884765625, 1.5, 92.0, 22.0 ],
+					"text" : "r params_audio"
 				}
 
 			}
@@ -721,11 +851,12 @@
 					}
 ,
 					"id" : "obj-2",
+					"linecount" : 2,
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "", "bang", "" ],
-					"patching_rect" : [ 70.371124267578125, 611.17938232421875, 193.499946594238281, 22.0 ],
+					"patching_rect" : [ 18.371124267578125, 582.17938232421875, 110.499946594238281, 35.0 ],
 					"text" : "jit.world isfaudioctx @enable 1"
 				}
 
@@ -736,8 +867,8 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 173.704457600911439, 559.17938232421875, 136.0, 22.0 ],
-					"text" : "s msgsFromFiles_audio"
+					"patching_rect" : [ 121.704457600911439, 530.17938232421875, 79.0, 22.0 ],
+					"text" : "s Files_audio"
 				}
 
 			}
@@ -747,8 +878,8 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 122.037790934244782, 585.17938232421875, 155.0, 22.0 ],
-					"text" : "s msgsFromINPUTS_audio"
+					"patching_rect" : [ 70.037790934244782, 556.17938232421875, 94.0, 22.0 ],
+					"text" : "s params_audio"
 				}
 
 			}
@@ -759,8 +890,8 @@
 					"numinlets" : 0,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 70.371124267578125, 457.43212890625, 135.0, 22.0 ],
-					"text" : "r msgsToISFInlet_audio"
+					"patching_rect" : [ 18.371124267578125, 450.93212890625, 83.0, 22.0 ],
+					"text" : "r ToISF_audio"
 				}
 
 			}
@@ -771,7 +902,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 4,
 					"outlettype" : [ "jit_gl_texture", "", "", "" ],
-					"patching_rect" : [ 70.371124267578125, 510.43212890625, 174.0, 22.0 ],
+					"patching_rect" : [ 18.371124267578125, 495.43212890625, 174.0, 22.0 ],
 					"text" : "jit.gl.isf @file \"FFT Color Lines\""
 				}
 
@@ -856,23 +987,7 @@
 					"mode" : 0,
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 61.371124267578125, 501.61151123046875, 189.0, 37.82061767578125 ],
-					"proportion" : 0.5
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"angle" : 270.0,
-					"background" : 1,
-					"bgcolor" : [ 0.811764705882353, 0.811764705882353, 0.811764705882353, 1.0 ],
-					"bordercolor" : [ 0.0, 0.0, 0.0, 1.0 ],
-					"id" : "obj-27",
-					"maxclass" : "panel",
-					"mode" : 0,
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 298.462120056152344, 421.305389404296875, 204.0, 117.25347900390625 ],
+					"patching_rect" : [ 9.371124267578125, 486.61151123046875, 189.0, 37.82061767578125 ],
 					"proportion" : 0.5
 				}
 
@@ -919,6 +1034,13 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-29", 0 ],
+					"source" : [ "obj-15", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-17", 0 ],
 					"source" : [ "obj-16", 0 ]
 				}
@@ -949,6 +1071,21 @@
 				"patchline" : 				{
 					"destination" : [ "obj-21", 0 ],
 					"source" : [ "obj-2", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-3", 0 ],
+					"source" : [ "obj-20", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-17", 0 ],
+					"midpoints" : [ 112.621097564697266, 487.43212890625, 27.871124267578125, 487.43212890625 ],
+					"source" : [ "obj-29", 0 ]
 				}
 
 			}
@@ -993,63 +1130,65 @@
 			}
  ],
 		"parameters" : 		{
-			"obj-10::obj-23::obj-4" : [ "color3", "color3", 0 ],
-			"obj-10::obj-11::obj-4" : [ "rangeFFT", "rangeFFT", 0 ],
-			"obj-10::obj-15::obj-4" : [ "vertical", "vertical", 0 ],
-			"obj-10::obj-17::obj-4" : [ "stereo", "stereo", 0 ],
-			"obj-10::obj-21::obj-4" : [ "color2", "color2", 0 ],
-			"obj-10::obj-9::obj-4" : [ "gainFFT", "gainFFT", 0 ],
-			"obj-10::obj-13::obj-4" : [ "waveSize", "waveSize", 0 ],
-			"obj-10::obj-25::obj-4" : [ "wavecolor", "wavecolor", 0 ],
-			"obj-10::obj-19::obj-4" : [ "color1", "color1", 0 ],
+			"obj-10::obj-57::obj-4" : [ "color3", "color3", 0 ],
+			"obj-10::obj-53::obj-4" : [ "color1", "color1", 0 ],
+			"obj-10::obj-59::obj-4" : [ "wavecolor", "wavecolor", 0 ],
+			"obj-10::obj-49::obj-4" : [ "vertical", "vertical", 0 ],
+			"obj-10::obj-43::obj-4" : [ "gainFFT", "gainFFT", 0 ],
+			"obj-10::obj-51::obj-4" : [ "stereo", "stereo", 0 ],
+			"obj-10::obj-55::obj-4" : [ "color2", "color2", 0 ],
+			"obj-10::obj-45::obj-4" : [ "rangeFFT", "rangeFFT", 0 ],
+			"obj-10::obj-47::obj-4" : [ "waveSize", "waveSize", 0 ],
+			"obj-20::obj-35" : [ "[5]", "Level", 0 ],
+			"obj-20::obj-21::obj-6" : [ "live.tab[3]", "live.tab[1]", 0 ],
 			"parameterbanks" : 			{
 
 			}
 ,
 			"parameter_overrides" : 			{
-				"obj-10::obj-23::obj-4" : 				{
+				"obj-10::obj-57::obj-4" : 				{
 					"parameter_longname" : "color3",
 					"parameter_shortname" : "color3"
 				}
 ,
-				"obj-10::obj-11::obj-4" : 				{
-					"parameter_longname" : "rangeFFT",
-					"parameter_shortname" : "rangeFFT"
+				"obj-10::obj-53::obj-4" : 				{
+					"parameter_longname" : "color1",
+					"parameter_shortname" : "color1"
 				}
 ,
-				"obj-10::obj-15::obj-4" : 				{
-					"parameter_longname" : "vertical",
-					"parameter_shortname" : "vertical"
-				}
-,
-				"obj-10::obj-17::obj-4" : 				{
-					"parameter_longname" : "stereo",
-					"parameter_shortname" : "stereo"
-				}
-,
-				"obj-10::obj-21::obj-4" : 				{
-					"parameter_longname" : "color2",
-					"parameter_shortname" : "color2"
-				}
-,
-				"obj-10::obj-9::obj-4" : 				{
-					"parameter_longname" : "gainFFT",
-					"parameter_shortname" : "gainFFT"
-				}
-,
-				"obj-10::obj-13::obj-4" : 				{
-					"parameter_longname" : "waveSize",
-					"parameter_shortname" : "waveSize"
-				}
-,
-				"obj-10::obj-25::obj-4" : 				{
+				"obj-10::obj-59::obj-4" : 				{
 					"parameter_longname" : "wavecolor",
 					"parameter_shortname" : "wavecolor"
 				}
 ,
-				"obj-10::obj-19::obj-4" : 				{
-					"parameter_longname" : "color1",
-					"parameter_shortname" : "color1"
+				"obj-10::obj-49::obj-4" : 				{
+					"parameter_longname" : "vertical",
+					"parameter_shortname" : "vertical"
+				}
+,
+				"obj-10::obj-43::obj-4" : 				{
+					"parameter_longname" : "gainFFT",
+					"parameter_shortname" : "gainFFT"
+				}
+,
+				"obj-10::obj-51::obj-4" : 				{
+					"parameter_longname" : "stereo",
+					"parameter_shortname" : "stereo"
+				}
+,
+				"obj-10::obj-55::obj-4" : 				{
+					"parameter_longname" : "color2",
+					"parameter_shortname" : "color2"
+				}
+,
+				"obj-10::obj-45::obj-4" : 				{
+					"parameter_longname" : "rangeFFT",
+					"parameter_shortname" : "rangeFFT"
+				}
+,
+				"obj-10::obj-47::obj-4" : 				{
+					"parameter_longname" : "waveSize",
+					"parameter_shortname" : "waveSize"
 				}
 
 			}
@@ -1058,36 +1197,72 @@
 ,
 		"dependency_cache" : [ 			{
 				"name" : "icon.png",
-				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF",
+				"bootpath" : "~/Documents/Max 8/Packages/ISF",
 				"patcherrelativepath" : "..",
 				"type" : "PNG",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "reltoabspath.js",
-				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF/javascript",
+				"bootpath" : "~/Documents/Max 8/Packages/ISF/javascript",
 				"patcherrelativepath" : "../javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "ISF_UI_stack.maxpat",
-				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF/patchers",
+				"bootpath" : "~/Documents/Max 8/Packages/ISF/patchers",
 				"patcherrelativepath" : ".",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "jit_gl_isf_ui_controller.js",
-				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF/javascript",
+				"bootpath" : "~/Documents/Max 8/Packages/ISF/javascript",
 				"patcherrelativepath" : "../javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "jit_gl_isf_controller.js",
-				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF/javascript",
+				"bootpath" : "~/Documents/Max 8/Packages/ISF/javascript",
 				"patcherrelativepath" : "../javascript",
+				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "demosound.maxpat",
+				"bootpath" : "C74:/help/msp",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "sine.svg",
+				"bootpath" : "C74:/media/max/picts/m4l-picts",
+				"type" : "svg",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "saw.svg",
+				"bootpath" : "C74:/media/max/picts/m4l-picts",
+				"type" : "svg",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "square.svg",
+				"bootpath" : "C74:/media/max/picts/m4l-picts",
+				"type" : "svg",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "random.svg",
+				"bootpath" : "C74:/media/max/picts/m4l-picts",
+				"type" : "svg",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "interfacecolor.js",
+				"bootpath" : "C74:/interfaces",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
