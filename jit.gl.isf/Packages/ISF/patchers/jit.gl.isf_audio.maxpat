@@ -290,7 +290,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 61.5, 86.0, 264.0, 20.0 ],
-									"presentation_linecount" : 2,
 									"text" : "This creates a video stream of FFT run on audio"
 								}
 
@@ -856,7 +855,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "", "bang", "" ],
-					"patching_rect" : [ 18.371124267578125, 582.17938232421875, 110.499946594238281, 35.0 ],
+					"patching_rect" : [ 18.371124267578125, 582.17938232421875, 113.0, 35.0 ],
 					"text" : "jit.world isfaudioctx @enable 1"
 				}
 
@@ -1130,66 +1129,9 @@
 			}
  ],
 		"parameters" : 		{
-			"obj-10::obj-57::obj-4" : [ "color3", "color3", 0 ],
-			"obj-10::obj-53::obj-4" : [ "color1", "color1", 0 ],
-			"obj-10::obj-59::obj-4" : [ "wavecolor", "wavecolor", 0 ],
-			"obj-10::obj-49::obj-4" : [ "vertical", "vertical", 0 ],
-			"obj-10::obj-43::obj-4" : [ "gainFFT", "gainFFT", 0 ],
-			"obj-10::obj-51::obj-4" : [ "stereo", "stereo", 0 ],
-			"obj-10::obj-55::obj-4" : [ "color2", "color2", 0 ],
-			"obj-10::obj-45::obj-4" : [ "rangeFFT", "rangeFFT", 0 ],
-			"obj-10::obj-47::obj-4" : [ "waveSize", "waveSize", 0 ],
 			"obj-20::obj-35" : [ "[5]", "Level", 0 ],
 			"obj-20::obj-21::obj-6" : [ "live.tab[3]", "live.tab[1]", 0 ],
 			"parameterbanks" : 			{
-
-			}
-,
-			"parameter_overrides" : 			{
-				"obj-10::obj-57::obj-4" : 				{
-					"parameter_longname" : "color3",
-					"parameter_shortname" : "color3"
-				}
-,
-				"obj-10::obj-53::obj-4" : 				{
-					"parameter_longname" : "color1",
-					"parameter_shortname" : "color1"
-				}
-,
-				"obj-10::obj-59::obj-4" : 				{
-					"parameter_longname" : "wavecolor",
-					"parameter_shortname" : "wavecolor"
-				}
-,
-				"obj-10::obj-49::obj-4" : 				{
-					"parameter_longname" : "vertical",
-					"parameter_shortname" : "vertical"
-				}
-,
-				"obj-10::obj-43::obj-4" : 				{
-					"parameter_longname" : "gainFFT",
-					"parameter_shortname" : "gainFFT"
-				}
-,
-				"obj-10::obj-51::obj-4" : 				{
-					"parameter_longname" : "stereo",
-					"parameter_shortname" : "stereo"
-				}
-,
-				"obj-10::obj-55::obj-4" : 				{
-					"parameter_longname" : "color2",
-					"parameter_shortname" : "color2"
-				}
-,
-				"obj-10::obj-45::obj-4" : 				{
-					"parameter_longname" : "rangeFFT",
-					"parameter_shortname" : "rangeFFT"
-				}
-,
-				"obj-10::obj-47::obj-4" : 				{
-					"parameter_longname" : "waveSize",
-					"parameter_shortname" : "waveSize"
-				}
 
 			}
 
@@ -1197,35 +1139,28 @@
 ,
 		"dependency_cache" : [ 			{
 				"name" : "icon.png",
-				"bootpath" : "~/Documents/Max 8/Packages/ISF",
+				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF",
 				"patcherrelativepath" : "..",
 				"type" : "PNG",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "reltoabspath.js",
-				"bootpath" : "~/Documents/Max 8/Packages/ISF/javascript",
+				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF/javascript",
 				"patcherrelativepath" : "../javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "ISF_UI_stack.maxpat",
-				"bootpath" : "~/Documents/Max 8/Packages/ISF/patchers",
+				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF/patchers",
 				"patcherrelativepath" : ".",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "jit_gl_isf_ui_controller.js",
-				"bootpath" : "~/Documents/Max 8/Packages/ISF/javascript",
-				"patcherrelativepath" : "../javascript",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "jit_gl_isf_controller.js",
-				"bootpath" : "~/Documents/Max 8/Packages/ISF/javascript",
+				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF/javascript",
 				"patcherrelativepath" : "../javascript",
 				"type" : "TEXT",
 				"implicit" : 1
