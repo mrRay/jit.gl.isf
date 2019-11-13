@@ -21,6 +21,8 @@ var			myMax = null;
 //	all the objects i create are stored here (type-dependent)
 var			items = new Array();
 
+// needed to set defaults for long types with a umenu
+var 		longValues = new Array();
 
 
 
@@ -278,14 +280,6 @@ function type(inType)	{
 		var pattr = this.patcher.newdefault(0, 0,"pattr", myName+"_pattr", items[0].varname);
 		pattr.hidden = true;
 		items.push(pattr);
-		if(myType == "long") {
-			items[1].message("parameter_enable", 1);
-			items[1].message("_parameter_longname", myName);
-			items[1].message("_parameter_shortname", myName);
-			pattr = this.patcher.newdefault(0, 0,"pattr", myName+"_pattr_2", items[1].varname);
-			pattr.hidden = true;
-			items.push(pattr);
-		}
 	}
 }
 
@@ -403,8 +397,20 @@ function default()	{
 		//items[0].int(args[0]);
 	}
 	else if (myType == "long")	{
-		items[0].message("set", args[0]);
-		items[1].message("set", args[0]);
+		if(longValues.length) {
+			// RR - we must find the index of our default value and use that to set the umenu
+			var val = 0;
+			for(lval in longValues) {
+				if(longValues[lval] == args[0]) {
+					items[0].message("int", val);
+					break;
+				}
+				val++;
+			}
+		}
+		else {
+			items[0].message("set", args[0]);
+		}
 		//items[0].set(args[0]);
 		//items[1].set(args[0]);
 	}
@@ -437,17 +443,33 @@ function values()	{
 	
 	this.patcher.hiddenconnect(items[2], 1, items[3], 0);
 
-	//	hide the number object
-	items[0].hidden = true;
+	// RR - remove the number object (remove rather than hide to fix issues with pattr/snapshots)
+	this.patcher.remove(items[items.length-1]);
+	items.splice(items.length-1, 1);
+	this.patcher.remove(items[0]);
+	items.splice(0, 1);
+
+	// RR - enable pattr and snapshots on umenu
+	items[0].message("parameter_enable", 1);
+	items[0].message("_parameter_longname", myName);
+	items[0].message("_parameter_shortname", myName);
+	var pattr = this.patcher.newdefault(0, 0,"pattr", myName+"_pattr", items[0].varname);
+	pattr.hidden = true;
+	items.push(pattr);
+
 	//	show the string menu and int menu
-	items[1].hidden = false;
-	items[2].hidden = false;
+	items[0].hidden = false;
+
+	// RR - why show the int menu here? let's leave it hidden
+	//items[2].hidden = false;
+
 	//	populate the string and int menus with the (same) passed values (we don't know if we'll be getting "labels")
+	items[0].clear();
 	items[1].clear();
-	items[2].clear();
 	for (var i=0; i<args.length; ++i)	{
+		items[0].append(args[i]);
 		items[1].append(args[i]);
-		items[2].append(args[i]);
+		longValues.push(args[i]);
 	}
 }
 function labels()	{
@@ -458,9 +480,9 @@ function labels()	{
 		return;
 	
 	//	clear the string menu, populate it with the passed values
-	items[1].clear();
+	items[0].clear();
 	for (var i=0; i<args.length; ++i)	{
-		items[1].append(args[i]);
+		items[0].append(args[i]);
 	}
 }
 /*
