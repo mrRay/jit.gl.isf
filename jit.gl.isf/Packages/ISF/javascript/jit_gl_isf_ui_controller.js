@@ -230,6 +230,10 @@ function type(inType)	{
 		items.push(msgToOut);
 		msgToOut.rect = new Array(160,210,160+180, 210+20);
 		msgToOut.set("param", myName, "$1", "$2");
+
+		//	make the loadbang object
+		var			lb = this.patcher.newdefault(260,90,"loadbang");
+		items.push(lb);
 		
 		//	connect everything
 		this.patcher.hiddenconnect(pictslider, 0, pack, 0);
@@ -239,15 +243,15 @@ function type(inType)	{
 		this.patcher.hiddenconnect(maxmsg, 0, vexpr, 2);
 		this.patcher.hiddenconnect(vexpr, 0, msgToOut, 0);
 		this.patcher.hiddenconnect(msgToOut, 0, this.patcher.getnamed("OUTLET"), 0);
+		this.patcher.hiddenconnect(lb, 0, minmsg, 0);
+		this.patcher.hiddenconnect(lb, 0, maxmsg, 0);
 		//	hide all the items i want hidden!
 		for (var i=1; i<items.length; ++i)	{
 			items[i].hidden = true;
 		}
 		
 		//	bang the min & max msgs!
-		items[2].bang();
-		items[3].bang();
-		
+		lb.bang();
 	}
 	else if (myType == "color")	{
 		//	[0]- swatch
