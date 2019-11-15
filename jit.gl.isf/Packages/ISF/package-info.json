@@ -6,7 +6,7 @@
 	"displayname" : "",
 	"extends" : "",
 	"extensible" : 0,
-	"homepatcher" : "jit.gl.isf_launcher.maxpat",
+	"homepatcher" : "ISF-Launcher.maxpat",
 	"max_version_max" : "none",
 	"max_version_min" : "8.0",
 	"name" : "ISF",
