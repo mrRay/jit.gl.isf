@@ -1,6 +1,6 @@
 {
 	"author" : "Vidvox",
-	"authors" : [ "Ray Cutler", "David Lublin" ],
+	"authors" : [ "Ray Cutler", "David Lublin", "Robert Ramirez" ],
 	"categories" : [  ],
 	"description" : "Jitter external that renders ISF files to OpenGL textures.",
 	"displayname" : "",
@@ -25,7 +25,7 @@
 ,
 	"readme" : "",
 	"tags" : [ "jitter", "video", "graphics", "opengl", "externals" ],
-    "version" : "1.0.0",
+    "version" : "1.0.2",
 	"versions" : null,
 	"website" : "https://isf.video/",
 	"filelist" : 	{

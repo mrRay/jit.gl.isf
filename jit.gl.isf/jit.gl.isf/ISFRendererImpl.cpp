@@ -210,30 +210,61 @@ void main()	{
 		isfString.append(" ");
 		hardCodedColorBarsDoc = CreateISFDocRefWith(isfString);
 	}
-
-	//	first try loading the file in gl2
+	
+	
 	ISFDocRef			loadedDoc = nullptr;
-	try {
-		if (_gl2Scene == nullptr)
-			throw 0;
-		if (hardCodedColorBarsDoc != nullptr)
-			_gl2Scene->useDoc(hardCodedColorBarsDoc);
-		else if (inFilePath == nullptr)
-			_gl2Scene->useFile();
-		else
-			_gl2Scene->useFile(*inFilePath, false);
-		GLBufferPoolRef		bp2 = getGL2BufferPool();
-		//if (bp2 == nullptr)
-		//	post("\tERR: buffer pool null in %s",__func__);
-		_gl2Scene->createAndRenderABuffer(VVGL::Size(640, 480), nullptr, bp2);
-		_sceneUsesGL4 = false;
-		_sceneLoaded = true;
-		loadedDoc = _gl2Scene->doc();
-		//cout << "\tfile loaded under gl 2!" << endl;
-	}
-	catch (...) {
+	//	if the host isn't running gl4...
+	if (!_hostUsesGL4)	{
+		//	first try loading the file in gl2
 		try {
-			//	if we're here, there was an exception- try loading the file in gl4
+			if (_gl2Scene == nullptr)
+				throw 0;
+			if (hardCodedColorBarsDoc != nullptr)
+				_gl2Scene->useDoc(hardCodedColorBarsDoc);
+			else if (inFilePath == nullptr)
+				_gl2Scene->useFile();
+			else
+				_gl2Scene->useFile(*inFilePath, false);
+			GLBufferPoolRef		bp2 = getGL2BufferPool();
+			//if (bp2 == nullptr)
+			//	post("\tERR: buffer pool null in %s",__func__);
+			_gl2Scene->createAndRenderABuffer(VVGL::Size(640, 480), nullptr, bp2);
+			_sceneUsesGL4 = false;
+			_sceneLoaded = true;
+			loadedDoc = _gl2Scene->doc();
+			//cout << "\tfile loaded under gl 2!" << endl;
+		}
+		catch (...) {
+			try {
+				//	if we're here, there was an exception- try loading the file in gl4
+				if (_gl4Scene == nullptr)
+					throw 0;
+				if (hardCodedColorBarsDoc != nullptr)
+					_gl4Scene->useDoc(hardCodedColorBarsDoc);
+				else if (inFilePath == nullptr)
+					_gl4Scene->useFile();
+				else
+					_gl4Scene->useFile(*inFilePath, false);
+				GLBufferPoolRef		bp4 = getGL4BufferPool();
+				//if (bp4 == nullptr)
+				//	post("\tERR: buffer pool null in %s",__func__);
+				_gl4Scene->createAndRenderABuffer(VVGL::Size(640, 480), nullptr, bp4);
+				_sceneUsesGL4 = true;
+				_sceneLoaded = true;
+				loadedDoc = _gl4Scene->doc();
+				//cout << "\tfile loaded under gl 4!" << endl;
+			}
+			catch (...) {
+				//post("jit.gl.isf: This shader could not be compiled, sorry! %s",_filepath);
+				_sceneUsesGL4 = false;
+				_sceneLoaded = false;
+			}
+		}
+	}
+	//	else the host is running gl4...
+	else	{
+		//	first try loading the file in gl4
+		try	{
 			if (_gl4Scene == nullptr)
 				throw 0;
 			if (hardCodedColorBarsDoc != nullptr)
@@ -251,10 +282,31 @@ void main()	{
 			loadedDoc = _gl4Scene->doc();
 			//cout << "\tfile loaded under gl 4!" << endl;
 		}
-		catch (...) {
-			//post("jit.gl.isf: This shader could not be compiled, sorry! %s",_filepath);
-			_sceneUsesGL4 = false;
-			_sceneLoaded = false;
+		catch (...)	{
+			try	{
+				//	if we're here, there was an exception- try loading the file in gl2
+				if (_gl2Scene == nullptr)
+					throw 0;
+				if (hardCodedColorBarsDoc != nullptr)
+					_gl2Scene->useDoc(hardCodedColorBarsDoc);
+				else if (inFilePath == nullptr)
+					_gl2Scene->useFile();
+				else
+					_gl2Scene->useFile(*inFilePath, false);
+				GLBufferPoolRef		bp2 = getGL2BufferPool();
+				//if (bp2 == nullptr)
+				//	post("\tERR: buffer pool null in %s",__func__);
+				_gl2Scene->createAndRenderABuffer(VVGL::Size(640, 480), nullptr, bp2);
+				_sceneUsesGL4 = false;
+				_sceneLoaded = true;
+				loadedDoc = _gl2Scene->doc();
+				//cout << "\tfile loaded under gl 2!" << endl;
+			}
+			catch (...)	{
+				//post("jit.gl.isf: This shader could not be compiled, sorry! %s",_filepath);
+				_sceneUsesGL4 = false;
+				_sceneLoaded = false;
+			}
 		}
 	}
 
