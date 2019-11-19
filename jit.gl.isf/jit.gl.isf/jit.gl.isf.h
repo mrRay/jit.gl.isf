@@ -25,9 +25,9 @@ typedef struct _jit_gl_vvisf	{
 	
 	//	attributes (automatically recognized by max)
 	t_symbol			*file;	//	
-	t_atom_long			adapt;	//	if 1, render resolution is the resolution of the incoming texture.  if 0, render resolution is 'dim' attribute.
+	long				adapt;	//	if 1, render resolution is the resolution of the incoming texture.  if 0, render resolution is 'dim' attribute.
 	uint32_t			lastAdaptDims[2];	//	'adapt' means we need to render at the res of the input image.  this is the res of the last-received input image.
-	t_atom_long			dim[2];	//	render size must be explicitly set
+	long				dim[2];	//	render size must be explicitly set
 	double				renderTimeOverride;	//	-1 by default.  if not -1, the scene will be rendered at this time value (instead of calculating the appropriate time internally).
 	
 	//	ivars (not to be confused with attributes!)

@@ -235,17 +235,18 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 		// instantiate a single internal jit.gl.texture should we need it.
 		TI->outputTexObj = (t_jit_object*)jit_object_new(ps_jit_gl_texture,dest_name);
 		if (TI->outputTexObj != NULL)	{
+			t_atom_long dim[2];
 			// set texture attributes.
 			jit_attr_setsym(TI->outputTexObj, _jit_sym_name, jit_symbol_unique());
 			jit_attr_setsym(TI->outputTexObj, gensym("defaultimage"), gensym("white"));
 			jit_attr_setlong(TI->outputTexObj, gensym("rectangle"), 1);
 			//jit_attr_setlong(TI->outputTexObj, ps_flip_j, 0);
 			
-			TI->dim[0] = 640;
-			TI->dim[1] = 480;
+			dim[0] = TI->dim[0] = 640;
+			dim[1] = TI->dim[1] = 480;
 			for (int i=0; i<2; ++i)
 				TI->lastAdaptDims[i] = TI->dim[i];
-			jit_attr_setlong_array(TI->outputTexObj, _jit_sym_dim, 2, TI->dim);
+			jit_attr_setlong_array(TI->outputTexObj, _jit_sym_dim, 2, dim);
 		}
 		else	{
 			post("jit.gl.isf: ERR: creating internal texture object");
@@ -1173,9 +1174,9 @@ t_jit_err jit_gl_vvisf_getattr_dim(t_jit_gl_vvisf *targetInstance, void *attr, l
 	}
 	
 	if (*ac >= 1)
-		jit_atom_setfloat(*av, TI->dim[0]);
+		jit_atom_setlong(*av, TI->dim[0]);
 	if (*ac >= 2)
-		jit_atom_setfloat(*av+1, TI->dim[1]);
+		jit_atom_setlong(*av+1, TI->dim[1]);
 	
 	return JIT_ERR_NONE;
 }
