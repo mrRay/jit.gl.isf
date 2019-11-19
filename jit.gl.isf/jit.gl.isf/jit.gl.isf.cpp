@@ -150,11 +150,21 @@ t_jit_err jit_gl_vvisf_init(void)	{
 		attrflags,
 		(method)jit_gl_vvisf_getattr_adapt,
 		(method)jit_gl_vvisf_setattr_adapt,
-		0/*fix*/,
 		calcoffset(t_jit_gl_vvisf,adapt));
 	jit_class_addattr(_jit_gl_vvisf_class, attr);
 	CLASS_ATTR_STYLE_LABEL((t_class*)_jit_gl_vvisf_class, "adapt", 0, "onoff", "Adapt");
-	
+
+	attr = (t_jit_object*)jit_object_new(
+		 _jit_sym_jit_attr_offset,
+		 "optimize",
+		 _jit_sym_long,
+		 attrflags,
+		 (method)0L,
+		 (method)0L,
+		 calcoffset(t_jit_gl_vvisf,optimize));
+	jit_class_addattr(_jit_gl_vvisf_class, attr);
+	CLASS_ATTR_ATTR_PARSE((t_class*)_jit_gl_vvisf_class,"optimize","invisible",USESYM(long),0,"1");
+
 	attr = (t_jit_object*)jit_object_new(
 		_jit_sym_jit_attr_offset_array,
 		"dim",
@@ -219,6 +229,7 @@ t_jit_gl_vvisf * jit_gl_vvisf_new(t_symbol * dest_name)	{
 		TI->pending_params = NULL;
 
 		TI->adapt = 1;
+		TI->optimize = 0;
 		
 		TI->renderTimeOverride = -1.0;
 		
@@ -584,7 +595,7 @@ void jit_gl_vvisf_do_set_tex_params(t_hashtab_entry *e, t_tex_param_info *tpinfo
 			if (firstMsgSym != NULL && secondMsgSym != NULL)	{
 				
 				//	if this is a jitter gl texture...
-				/*if (firstMsgSym == ps_jit_gl_texture)	{
+				if (TI->optimize && firstMsgSym == ps_jit_gl_texture)	{
 					
 					//	the second msg sym is the name of the incoming jitter texture.  check to see if we're already registered as an observer
 					bool				alreadyRegistered = false;
@@ -636,7 +647,7 @@ void jit_gl_vvisf_do_set_tex_params(t_hashtab_entry *e, t_tex_param_info *tpinfo
 					}
 				}
 				//	else if this is a jitter matrix (CPU-based)...
-				else if (firstMsgSym == ps_jit_matrix)	{*/
+				else if (!TI->optimize || firstMsgSym == ps_jit_matrix)	{
 					//post("input named %s rxed a jitter matrix",inputName.c_str());
 					
 					//	try to get an existing client texture for the input name
@@ -650,7 +661,6 @@ void jit_gl_vvisf_do_set_tex_params(t_hashtab_entry *e, t_tex_param_info *tpinfo
 					//	if we don't already have an existing client texture...
 					if (clientTex == NULL)	{
 						//	make a client texture, set it up
-						//clientTex = (t_jit_object*)jit_object_new(ps_jit_gl_texture, jit_attr_getsym(TI, ps_drawto_j));
 						clientTex = (t_jit_object*)jit_object_new(ps_jit_gl_texture, jit_attr_getsym(TI, ps_drawto_j));
 						if (clientTex != NULL)	{
 							//	add the client texture to the map
@@ -686,7 +696,7 @@ void jit_gl_vvisf_do_set_tex_params(t_hashtab_entry *e, t_tex_param_info *tpinfo
 					}
 					else
 						post("jit.gl.isf: ERR: clientTex NULL in %s",__func__);
-				//}
+				}
 				
 			}
 			else

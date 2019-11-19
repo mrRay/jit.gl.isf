@@ -29,7 +29,8 @@ typedef struct _jit_gl_vvisf	{
 	uint32_t			lastAdaptDims[2];	//	'adapt' means we need to render at the res of the input image.  this is the res of the last-received input image.
 	long				dim[2];	//	render size must be explicitly set
 	double				renderTimeOverride;	//	-1 by default.  if not -1, the scene will be rendered at this time value (instead of calculating the appropriate time internally).
-	
+	long				optimize;
+
 	//	ivars (not to be confused with attributes!)
 	ISFRenderer			*isfRenderer;	//	this owns the GL scenes and does all the rendering
 	
