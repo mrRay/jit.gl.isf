@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 34.0, 79.0, 822.0, 694.0 ],
+		"rect" : [ 42.0, 85.0, 822.0, 694.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -95,7 +95,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 129.54547119140625, 554.0, 276.0909423828125, 64.0 ],
+									"patching_rect" : [ 129.54547119140625, 554.0, 276.0909423828125, 66.0 ],
 									"text" : "After generating paramter UI for a desired ISF effect, this bpatcher or its contents can be copied and pasted into your patch with all parameters snapshot and pattrstorage ready."
 								}
 
@@ -321,7 +321,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 29.0, 65.41448974609375, 298.0, 87.0 ],
+									"patching_rect" : [ 29.0, 65.41448974609375, 298.0, 89.0 ],
 									"text" : "This page lets you browse the ISFs installed on this machine, lets you preview them with the video stream selected on the front page, and provides a simple UI for most parameter types.\n\nThe other tabs explain how to build stuff like this."
 								}
 
@@ -335,7 +335,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 29.0, 25.41448974609375, 298.0, 33.0 ],
+									"patching_rect" : [ 29.0, 25.41448974609375, 298.0, 34.0 ],
 									"text" : "Play!"
 								}
 
@@ -618,10 +618,10 @@
 																	"patching_rect" : [ 102.0, 25.0, 195.0, 20.0 ],
 																	"saved_attribute_attributes" : 																	{
 																		"valueof" : 																		{
+																			"parameter_longname" : "colorShift",
 																			"parameter_mmax" : 1.0,
 																			"parameter_shortname" : "colorShift",
-																			"parameter_type" : 0,
-																			"parameter_longname" : "colorShift"
+																			"parameter_type" : 0
 																		}
 
 																	}
@@ -1172,8 +1172,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 541.5, 697.40673828125, 241.0, 62.0 ],
-									"text" : ";\rmax launchbrowser \"mailto:support@vidvox.net?subject=ISF in Max question\""
+									"patching_rect" : [ 541.5, 697.40673828125, 241.0, 64.0 ],
+									"text" : ";\r\nmax launchbrowser \"mailto:support@vidvox.net?subject=ISF in Max question\""
 								}
 
 							}
@@ -1263,8 +1263,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 541.5, 641.40673828125, 196.0, 49.0 ],
-									"text" : ";\rmax launchbrowser https://github.com/mrRay/jit.gl.isf"
+									"patching_rect" : [ 541.5, 641.40673828125, 196.0, 50.0 ],
+									"text" : ";\r\nmax launchbrowser https://github.com/mrRay/jit.gl.isf"
 								}
 
 							}
@@ -1277,8 +1277,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 541.5, 588.40673828125, 246.0, 49.0 ],
-									"text" : ";\rmax launchbrowser https://www.interactiveshaderformat.com/"
+									"patching_rect" : [ 541.5, 588.40673828125, 246.0, 50.0 ],
+									"text" : ";\r\nmax launchbrowser https://www.interactiveshaderformat.com/"
 								}
 
 							}
@@ -1291,8 +1291,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 541.5, 547.3134765625, 246.0, 35.0 ],
-									"text" : ";\rmax launchbrowser https://docs.isf.video/"
+									"patching_rect" : [ 541.5, 547.3134765625, 246.0, 36.0 ],
+									"text" : ";\r\nmax launchbrowser https://docs.isf.video/"
 								}
 
 							}
@@ -1305,8 +1305,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 541.5, 506.40673828125, 215.0, 35.0 ],
-									"text" : ";\rmax launchbrowser https://isf.video/"
+									"patching_rect" : [ 541.5, 506.40673828125, 215.0, 36.0 ],
+									"text" : ";\r\nmax launchbrowser https://isf.video/"
 								}
 
 							}
@@ -1367,7 +1367,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 131.166656494140625, 483.90673828125, 382.0, 33.0 ],
+									"patching_rect" : [ 131.166656494140625, 483.90673828125, 382.0, 34.0 ],
 									"text" : "More?"
 								}
 
@@ -1392,7 +1392,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 131.0, 409.0, 359.0, 47.0 ],
+									"patching_rect" : [ 131.0, 409.0, 359.0, 48.0 ],
 									"text" : "In addition to parameters, ISF files have root-level attributes that can be queried.  The ISF object will send data from its \"File Information\" outlet in response to these messages."
 								}
 
@@ -1454,7 +1454,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 131.0, 334.0, 359.0, 33.0 ],
+									"patching_rect" : [ 131.0, 334.0, 359.0, 34.0 ],
 									"text" : "Floating-point numbers set the render time of the ISF.  Once set, the ISF's internal \"time\" will continue to advance as normal."
 								}
 
@@ -1491,7 +1491,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 131.0, 178.0, 359.0, 33.0 ],
+									"patching_rect" : [ 131.0, 178.0, 359.0, 34.0 ],
 									"text" : "The \"file\" attribute stores the path to the currently-loaded file.  Calling \"read <filepath>\" is the same as calling \"file <filepath>\"."
 								}
 
@@ -1527,7 +1527,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 131.0, 255.0, 359.0, 33.0 ],
+									"patching_rect" : [ 131.0, 255.0, 359.0, 34.0 ],
 									"text" : "If \"adapt\" is disabled (or you've loaded a generator), the \"dim\" attribute is used to manually specify the rendering resolution."
 								}
 
@@ -1551,7 +1551,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 131.0, 93.0, 359.0, 60.0 ],
+									"patching_rect" : [ 131.0, 93.0, 359.0, 62.0 ],
 									"text" : "The \"adapt\" attribute in jit.gl.isf functions similarly to other jitter objects- if enabled and jit.gl.isf is working with an image filter, it will render at the resolution of the most recently received \"inputImage\""
 								}
 
@@ -1565,7 +1565,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 131.0, 53.0, 359.0, 33.0 ],
+									"patching_rect" : [ 131.0, 53.0, 359.0, 34.0 ],
 									"text" : "Other messages/attributes"
 								}
 
@@ -1835,7 +1835,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 200.5909423828125, 118.5, 441.0, 33.0 ],
+									"patching_rect" : [ 200.5909423828125, 118.5, 441.0, 34.0 ],
 									"text" : "jit.gl.isf has a \"param information\" outlet, from which all parameter-related information is published."
 								}
 
@@ -1847,7 +1847,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 200.5909423828125, 78.5, 441.0, 33.0 ],
+									"patching_rect" : [ 200.5909423828125, 78.5, 441.0, 34.0 ],
 									"text" : "ISF files usually have parameters (known as INPUTS in the ISF spec).  By supplying values for these parameters, you can affect how the ISF file renders."
 								}
 
@@ -1861,7 +1861,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 200.5909423828125, 38.5, 310.0, 33.0 ],
+									"patching_rect" : [ 200.5909423828125, 38.5, 310.0, 34.0 ],
 									"text" : "ISF parameters"
 								}
 
@@ -2121,7 +2121,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 416.5909423828125, 486.045415227939259, 353.0, 60.0 ],
+									"patching_rect" : [ 416.5909423828125, 486.045415227939259, 353.0, 62.0 ],
 									"text" : "- \"audio\" and \"audioFFT\"-type params will work with jitter matrices or GL textures.  Please refer to the ISF spec for a detailed description of the format of these images, and how their min/max values affect this format."
 								}
 
@@ -2155,7 +2155,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 416.5909423828125, 396.760314941406307, 397.38641357421875, 33.0 ],
+									"patching_rect" : [ 416.5909423828125, 396.760314941406307, 397.38641357421875, 34.0 ],
 									"text" : "- \"point2D\"-type params will work with two (X and Y) integer or floating-point values"
 								}
 
@@ -2200,7 +2200,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 416.5909423828125, 281.525357921348984, 397.38641357421875, 33.0 ],
+									"patching_rect" : [ 416.5909423828125, 281.525357921348984, 397.38641357421875, 34.0 ],
 									"text" : "- \"event\"-type params do not require any value (as \"event\"-type inputs are valueless events)"
 								}
 
@@ -2214,7 +2214,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 416.784149169921875, 184.0, 396.0, 33.0 ],
+									"patching_rect" : [ 416.784149169921875, 184.0, 396.0, 34.0 ],
 									"text" : "Setting an ISF file's parameters"
 								}
 
@@ -2226,7 +2226,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 416.784149169921875, 231.82478485544641, 377.0, 47.0 ],
+									"patching_rect" : [ 416.784149169921875, 231.82478485544641, 377.0, 48.0 ],
 									"text" : "Parameter values can be adjusted using the \"param <param name> <value>\" message.  Please note that the type of \"value\" provided will vary from one parameter type to another."
 								}
 
@@ -2263,7 +2263,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 24.166656494140625, 523.0, 379.0, 47.0 ],
+									"patching_rect" : [ 24.166656494140625, 523.0, 379.0, 48.0 ],
 									"text" : "Parameters have a number of other attributes.  You can get the value of these attributes with the \"getparam\" message, which requires the name of the parameter and the attribute you want to get."
 								}
 
@@ -2311,7 +2311,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 24.166656494140625, 441.76031494140625, 356.0, 33.0 ],
+									"patching_rect" : [ 24.166656494140625, 441.76031494140625, 356.0, 34.0 ],
 									"text" : "- The ISF object will then send the message \"getparamlist done\", to indicate that it has finished dumping the parameter names."
 								}
 
@@ -2323,7 +2323,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 24.166656494140625, 356.525357921348984, 362.5, 47.0 ],
+									"patching_rect" : [ 24.166656494140625, 356.525357921348984, 362.5, 48.0 ],
 									"text" : "- The ISF object will then send a number of messages describing the names of the parameters (one message for each parameter).  The format of these messages will be \"name <parameter_name>\"."
 								}
 
@@ -2335,7 +2335,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 24.166656494140625, 289.0, 356.0, 33.0 ],
+									"patching_rect" : [ 24.166656494140625, 289.0, 356.0, 34.0 ],
 									"text" : "- First, the ISF object will send the message \"getparamlist clear\", to indicate that it's about to dump the list of parameter names"
 								}
 
@@ -2347,7 +2347,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 24.166656494140625, 229.0, 376.0, 47.0 ],
+									"patching_rect" : [ 24.166656494140625, 229.0, 376.0, 48.0 ],
 									"text" : "Every parameter has a unique name.  You can query the parameters available in the loaded ISF file with the \"getparamlist\" message (this is also done automatically every time you load a new ISF)."
 								}
 
@@ -2361,7 +2361,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 24.166656494140625, 184.0, 368.0, 33.0 ],
+									"patching_rect" : [ 24.166656494140625, 184.0, 368.0, 34.0 ],
 									"text" : "Getting an ISF file's parameters"
 								}
 
@@ -2531,7 +2531,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.5909423828125, 276.71270751953125, 298.0, 33.0 ],
+									"patching_rect" : [ 31.5909423828125, 276.71270751953125, 298.0, 34.0 ],
 									"text" : "Installed ISF files can be referenced by their filename. Double-click to view and edit the loaded file"
 								}
 
@@ -2568,7 +2568,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 23.5909423828125, 463.0330810546875, 353.0, 47.0 ],
+									"patching_rect" : [ 23.5909423828125, 463.0330810546875, 353.0, 48.0 ],
 									"text" : "Installing files isn't mandatory- but installed ISF files can be browsed, filtered, and automatically listed, which makes them easier to work with."
 								}
 
@@ -2614,7 +2614,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 63.5909423828125, 544.0330810546875, 214.0, 33.0 ],
+									"patching_rect" : [ 63.5909423828125, 544.0330810546875, 214.0, 34.0 ],
 									"text" : "/Library/Graphics/ISF\n~/Library/Graphics/ISF"
 								}
 
@@ -2639,7 +2639,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 23.5909423828125, 366.0330810546875, 310.0, 33.0 ],
+									"patching_rect" : [ 23.5909423828125, 366.0330810546875, 310.0, 34.0 ],
 									"text" : "\"Installing\" ISF files"
 								}
 
@@ -2651,7 +2651,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 23.5909423828125, 401.0330810546875, 355.0, 60.0 ],
+									"patching_rect" : [ 23.5909423828125, 401.0330810546875, 355.0, 62.0 ],
 									"text" : "For convenience, there are several standard locations in which ISF files are commonly installed.  These locations are accessible to all applications on your machine, so everything that supports ISF can work with the same set of ISF files."
 								}
 
@@ -2663,7 +2663,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.5909423828125, 148.5, 353.0, 74.0 ],
+									"patching_rect" : [ 31.5909423828125, 148.5, 353.0, 75.0 ],
 									"text" : "ISF files can be loaded from anywhere- you do **NOT** have to \"install\" an ISF file to load it and use it in Max.  Use the \"read <filepath>\" message to load ISF files from anywhere on your filesystem.  If you drag an ISF file into Max, it will automatically create one of these messages for you."
 								}
 
@@ -2677,7 +2677,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.5909423828125, 113.5, 310.0, 33.0 ],
+									"patching_rect" : [ 31.5909423828125, 113.5, 310.0, 34.0 ],
 									"text" : "Loading ISF files"
 								}
 
@@ -2703,7 +2703,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 800.416666666666742, 449.0, 261.0, 60.0 ],
+									"patching_rect" : [ 800.416666666666742, 449.0, 261.0, 62.0 ],
 									"text" : "this bit populates a umenu with the list of files output from the ISF object's \"filenames outlet\".  it gates everything off when the filenames are done outputting."
 								}
 
@@ -2845,7 +2845,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 603.5909423828125, 449.0, 150.0, 47.0 ],
+									"patching_rect" : [ 603.5909423828125, 449.0, 150.0, 48.0 ],
 									"text" : "this bit populates the pop-up button with the list of available categories"
 								}
 
@@ -2858,7 +2858,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 800.416666666666742, 332.71270751953125, 191.0, 87.0 ],
+									"patching_rect" : [ 800.416666666666742, 332.71270751953125, 191.0, 89.0 ],
 									"text" : "(On launch, this patch sends an \"all_categories\" message to the jit.gl.isf object, which lists all installed ISF files from its file information outlet, and populates these UI items)"
 								}
 
@@ -2895,7 +2895,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 603.5909423828125, 222.5, 149.0, 33.0 ],
+									"patching_rect" : [ 603.5909423828125, 222.5, 149.0, 34.0 ],
 									"text" : "The list of files, which can be loaded by name!"
 								}
 
@@ -2956,7 +2956,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 406.0909423828125, 148.5, 373.0, 60.0 ],
+									"patching_rect" : [ 406.0909423828125, 148.5, 373.0, 62.0 ],
 									"text" : "On launch, jit.gl.isf will automatically scan the installed locations for ISF files, so you can load these files by name, browse them by type (source/filter/transition), or browse them by category (ISFs can have multiple categories)"
 								}
 
@@ -2970,7 +2970,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 406.0909423828125, 113.5, 310.0, 33.0 ],
+									"patching_rect" : [ 406.0909423828125, 113.5, 310.0, 34.0 ],
 									"text" : "Browsing ISF files"
 								}
 
@@ -3563,7 +3563,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 105.0, 822.0, 668.0 ],
+						"rect" : [ 42.0, 111.0, 822.0, 668.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -3666,7 +3666,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 402.462120056152344, 330.40911865234375, 382.0, 60.0 ],
+									"patching_rect" : [ 400.462120056152344, 330.40911865234375, 382.0, 62.0 ],
 									"text" : "4 - Open the ISF Overview for examples, tutorials, and more!"
 								}
 
@@ -3684,8 +3684,8 @@
 									"name" : "install-check.maxpat",
 									"numinlets" : 0,
 									"numoutlets" : 0,
-									"offset" : [ 0.0, -150.0 ],
-									"patching_rect" : [ 402.462120056152344, 1.5, 415.628822326660156, 147.40911865234375 ],
+									"offset" : [ 0.0, 0.0 ],
+									"patching_rect" : [ 391.462120056152344, 1.5, 426.628822326660156, 147.40911865234375 ],
 									"viewvisibility" : 1
 								}
 
@@ -3817,7 +3817,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 443.371185302734375, 783.91448974609375, 305.5909423828125, 54.0 ],
+									"patching_rect" : [ 443.371185302734375, 783.91448974609375, 305.5909423828125, 55.0 ],
 									"text" : "only pass images if the ISF file you loaded has an input named \"inputImage\" (the dedicated input named used for filter input images)"
 								}
 
@@ -3873,39 +3873,39 @@
 													"outputmode" : [ 1 ],
 													"out_name" : [ "u139003754" ],
 													"dim" : [ 1, 1 ],
-													"loopend" : [ 0 ],
-													"usesrcrect" : [ 0 ],
-													"looppoints" : [ 0, 0 ],
-													"time" : [ 0 ],
-													"looppoints_ms" : [ 0, 0 ],
-													"srcrect" : [ 0, 0, 1, 1 ],
-													"adapt" : [ 1 ],
-													"loopreport" : [ 0 ],
-													"autostart" : [ 1 ],
 													"rate" : [ 1.0 ],
-													"automatic" : [ 0 ],
-													"unique" : [ 0 ],
-													"framereport" : [ 0 ],
-													"drawto" : [ "" ],
-													"texture_name" : [ "u737003752" ],
-													"output_texture" : [ 0 ],
-													"time_secs" : [ 0.0 ],
-													"interp" : [ 0 ],
-													"looppoints_secs" : [ 0.0, 0.0 ],
-													"position" : [ 0.0 ],
 													"dstrect" : [ 0, 0, 1, 1 ],
-													"loopstart" : [ 0 ],
-													"colormode" : [ "argb" ],
-													"vol" : [ 1.0 ],
-													"usedstrect" : [ 0 ],
-													"time_ms" : [ 0 ],
-													"engine" : [ "avf" ],
-													"moviefile" : [ "" ],
-													"cache_size" : [ 0.100000001490116 ],
+													"adapt" : [ 1 ],
 													"fps" : [ 0.0 ],
-													"timescale" : [ 600 ],
+													"vol" : [ 1.0 ],
+													"cache_size" : [ 0.100000001490116 ],
+													"loopreport" : [ 0 ],
+													"engine" : [ "avf" ],
+													"usedstrect" : [ 0 ],
+													"colormode" : [ "argb" ],
+													"duration" : [ 0 ],
+													"position" : [ 0.0 ],
+													"autostart" : [ 1 ],
+													"drawto" : [ "" ],
+													"time" : [ 0 ],
+													"texture_name" : [ "u737003752" ],
+													"framereport" : [ 0 ],
+													"srcrect" : [ 0, 0, 1, 1 ],
+													"output_texture" : [ 0 ],
 													"framecount" : [ 0 ],
-													"duration" : [ 0 ]
+													"unique" : [ 0 ],
+													"loopend" : [ 0 ],
+													"looppoints_secs" : [ 0.0, 0.0 ],
+													"looppoints" : [ 0, 0 ],
+													"interp" : [ 0 ],
+													"time_secs" : [ 0.0 ],
+													"automatic" : [ 0 ],
+													"usesrcrect" : [ 0 ],
+													"time_ms" : [ 0 ],
+													"looppoints_ms" : [ 0, 0 ],
+													"moviefile" : [ "" ],
+													"timescale" : [ 600 ],
+													"loopstart" : [ 0 ]
 												}
 
 											}
@@ -3918,39 +3918,39 @@
 													"outputmode" : [ 1 ],
 													"out_name" : [ "u139003754" ],
 													"dim" : [ 1, 1 ],
-													"loopend" : [ 0 ],
-													"usesrcrect" : [ 0 ],
-													"looppoints" : [ 0, 0 ],
-													"time" : [ 0 ],
-													"looppoints_ms" : [ 0, 0 ],
-													"srcrect" : [ 0, 0, 1, 1 ],
-													"adapt" : [ 1 ],
-													"loopreport" : [ 0 ],
-													"autostart" : [ 1 ],
 													"rate" : [ 1.0 ],
-													"automatic" : [ 0 ],
-													"unique" : [ 0 ],
-													"framereport" : [ 0 ],
-													"drawto" : [ "" ],
-													"texture_name" : [ "u737003752" ],
-													"output_texture" : [ 0 ],
-													"time_secs" : [ 0.0 ],
-													"interp" : [ 0 ],
-													"looppoints_secs" : [ 0.0, 0.0 ],
-													"position" : [ 0.0 ],
 													"dstrect" : [ 0, 0, 1, 1 ],
-													"loopstart" : [ 0 ],
-													"colormode" : [ "argb" ],
-													"vol" : [ 1.0 ],
-													"usedstrect" : [ 0 ],
-													"time_ms" : [ 0 ],
-													"engine" : [ "avf" ],
-													"moviefile" : [ "" ],
-													"cache_size" : [ 0.100000001490116 ],
+													"adapt" : [ 1 ],
 													"fps" : [ 0.0 ],
-													"timescale" : [ 600 ],
+													"vol" : [ 1.0 ],
+													"cache_size" : [ 0.100000001490116 ],
+													"loopreport" : [ 0 ],
+													"engine" : [ "avf" ],
+													"usedstrect" : [ 0 ],
+													"colormode" : [ "argb" ],
+													"duration" : [ 0 ],
+													"position" : [ 0.0 ],
+													"autostart" : [ 1 ],
+													"drawto" : [ "" ],
+													"time" : [ 0 ],
+													"texture_name" : [ "u737003752" ],
+													"framereport" : [ 0 ],
+													"srcrect" : [ 0, 0, 1, 1 ],
+													"output_texture" : [ 0 ],
 													"framecount" : [ 0 ],
-													"duration" : [ 0 ]
+													"unique" : [ 0 ],
+													"loopend" : [ 0 ],
+													"looppoints_secs" : [ 0.0, 0.0 ],
+													"looppoints" : [ 0, 0 ],
+													"interp" : [ 0 ],
+													"time_secs" : [ 0.0 ],
+													"automatic" : [ 0 ],
+													"usesrcrect" : [ 0 ],
+													"time_ms" : [ 0 ],
+													"looppoints_ms" : [ 0, 0 ],
+													"moviefile" : [ "" ],
+													"timescale" : [ 600 ],
+													"loopstart" : [ 0 ]
 												}
 
 											}
@@ -3963,39 +3963,39 @@
 													"outputmode" : [ 1 ],
 													"out_name" : [ "u139003754" ],
 													"dim" : [ 1, 1 ],
-													"loopend" : [ 0 ],
-													"usesrcrect" : [ 0 ],
-													"looppoints" : [ 0, 0 ],
-													"time" : [ 0 ],
-													"looppoints_ms" : [ 0, 0 ],
-													"srcrect" : [ 0, 0, 1, 1 ],
-													"adapt" : [ 1 ],
-													"loopreport" : [ 0 ],
-													"autostart" : [ 1 ],
 													"rate" : [ 1.0 ],
-													"automatic" : [ 0 ],
-													"unique" : [ 0 ],
-													"framereport" : [ 0 ],
-													"drawto" : [ "" ],
-													"texture_name" : [ "u737003752" ],
-													"output_texture" : [ 0 ],
-													"time_secs" : [ 0.0 ],
-													"interp" : [ 0 ],
-													"looppoints_secs" : [ 0.0, 0.0 ],
-													"position" : [ 0.0 ],
 													"dstrect" : [ 0, 0, 1, 1 ],
-													"loopstart" : [ 0 ],
-													"colormode" : [ "argb" ],
-													"vol" : [ 1.0 ],
-													"usedstrect" : [ 0 ],
-													"time_ms" : [ 0 ],
-													"engine" : [ "avf" ],
-													"moviefile" : [ "" ],
-													"cache_size" : [ 0.100000001490116 ],
+													"adapt" : [ 1 ],
 													"fps" : [ 0.0 ],
-													"timescale" : [ 600 ],
+													"vol" : [ 1.0 ],
+													"cache_size" : [ 0.100000001490116 ],
+													"loopreport" : [ 0 ],
+													"engine" : [ "avf" ],
+													"usedstrect" : [ 0 ],
+													"colormode" : [ "argb" ],
+													"duration" : [ 0 ],
+													"position" : [ 0.0 ],
+													"autostart" : [ 1 ],
+													"drawto" : [ "" ],
+													"time" : [ 0 ],
+													"texture_name" : [ "u737003752" ],
+													"framereport" : [ 0 ],
+													"srcrect" : [ 0, 0, 1, 1 ],
+													"output_texture" : [ 0 ],
 													"framecount" : [ 0 ],
-													"duration" : [ 0 ]
+													"unique" : [ 0 ],
+													"loopend" : [ 0 ],
+													"looppoints_secs" : [ 0.0, 0.0 ],
+													"looppoints" : [ 0, 0 ],
+													"interp" : [ 0 ],
+													"time_secs" : [ 0.0 ],
+													"automatic" : [ 0 ],
+													"usesrcrect" : [ 0 ],
+													"time_ms" : [ 0 ],
+													"looppoints_ms" : [ 0, 0 ],
+													"moviefile" : [ "" ],
+													"timescale" : [ 600 ],
+													"loopstart" : [ 0 ]
 												}
 
 											}
@@ -4046,7 +4046,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 131.674275716145758, 544.016738891601562, 128.0, 23.0 ],
+									"patching_rect" : [ 131.674275716145758, 544.016738891601563, 128.0, 23.0 ],
 									"text" : "s msgsFromINPUTS"
 								}
 
@@ -4107,7 +4107,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 402.462120056152344, 190.90911865234375, 383.0, 21.0 ],
+									"patching_rect" : [ 400.462120056152344, 190.90911865234375, 383.0, 21.0 ],
 									"text" : "(you can change the files listed here in the \"Play\" tab above)"
 								}
 
@@ -4121,7 +4121,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 402.462120056152344, 150.90911865234375, 382.0, 33.0 ],
+									"patching_rect" : [ 400.462120056152344, 150.90911865234375, 382.0, 34.0 ],
 									"text" : "2 - Pick a file to start rendering!"
 								}
 
@@ -4135,7 +4135,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 402.462120056152344, 241.40911865234375, 382.0, 33.0 ],
+									"patching_rect" : [ 400.462120056152344, 241.40911865234375, 382.0, 34.0 ],
 									"text" : "3 - Check out the tabs above!"
 								}
 
@@ -4160,7 +4160,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 689.386405944824219, 216.40911865234375, 108.0, 23.0 ],
+									"patching_rect" : [ 687.386405944824219, 216.40911865234375, 108.0, 23.0 ],
 									"text" : "s msgsToISFInlet"
 								}
 
@@ -4173,7 +4173,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 638.386405944824219, 216.40911865234375, 53.0, 23.0 ],
+									"patching_rect" : [ 636.386405944824219, 216.40911865234375, 53.0, 23.0 ],
 									"text" : "read $1"
 								}
 
@@ -4187,7 +4187,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "int", "", "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 502.386405944824219, 216.40911865234375, 134.0, 23.0 ],
+									"patching_rect" : [ 500.386405944824219, 216.40911865234375, 134.0, 23.0 ],
 									"style" : "redness"
 								}
 
@@ -4200,7 +4200,7 @@
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 425.386405944824219, 216.40911865234375, 81.0, 23.0 ],
+									"patching_rect" : [ 423.386405944824219, 216.40911865234375, 81.0, 23.0 ],
 									"text" : "r inFilesPUB"
 								}
 
@@ -4212,7 +4212,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 402.462120056152344, 281.4114990234375, 382.0, 36.0 ],
+									"patching_rect" : [ 400.462120056152344, 281.4114990234375, 382.0, 36.0 ],
 									"text" : "Browsing/filtering ISFs, getting and setting ISF parameters, changing the rendering resolution- there's a lot to do!"
 								}
 
@@ -4226,7 +4226,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 0.166656494140625, 129.5, 382.0, 60.0 ],
+									"patching_rect" : [ 0.166656494140625, 129.5, 382.0, 62.0 ],
 									"text" : "jit.gl.isf",
 									"textjustification" : 1
 								}
@@ -4621,13 +4621,6 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "icon.png",
-				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF",
-				"patcherrelativepath" : "..",
-				"type" : "PNG",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "chickens.mp4",
 				"bootpath" : "C74:/media/jitter",
 				"type" : "mpg4",
@@ -4647,7 +4640,7 @@
 			}
 , 			{
 				"name" : "install-check.maxpat",
-				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF/patchers",
+				"bootpath" : "~/Documents/Max 8/Packages/ISF/patchers",
 				"patcherrelativepath" : "../patchers",
 				"type" : "JSON",
 				"implicit" : 1
@@ -4666,28 +4659,28 @@
 			}
 , 			{
 				"name" : "reltoabspath.js",
-				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF/javascript",
+				"bootpath" : "~/Documents/Max 8/Packages/ISF/javascript",
 				"patcherrelativepath" : "../javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "jit_gl_isf_ui_controller.js",
-				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF/javascript",
+				"bootpath" : "~/Documents/Max 8/Packages/ISF/javascript",
 				"patcherrelativepath" : "../javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "jit_gl_isf_controller.js",
-				"bootpath" : "~/dev/cycling/jit.gl.isf/jit.gl.isf/Packages/ISF/javascript",
+				"bootpath" : "~/Documents/Max 8/Packages/ISF/javascript",
 				"patcherrelativepath" : "../javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "jit.gl.isf.mxo",
-				"type" : "iLaX"
+				"name" : "jit.gl.isf.mxe64",
+				"type" : "mx64"
 			}
  ],
 		"autosave" : 0

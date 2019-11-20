@@ -45,7 +45,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 7.871192932128906, 241.90911865234375, 324.0, 38.0 ],
+					"patching_rect" : [ 7.871192932128906, 241.90911865234375, 324.0, 39.0 ],
 					"text" : "Check out the resources below to learn everything you need to know about using ISF with Max."
 				}
 
@@ -82,8 +82,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 520.704544067382812, 98.664505004882812, 439.0, 35.0 ],
-					"text" : ";\rmax launchbrowser https://isf.vidvox.net/download/win-desktop-editor-beta"
+					"patching_rect" : [ 520.704544067382813, 98.664505004882813, 439.0, 36.0 ],
+					"text" : ";\r\nmax launchbrowser https://isf.vidvox.net/download/win-desktop-editor-beta"
 				}
 
 			}
@@ -95,8 +95,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 502.704544067382812, 139.0, 443.0, 35.0 ],
-					"text" : ";\rmax launchbrowser https://isf.vidvox.net/download/mac-desktop-editor-beta"
+					"patching_rect" : [ 502.704544067382813, 139.0, 443.0, 36.0 ],
+					"text" : ";\r\nmax launchbrowser https://isf.vidvox.net/download/mac-desktop-editor-beta"
 				}
 
 			}
@@ -108,7 +108,7 @@
 					"numinlets" : 3,
 					"numoutlets" : 3,
 					"outlettype" : [ "bang", "bang", "" ],
-					"patching_rect" : [ 502.704544067382812, 54.392379760742188, 55.0, 35.0 ],
+					"patching_rect" : [ 502.704544067382813, 54.392379760742188, 55.0, 36.0 ],
 					"text" : "sel mac windows"
 				}
 
@@ -120,7 +120,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 502.704544067382812, 6.0, 52.0, 22.0 ],
+					"patching_rect" : [ 502.704544067382813, 6.0, 52.0, 22.0 ],
 					"text" : "platform"
 				}
 
@@ -132,7 +132,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "int" ],
-					"patching_rect" : [ 502.704544067382812, 28.392379760742188, 44.0, 22.0 ],
+					"patching_rect" : [ 502.704544067382813, 28.392379760742188, 44.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"selector" : "platform"
 					}
@@ -234,7 +234,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "int" ],
-					"patching_rect" : [ 728.0, 309.71563720703125, 87.0, 76.0 ],
+					"patching_rect" : [ 728.0, 309.71563720703125, 87.0, 77.0 ],
 					"text" : "console @classfilter node.script @patcherfilter thispatcher"
 				}
 
@@ -343,10 +343,10 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 7.871192932128906, 153.5, 401.0, 33.0 ],
+					"patching_rect" : [ 7.871192932128906, 153.5, 401.0, 34.0 ],
 					"presentation" : 1,
 					"presentation_linecount" : 2,
-					"presentation_rect" : [ 9.871192932128906, 150.5, 382.0, 60.0 ],
+					"presentation_rect" : [ 9.871192932128906, 150.5, 382.0, 62.0 ],
 					"text" : "1 - Install Free ISF Editor and Files"
 				}
 
@@ -359,9 +359,9 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 7.871192932128906, 201.90911865234375, 242.0, 31.0 ],
+					"patching_rect" : [ 7.871192932128906, 201.90911865234375, 242.0, 32.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 9.871192932128906, 184.107620239257812, 587.0, 31.0 ],
+					"presentation_rect" : [ 9.871192932128906, 184.107620239257813, 587.0, 32.0 ],
 					"text" : "ISF is already installed! "
 				}
 
@@ -381,7 +381,7 @@
 					"numoutlets" : 3,
 					"outlettype" : [ "int", "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 10.704544067382812, 83.607620239257812, 132.0, 34.0 ],
+					"patching_rect" : [ -1.295455932617187, 83.607620239257813, 132.0, 34.0 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 459.0, 247.0, 186.0, 49.0 ],
 					"rounded" : 9.0,
@@ -402,10 +402,10 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 7.871192932128906, 3.5, 401.0, 33.0 ],
+					"patching_rect" : [ 7.871192932128906, 3.5, 401.0, 34.0 ],
 					"presentation" : 1,
 					"presentation_linecount" : 2,
-					"presentation_rect" : [ 5.166656494140625, 387.40911865234375, 382.0, 60.0 ],
+					"presentation_rect" : [ 5.166656494140625, 387.40911865234375, 382.0, 62.0 ],
 					"text" : "1 - Install Free ISF Editor and Files"
 				}
 
@@ -417,7 +417,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 84.628837585449219, 122.607620239257812, 359.075706481933594, 20.0 ],
+					"patching_rect" : [ 72.628837585449219, 127.607620239257813, 359.075706481933594, 20.0 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 28.0909423828125, 554.5, 359.075706481933594, 20.0 ],
 					"text" : "NOTE: you must restart max after installing any ISF files",
@@ -434,10 +434,10 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 142.795478820800781, 75.107620239257812, 303.0, 51.0 ],
+					"patching_rect" : [ 126.795478820800781, 75.107620239257813, 296.0, 52.0 ],
 					"presentation" : 1,
 					"presentation_linecount" : 3,
-					"presentation_rect" : [ 28.0909423828125, 497.40911865234375, 352.4090576171875, 51.0 ],
+					"presentation_rect" : [ 28.0909423828125, 497.40911865234375, 352.4090576171875, 52.0 ],
 					"text" : "Click here to download the installer in your browser. When the downlaod completes, run the installer to have full access to the ISF files in Max."
 				}
 
@@ -450,10 +450,10 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 7.871192932128906, 37.107620239257812, 433.0, 38.0 ],
+					"patching_rect" : [ 7.871192932128906, 37.107620239257813, 404.0, 39.0 ],
 					"presentation" : 1,
 					"presentation_linecount" : 2,
-					"presentation_rect" : [ 5.166656494140625, 416.40911865234375, 375.0, 38.0 ],
+					"presentation_rect" : [ 5.166656494140625, 416.40911865234375, 375.0, 39.0 ],
 					"text" : "Here are a couple hundred free filters and a free cross-platform ISF Editor to get you started with a bang!"
 				}
 
@@ -668,6 +668,14 @@
 
 			}
  ],
+		"dependency_cache" : [ 			{
+				"name" : "n4m.max-fs.js",
+				"bootpath" : "C74:/packages/Node For Max/examples/filesystem",
+				"type" : "TEXT",
+				"implicit" : 1
+			}
+ ],
+		"autosave" : 0,
 		"styles" : [ 			{
 				"name" : "tap",
 				"default" : 				{
