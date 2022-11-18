@@ -549,6 +549,9 @@ bool jit_gl_vvisf_setup_jitter_texture(t_jit_gl_vvisf *targetInstance, t_symbol 
 	if(jit_gl_drawinfo_setup(targetInstance, &drawInfo)) {
 		return false;
 	}
+	if(isGL3) {
+		jit_ob3d_state_begin((t_jit_object*)targetInstance);
+	}
 	jit_gl_bindtexture(&drawInfo, texName, 0);
 	jit_gl_unbindtexture(&drawInfo, texName, 0);
 	return true;
